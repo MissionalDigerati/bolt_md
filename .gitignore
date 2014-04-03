@@ -1,2 +1,9 @@
 .DS_Store
+._.DS_Store
+*.sublime-*
+composer.lock
 .rvmrc
+app/cache/*
+app/config/config.yml
+app/database/*
+files/*
