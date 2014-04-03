@@ -5,7 +5,10 @@
 # ------------------------------------------------------------------------------
 # Place your own routes here, that have a HIGHER priority than the default routes.
 
-
+pagebinding:
+  path: /{slug}
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page' }
+  contenttype: pages
 
 # ------------------------------------------------------------------------------
 # These are the routes defining the default behaviour of Bolt's frontend. 
