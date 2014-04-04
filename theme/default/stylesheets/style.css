@@ -418,7 +418,7 @@ hr {
 	background: none;
 	color: #3f8dbf;    
 }
-.nav > li.current > a {
+.nav > li.current > a, .footer-menu > li.current > a {
 	background: none;
 	color: #3f8dbf;
 }

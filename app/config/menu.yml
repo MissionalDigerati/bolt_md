@@ -3,24 +3,68 @@
 
 main:
   - label: Home
-    title: This is the first menu item.
-    path: homepage
-    class: first
-  - label: Second item
-    path: entry/1
+    title: Visit the Home Page
+    path:  /
+    class: home
+  - label: About Us
+    title: Learn More About Us
+    path:  /about-us
+    class: about
+  - label: Projects
+    title: Discover Some of Our Projects
+    path:  /projects
+    class: projects
+  - label: Training
+    title: Check Out Our Classes
+    path:  /training
+    class: training
     submenu:
-      - label: Sub 1
-        path: entry/2
-      - label: Sub 2
-        class: menu-item-class
-        path: entry/3
-      - label: Sub 3
-        path: entry/4
-      - label: Sub 4
-        class: sub-class
-        path: page/3
-  - label: All pages
-    path: pages/
-  - label: The Bolt site
-    link: http://bolt.cm
-    class: last
+      - label: Digerati 101
+        title: Learn How to Code
+        path:  /training/digerati-101
+        class: training-digerati-101
+      - label: 'Faith & Tech'
+        title: Learn More About Technology
+        path:  /training/faith-and-tech
+        class: training-faith-and-tech
+  - label: Submit an Idea
+    title: Got a Great Idea
+    path:  /submit-an-idea
+    class: submit-an-idea
+  - label: Code
+    title: Checkout Our Code
+    link:  https://github.com/MissionalDigerati
+    class: code-repo
+  - label: Contact Us
+    title: Get in Touch
+    path:  /contact-us
+    class: contact-us
+footer:
+  - label: Home
+    title: Visit the Home Page
+    path:  /
+    class: home
+  - label: About Us
+    title: Learn More About Us
+    path:  /about-us
+    class: about
+  - label: Projects
+    title: Discover Some of Our Projects
+    path:  /projects
+    class: projects
+  - label: Training
+    title: Check Out Our Classes
+    path:  /training
+    class: training
+  - label: Submit an Idea
+    title: Got a Great Idea
+    path:  /submit-an-idea
+    class: submit-an-idea
+  - label: Code
+    title: Checkout Our Code
+    link:  https://github.com/MissionalDigerati
+    class: code-repo
+  - label: Contact Us
+    title: Get in Touch
+    path:  /contact-us
+    class: contact-us

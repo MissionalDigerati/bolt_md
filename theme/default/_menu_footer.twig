@@ -1,0 +1,7 @@
+{% for item in menu %}
+    <li class="index-{{ loop.index }}{% if loop.first %} first{% endif %}{% if loop.last %} last{% endif %}{% if item|current %} current{% endif %}">
+        <a href="{{ item.link }}" title="{{ item.title }}" class="{% if item.submenu is defined %}dropdown-toggle js-activated{% endif %}">
+            {{item.label}}
+        </a>
+    </li>
+{% endfor %}
