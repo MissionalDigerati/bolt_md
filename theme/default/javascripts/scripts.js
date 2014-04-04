@@ -413,39 +413,40 @@ $(document).ready(function(){
 /*	SCROLL NAV
 /*-----------------------------------------------------------------------------------*/
 $(document).ready(function() {
-	headerWrapper		= parseInt($('.navbar').height());
-	offsetTolerance	= -42;
-	
-	//Detecting user's scroll
-	$(window).scroll(function() {
-	
-		//Check scroll position
-		scrollPosition	= parseInt($(this).scrollTop());
-		
-		//Move trough each menu and check its position with scroll position then add current class
-		$('.navbar ul a').each(function() {
+    if ($('body').hasClass('onepage')) {
+        headerWrapper       = parseInt($('.navbar').height());
+        offsetTolerance = -42;
+        
+        //Detecting user's scroll
+        $(window).scroll(function() {
+        
+            //Check scroll position
+            scrollPosition  = parseInt($(this).scrollTop());
+            
+            //Move trough each menu and check its position with scroll position then add current class
+            $('.navbar ul a').each(function() {
 
-			thisHref				= $(this).attr('href');
-			thisTruePosition	= parseInt($(thisHref).offset().top);
-			thisPosition 		= thisTruePosition - headerWrapper - offsetTolerance;
-			
-			if(scrollPosition >= thisPosition) {
-				
-				$('.current').removeClass('current');
-				$('.navbar ul a[href='+ thisHref +']').parent('li').addClass('current');
-				
-			}
-		});
-		
-		
-		//If we're at the bottom of the page, move pointer to the last section
-		bottomPage	= parseInt($(document).height()) - parseInt($(window).height());
-		
-		if(scrollPosition == bottomPage || scrollPosition >= bottomPage) {
-		
-			$('.current').removeClass('current');
-			$('.navbar ul a:last').parent('li').addClass('current');
-		}
-	});
-	
+                thisHref                = $(this).attr('href');
+                thisTruePosition    = parseInt($(thisHref).offset().top);
+                thisPosition        = thisTruePosition - headerWrapper - offsetTolerance;
+                
+                if(scrollPosition >= thisPosition) {
+                    
+                    $('.current').removeClass('current');
+                    $('.navbar ul a[href='+ thisHref +']').parent('li').addClass('current');
+                    
+                }
+            });
+            
+            
+            //If we're at the bottom of the page, move pointer to the last section
+            bottomPage  = parseInt($(document).height()) - parseInt($(window).height());
+            
+            if(scrollPosition == bottomPage || scrollPosition >= bottomPage) {
+            
+                $('.current').removeClass('current');
+                $('.navbar ul a:last').parent('li').addClass('current');
+            }
+        });
+    };
 });
