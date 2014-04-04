@@ -39,6 +39,13 @@ main:
     title: Get in Touch
     path:  /contact-us
     class: contact-us
+social:
+  - label: Github
+    link:  https://github.com/MissionalDigerati
+    class: icon-s-github
+  - label: Twitter
+    link:  https://twitter.com/M_Digerati
+    class: icon-s-twitter
 footer:
   - label: Home
     title: Visit the Home Page
