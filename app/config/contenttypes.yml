@@ -5,9 +5,8 @@ digeratis:
     name: Digeratis
     singular_name: Digerati
     fields:
-        thumbnail:
+        thumb_image:
             type: image
-            attrib: title
         prefix:
             type: select
             values: ['Atty.', 'Coach', 'Dr.', 'Gov.', 'Fr.', 'Hon.', 'Ofc.', 'Master', 'Miss', 'Mr.', 'Mrs.', 'Ms.', 'Pres.', 'Prof.', 'Rev.']

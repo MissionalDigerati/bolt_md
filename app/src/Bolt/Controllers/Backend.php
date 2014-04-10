@@ -660,9 +660,7 @@ class Backend implements ControllerProviderInterface
                 if ($app['request']->get('returnto')) {
 
                     // We must 'return to' the edit page. In which case we must know the Id, so let's fetch it.
-                    if (empty($id)) {
-                        $id = $app['storage']->getLatestId($contenttype['slug']);
-                    }
+                    $id = $app['storage']->getLatestId($contenttype['slug']);
 
                     return redirect('editcontent', array('contenttypeslug' => $contenttype['slug'], 'id' => $id), "#".$app['request']->get('returnto'));
 
@@ -1009,7 +1007,12 @@ class Backend implements ControllerProviderInterface
                     $app['session']->getFlashBag()->set('error', __('User %s could not be saved, or nothing was changed.', array('%s' => $user['displayname'])));
                 }
 
-                return redirect('users');
+                if ($firstuser) {
+                    // To the dashboard, where 'login' will be triggered..
+                    return redirect('dashboard');
+                } else {
+                    return redirect('users');
+                }
 
             }
         }
