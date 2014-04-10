@@ -4,3 +4,8 @@ keywords:
     slug: keywords
     singular_slug: keyword
     behaves_like: tags
+
+languages:
+    slug: languages
+    singular_slug: language
+    behaves_like: tags

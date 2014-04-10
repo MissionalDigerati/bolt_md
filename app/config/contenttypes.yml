@@ -1,5 +1,55 @@
 # This file defines the contenttypes on the website. See the documentation for
 # details: http://docs.bolt.cm/content#defining-contenttypes
+
+digeratis:
+    name: Digeratis
+    singular_name: Digerati
+    fields:
+        thumbnail:
+            type: image
+            attrib: title
+        prefix:
+            type: select
+            values: ['Atty.', 'Coach', 'Dr.', 'Gov.', 'Fr.', 'Hon.', 'Ofc.', 'Master', 'Miss', 'Mr.', 'Mrs.', 'Ms.', 'Pres.', 'Prof.', 'Rev.']
+        first_name:
+            type: text
+            class: wide
+            label: 'First Name'
+        last_name:
+            type: text
+            class: wide
+            label: 'Last Name'
+        slug:
+            type: slug
+            uses: [first_name,last_name]
+        title:
+            type: text
+            class: wide
+        biography:
+            type: html
+            label: 'Biography'
+        donate_link:
+            type: text
+            class: wide
+            label: 'Donate Link'
+    sort: [last_name,first_name]
+    recordsperpage: 100
+    taxonomy: languages
+
+faqs:
+    name: FAQs
+    singular_name: FAQ
+    fields:
+        question:
+            type: text
+            class: wide
+            label: 'Question'
+        answer:
+            type: html
+            label: 'Answer'
+    sort: question
+    recordsperpage: 100
+
 pages:
     name: Pages
     singular_name: Page
@@ -40,25 +90,3 @@ pages:
     sort: title
     recordsperpage: 100
     taxonomy: keywords
-
-# possible field types:
-# text - varchar(256) - input type text.
-# integer - integer - Input field for integer numbers.
-# float - double - Input field for floating numbers, stored as 'Double'.
-# geolocation - text (65kb) - Input field for geolocation. Enter an address, and the location is geocoded to latitude/longitude coordinates
-# imagelist - text (65kb) - Input type for imagelists. Add multiple images with a description. Useful for image sliders, galleries, etcetera.
-# image - varchar(256) - image select/upload widget, stored as filename.
-# file - varchar(256) - file select/upload widget, stored as filename.
-# filelist - text (65kb) - Input type for a list of files. Including a description.
-# video - varchar(256) - Video embed widget, stored as filename.
-# html - text (65kb) - wysiwyg element.
-# textarea - varchar(32768) - Simple, plain < textarea > field.
-# markdown - varchar(32768) - Simple, plain < textarea > field, which is parsed as Markdown text.
-# datetime - datetime - date and time selector widget.
-# date - datetime - date selector widget.
-# select - varchar(256) - select with predefined values
-# templateselect - varchar(256) - select with template filenames
-# checkbox - integer - checkbox-field which is 1 (checked) or 0 (unchecked)
-
-
-# number (deprecated) - input type decimal(18,9), useful for storing number that need to be sortable
