@@ -4,14 +4,21 @@ jQuery(document).ready(function($) {
         addPicon(picon, $(this).is(':selected'));
     });
     $('div.picon_select_holder').click(function(event) {
-        $('div.picon_select_holder').removeClass('selected');
-        $(this).addClass('selected');
         var picon = $(this).attr('data-picon');
-        $('#tagline_icon option').filter(function() {
-            return $.trim($(this).text()) == picon; 
-        }).prop('selected', true);
+        selectPicon(picon);
+    });
+    $('#tagline_icon').change(function(event) {
+        picon = $(this).find('option:selected').text();
+        selectPicon(picon);
     });
 });
+function selectPicon(picon) {
+    $('div.picon_select_holder').removeClass('selected');
+    $('div.picon_select_holder[data-picon="' + picon + '"]').addClass('selected');
+    $('#tagline_icon option').filter(function() {
+        return $.trim($(this).text()) == picon; 
+    }).prop('selected', true);
+};
 function addPicon(picon, selected) {
     var addClass = '';
     if (selected === true) {
