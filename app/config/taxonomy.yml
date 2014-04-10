@@ -1,2 +1,6 @@
 # This file defines the different types of taxonomies in Bolt. See the 
 # documentation for details: http://docs.bolt.cm/taxonomies#taxonomies
+keywords:
+    slug: keywords
+    singular_slug: keyword
+    behaves_like: tags
