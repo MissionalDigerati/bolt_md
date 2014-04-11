@@ -1,6 +1,21 @@
 # This file defines the contenttypes on the website. See the documentation for
 # details: http://docs.bolt.cm/content#defining-contenttypes
 
+clients:
+    name: Clients
+    singular_name: Client
+    fields:
+        name:
+            type: text
+            class: wide
+        url:
+            type: text
+            class: wide
+            label: 'URL'
+        about:
+            type: html
+            label: 'About'
+
 digeratis:
     name: Digeratis
     singular_name: Digerati
