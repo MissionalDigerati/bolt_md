@@ -89,3 +89,26 @@ pages:
     sort: title
     recordsperpage: 100
     taxonomy: keywords
+
+social_links:
+    name: Social Links
+    singular_name: Social Link
+    fields:
+        social_media:
+            label: 'Social Media'
+            type: select
+            values: [ 'Appnet', 'Behance', 'Blogger', 'Delicious ', 'Digg', 'Dribbble', 'Dropbox', 'Evernote', 'Facebook', 'Flickr', 'Forrst', 'Github', 'Gplus', 'Grooveshark', 'Instagram', 'Klout', 'LastFM', 'LinkedIn', 'Paypal', 'Picasa', 'Pinterest', 'Posterous', 'RSS', 'Skype', 'SoundCloud', 'Songkick', 'Spotify', 'Stumbleupon', 'Tumblr', 'Twitter', 'Vimeo', 'Website', 'Youtube' ]
+        url:
+            label: 'URL'
+            type: text
+            class: wide
+    relations:
+        digeratis:
+            multiple: false
+            label: 'Select a Digerati'
+            order: [last_name,first_name]
+            format: "{{ item.last_name|escape }}, {{ item.first_name|escape }}"
+    sort: id
+    show_on_dashboard: false
+    default_status: publish
+    searchable: false
