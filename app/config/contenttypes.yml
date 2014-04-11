@@ -105,6 +105,50 @@ pages:
     recordsperpage: 100
     taxonomy: keywords
 
+projects:
+    name: Projects
+    singular_name: Project
+    fields:
+        title:
+            type: text
+            class: wide
+        slug:
+            type: slug
+            uses: title
+        action_text:
+            type: text
+            class: wide
+            label: 'Action Text'
+        action_url:
+            type: text
+            class: wide
+            label: 'Action URL'
+        thumb_image:
+            type: image
+            label: 'Thumbnail Image'
+        tagline:
+            type: text
+            label: 'Tagline'
+        details:
+            type: html
+            label: 'Project Details'
+        key_features:
+            type: html
+            label: 'Key Features'
+        pictures:
+            type: imagelist
+            label: 'Pictures'
+    relations:
+        clients:
+            multiple: false
+            label: 'Select the Client'
+            order: name
+            format: "{{ item.name|escape }}"
+    sort: title
+    recordsperpage: 100
+    taxonomy: [languages, libraries, statuses]
+
+
 social_links:
     name: Social Links
     singular_name: Social Link
