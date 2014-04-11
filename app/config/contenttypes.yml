@@ -83,7 +83,7 @@ pages:
             type: templateselect
             filter: '*.twig'
         tagline: 
-            type: text
+            type: textarea
             label: 'Tagline'
             class: wide
         tagline_icon:
@@ -129,7 +129,7 @@ projects:
             type: image
             label: 'Thumbnail Image'
         tagline:
-            type: text
+            type: textarea
             label: 'Tagline'
         details:
             type: html
@@ -188,7 +188,7 @@ training:
             type: image
             label: 'Thumbnail Image'
         tagline:
-            type: text
+            type: textarea
             class: wide
             label: 'Tagline'
         duration:
@@ -207,4 +207,30 @@ training:
             label: 'Points to Unlock'
     sort: title
     taxonomy: training_types
+
+upcoming_classes:
+    name: Upcoming Classes
+    singular_name: Upcoming Class
+    fields:
+        title:
+            type: text
+            class: wide
+        slug:
+            type: slug
+            uses: title
+        date_of_class:
+            type: datetime
+            label: 'Date of Class'
+        location:
+            type: geolocation
+        notes:
+            type: html
+    relations:
+        training:
+            multiple: false
+            label: 'Select the Type of Training'
+            order: title
+    sort: title
+    taxonomy: training_types
+
 
