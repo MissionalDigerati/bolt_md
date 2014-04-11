@@ -26,3 +26,12 @@ statuses:
     behaves_like: categories
     multiple: false
     options: [ 'Archived', 'Completed', 'Current', 'Planning', 'Under Development' ]
+
+training_types:
+    name: Training
+    slug: training_types
+    singular_name: Training
+    singular_slug: training_type
+    behaves_like: categories
+    multiple: false
+    options: [ 'Digerati 101', 'Faith & Tech' ]

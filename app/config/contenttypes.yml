@@ -15,6 +15,8 @@ clients:
         about:
             type: html
             label: 'About'
+    show_on_dashboard: false
+    default_status: publish
 
 digeratis:
     name: Digeratis
@@ -171,3 +173,38 @@ social_links:
     show_on_dashboard: false
     default_status: publish
     searchable: false
+
+training:
+    name: Training
+    singular_name: Training
+    fields:
+        title:
+            type: text
+            class: wide
+        slug:
+            type: slug
+            uses: title
+        thumb_image:
+            type: image
+            label: 'Thumbnail Image'
+        tagline:
+            type: text
+            class: wide
+            label: 'Tagline'
+        duration:
+            type: text
+            class: wide
+            label: 'Duration of Class'
+        suggested_donation:
+            type: float
+            label: 'Suggested Donation'
+        suggested_donation_text:
+            type: text
+            class: wide
+            label: 'Suggested Donation Text'
+        points:
+            type: integer
+            label: 'Points to Unlock'
+    sort: title
+    taxonomy: training_types
+
