@@ -1674,6 +1674,58 @@ hr {
     padding-top: 15px
 }
 /*-----------------------------------------------------------------------------------*/
+/*  CORE VALUES
+/*-----------------------------------------------------------------------------------*/
+#core-values {
+    text-align: center;
+    width: 80%;
+    margin: 0 auto;
+}
+#core-values .author {
+    font-style: normal;
+    font-size: 14px;
+    color: #3f8dbf;
+    display: block;
+}
+#core-values div {
+    font-size: 18px;
+    margin-bottom: 10px;
+    line-height: 32px;
+    font-weight: 300;
+    position: relative;
+}
+#core-values .tab {
+    border: none;
+    margin: 0;
+    display: inline;
+}
+#core-values .etabs {
+    padding: 0;
+    margin: 0;
+    height: 12px;
+}
+#core-values .tab a {
+    padding: 0;
+    text-indent: -99999px;
+    width: 10px;
+    height: 10px;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    background: none;
+    border: 1px solid #aaa;
+    display: inline-block;
+}
+#core-values .tab a.active,
+#core-values .tab a:hover {
+    border: 1px solid #FFF;
+    background: none;
+    position: relative;
+    z-index: 3;
+}
+#core-values .panel-container {
+    border: none
+}
+/*-----------------------------------------------------------------------------------*/
 /*	COLUMN TESTIMONIALS
 /*-----------------------------------------------------------------------------------*/
 .arrow-box {

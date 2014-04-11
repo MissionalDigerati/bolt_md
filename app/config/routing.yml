@@ -9,6 +9,10 @@ pagebinding:
   path: /{slug}
   defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page' }
   contenttype: pages
+root:
+  path:     /
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'welcome' }
+    
 
 # ------------------------------------------------------------------------------
 # These are the routes defining the default behaviour of Bolt's frontend. 
