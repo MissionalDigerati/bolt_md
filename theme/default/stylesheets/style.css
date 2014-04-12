@@ -3911,7 +3911,7 @@ input:focus:-ms-input-placeholder {
 	    display: none
 	}
 	.tab {
-	    display: block !important;
+	    display: block;
 	    margin: 0 !important;
 	}
 	.tabs-top .tab {
@@ -4095,4 +4095,10 @@ input:focus:-ms-input-placeholder {
 		max-height: 230px !important;
 	    overflow-y: scroll;
 	}
+}
+/*-----------------------------------------------------------------------------------*/
+/*  Custom
+/*-----------------------------------------------------------------------------------*/
+img.upcoming-class-image {
+    max-width: 200px;
 }

@@ -230,7 +230,7 @@ upcoming_classes:
             multiple: false
             label: 'Select the Type of Training'
             order: title
+            required: true
     sort: title
-    taxonomy: training_types
 
 
