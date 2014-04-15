@@ -10,6 +10,19 @@ main:
     title: Learn More About Us
     path:  /about-us
     class: about
+    submenu:
+      - label: Our Ministry
+        title: Learn More About Us
+        path:  /about-us/our-ministry
+        class: about-us-our-ministry
+      - label: Our Coding Practices
+        title: Learn More About How We Code
+        path:  /about-us/our-coding-practices
+        class: about-us-our-coding-practices
+      - label: Our Digeratis
+        title: Learn More About Our Team
+        path:  /about-us/our-digeratis
+        class: about-us-our-digeratis
   - label: Projects
     title: Discover Some of Our Projects
     path:  /projects

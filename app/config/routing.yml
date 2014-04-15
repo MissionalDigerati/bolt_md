@@ -9,9 +9,16 @@ pagebinding:
   path: /{slug}
   defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page' }
   contenttype: pages
+  contenttype: pages
+  path: /about-us/our-ministry
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'our-ministry' }
+  contenttype: pages
 root:
   path:     /
   defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'welcome' }
+reroute:
+  path: /about-us
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'our-ministry' }
     
 
 # ------------------------------------------------------------------------------
