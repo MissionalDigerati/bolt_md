@@ -4102,3 +4102,18 @@ input:focus:-ms-input-placeholder {
 img.upcoming-class-image {
     max-width: 200px;
 }
+/*-----------------------------------------------------------------------------------*/
+/*  Caption Custom
+/*-----------------------------------------------------------------------------------*/
+div.caption.title_header {
+    font-size: 35px;
+    font-weight: bold;
+}
+div.caption.tagline {
+    font-size: 25px;
+    font-style: italic;
+}
+div.caption.bullet_point {
+    font-size: 25px;
+    text-align: left;
+}
