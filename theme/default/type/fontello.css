@@ -579,5 +579,6 @@
 .icon-s-picasa:before { content: '\f345'; } /* '' */
 .icon-s-soundcloud:before { content: '\f348'; } /* '' */
 .icon-s-behance:before { content: '\f34e'; } /* '' */
+.icon-s-website:before { content: 'W'; } /* '' */
 
 .icon-circle-empty:before { content: '\e800'; } /* '' */

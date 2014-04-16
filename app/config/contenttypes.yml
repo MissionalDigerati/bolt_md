@@ -175,7 +175,7 @@ social_links:
             label: 'Select a Digerati'
             order: [last_name,first_name]
             format: "{{ item.last_name|escape }}, {{ item.first_name|escape }}"
-    sort: id
+    sort: social_media
     show_on_dashboard: false
     default_status: publish
     searchable: false

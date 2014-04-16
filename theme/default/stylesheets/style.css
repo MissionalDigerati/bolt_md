@@ -1210,6 +1210,10 @@ hr {
     border-color: #ff8b45;
     color: #ff8b45;
 }
+.social .icon-s-website {
+    border-color: #CACAC8;
+    color: #2c2c2c;
+}
 .social a:hover .icon-s-pinterest {
     background-color: #d8545d
 }
@@ -1308,6 +1312,10 @@ hr {
 }
 .social a:hover .icon-s-soundcloud {
     background-color: #ff8b45
+}
+.social a:hover .icon-s-website {
+    background-color: #CACAC8;
+    color: #2c2c2c;
 }
 .social a:hover a:hover i {
     background-color: #FFF

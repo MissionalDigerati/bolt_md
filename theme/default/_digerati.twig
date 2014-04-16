@@ -21,13 +21,19 @@
           {% endfor %}
 
       {% endif %}
-      {{ print(digerati.relation) }}
     </span>
-    <ul class="social">
-      <li><a href="#"><i class="icon-s-twitter"></i></a></li>
-      <li><a href="#"><i class="icon-s-facebook"></i></a></li>
-      <li><a href="#"><i class="icon-s-pinterest"></i></a></li>
-      <li><a href="#"><i class="icon-s-linkedin"></i></a></li>
-    </ul>
+    {% set social_links = digerati.related('social_links') %}
+    {% if social_links is defined and social_links is not empty %}
+      <ul class="social">
+
+        {% for social_link in social_links|sort %}
+
+          <li><a href="{{ social_link.url }}" target="_blank"><i class="icon-s-{{ social_link.social_media|lower }}"></i></a></li>
+        
+        {% endfor %}
+
+      </ul>
+
+    {% endif %}
   </div>
 </div>
