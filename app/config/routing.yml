@@ -5,20 +5,30 @@
 # ------------------------------------------------------------------------------
 # Place your own routes here, that have a HIGHER priority than the default routes.
 
+our_ministry:
+  path: /about-us/our-ministry
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'our-ministry' }
+
+our_coding_practices:
+  path: /about-us/our-coding-practices
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'our-coding-practices' }
+
+digeratis:
+  path: /about-us/our-digeratis
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug':  'page', 'slug': 'our-digeratis' }
+
+about_us:
+  path: /about-us
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'our-ministry' }
+
+root:
+  path:     /
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'welcome' }
+
 pagebinding:
   path: /{slug}
   defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page' }
   contenttype: pages
-  contenttype: pages
-  path: /about-us/our-ministry
-  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'our-ministry' }
-  contenttype: pages
-root:
-  path:     /
-  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'welcome' }
-reroute:
-  path: /about-us
-  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'our-ministry' }
     
 
 # ------------------------------------------------------------------------------

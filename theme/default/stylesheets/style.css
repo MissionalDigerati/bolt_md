@@ -2420,9 +2420,18 @@ a.more:after {
     content: "→";
     padding-left: 5px;
 }
-.meta.tags a:before {
+.meta.tags a:before, .meta.tags span:before {
     content: "#";
     display: inline-block;
+}
+.meta.tags span:before {
+    padding: 0px;
+}
+.meta.tags span:after {
+    content: ", ";
+}
+.meta.tags span:last-child:after {
+    content: "";
 }
 .grid-blog .post {
     margin-bottom: 30px
