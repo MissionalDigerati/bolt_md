@@ -1,0 +1,92 @@
+# This is the config file for the Simple Forms extension.
+
+stylesheet: stylesheets/simpleforms.css
+template: simpleforms/form.twig
+mail_template: assets/simpleforms_mail.twig
+message_ok: Thanks! Your message has been sent.
+message_error: There was an error in the form. Please check the form, and try again.
+message_technical: There were some technical difficulties, so your message was not sent. We apologize for the inconvenience.
+button_text: Send
+# Optional. Used only, when you have a file field.
+# mime_types_message: "Not allowed file type. Allowed file types are:"
+
+# ReCaptcha Config - Set these options to enable ReCaptcha spam protection.
+# Generate your keys at https://www.google.com/recaptcha/admin/create
+recaptcha_enabled: false
+recaptcha_public_key: ''
+recaptcha_private_key: ''
+recaptcha_error_message: "The CAPTCHA wasn't entered correctly. Please try again."
+recaptcha_theme: clean
+
+# Enable CSRF protection for forms. You should leave this set to 'true', unless
+# you know what you're doing.
+csrf: true
+
+# global cc email address
+# set this value to an email address that will receive a copy of every email from simpleforms
+# recipient_cc_email: info@example.com
+# recipient_cc_name: Info
+
+# global bcc email address
+# set this value to an email address that will receive a blind copy of every email from simpleforms
+# recipient_bcc_email: info@example.com
+
+# global testmode
+# for development all email will be sent to this address
+# all other recipient and cc addresses will be ignored
+# remove or set 'testmode' to false for a production site
+testmode : true
+testmode_recipient: johnathan@jpulos.com
+
+# from_email and from_name can be set for picky SMTP servers
+
+# SimpleForms Form declaration
+#
+submit_an_idea:
+  recipient_email: johnathan@missionaldigerati.org
+  recipient_name: 'Missional Digerati'
+  mail_subject: "[MD] Submit an Idea"
+  fields:
+    name:
+      label: 'Your Name'
+      placeholder: 'Your name is...'
+      type: text
+      required: true
+    email:
+      type: email
+      label: 'Your Email'
+      placeholder: 'Your email address is...'
+      required: true
+    phone:
+      type: text
+      label: 'Your Phone Number'
+      placeholder: 'Your phone number is...'
+    skype:
+      type: text
+      label: 'Your Skype Handle'
+      placeholder: 'Your Skype handle is...'
+    idea:
+      type: textarea
+      label: 'Your Idea'
+      placeholder: 'Your idea is...'
+      required: true
+  button_text: Submit Your Idea
+
+# A simple contact form. Use as {{ simpleform('contact') }} in your templates.
+contact:
+  recipient_email: info@example.org
+  recipient_name: Info
+  fields:
+    name:
+      type: text
+      required: true
+      placeholder: Your name ..
+    email:
+      type: email
+      label: Email address
+      required: true
+      placeholder: Your email address ..
+    message:
+      type: textarea
+      required: true
+      placeholder: Your message ..

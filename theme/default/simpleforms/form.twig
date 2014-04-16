@@ -14,7 +14,7 @@
     };
 </script>
 {% endif %}
-<form action="#" method="post" class="simpleform simpleform-{{ formname }} forms" enctype="multipart/form-data">
+<form action="#" method="post" class="simpleform simpleform-{{ formname }}" enctype="multipart/form-data">
     {{ form_widget(form) }}
 
     {% if recaptcha_html %}
@@ -23,6 +23,6 @@
         {{ recaptcha_html|raw }}
     </div>
     {% endif %}
-    <input type="submit" name="submit" value="{{ button_text }}" class="simpleform-submit" />
+    <input type="submit" name="submit" value="{{ button_text }}" class="btn-submit btn" />
 </form>
 {% endif %}
