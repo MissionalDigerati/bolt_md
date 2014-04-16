@@ -22,11 +22,12 @@
 
       {% endif %}
     </span>
-    {% set social_links = digerati.related('social_links') %}
+    {% set social_links = related_sort(digerati.related('social_links'), 'social_media') %}
+
     {% if social_links is defined and social_links is not empty %}
       <ul class="social">
 
-        {% for social_link in social_links|sort %}
+        {% for social_link in social_links %}
 
           <li><a href="{{ social_link.url }}" target="_blank"><i class="icon-s-{{ social_link.social_media|lower }}"></i></a></li>
         
