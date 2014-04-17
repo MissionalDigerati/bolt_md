@@ -1,0 +1,62 @@
+{% include '_header.twig' with { 'title': 'Projects' } %}
+
+<body class="full-layout">
+<div class="body-wrapper">
+
+  {% include '_nav.twig' %}
+
+  <div class="offset"></div>
+
+  <div class="light-wrapper page-title">
+    <div class="container inner">
+      <h1>Projects</h1>
+    </div>
+  </div> 
+
+  <div class="dark-wrapper">
+    <div class="container inner">
+        {% setcontent current_projects = 'projects' where { status: 'published', featured: '1' } limit 1 %}
+
+        {% if current_projects is defined and current_projects is not empty %}
+
+            {% for project in current_projects %}
+
+                {% include '_project.twig' with {'project': project} %}
+
+            {% endfor %}
+
+        {% endif %}
+        <div class="section-title text-center">
+            <h2>Technology Crafted Solutions</h2>
+            <span class="icon"><i class="icon-picons-configuration-2"></i></span>
+        </div>
+
+        <div class="row">
+
+            {% if projects is defined and projects is not empty %}
+
+                {% for project in projects %}
+
+                    <div class="col-sm-6">
+
+                        {% include '_project.twig' with {'project': project} %}
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        </div>
+    </div>
+  </div>
+  
+{% include '_footer.twig' %}
+
+</div>
+<!-- /.body-wrapper --> 
+
+{% include '_scripts.twig' %}
+
+</body>
+</html>
