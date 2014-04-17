@@ -3,11 +3,38 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="{{ page.seo_description }}">
-<meta name="keywords" content="{% if page.taxonomy.keywords is defined %}{% for keyword in record.taxonomy.keywords %}{{ keyword }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+{% if page is defined and page is not empty %}
+
+    {% if page.seo_description is not empty %}
+
+        <meta name="description" content="{{ page.seo_description }}">
+
+    {% else %}
+
+        <meta name="description" content="Missional Digerati is a Christian non-profit mobile and web app development team dedicated to leveraging technology for the purpose of delivering the Gospel to every nation.">
+
+    {% endif %}
+    {% if page.taxonomy.keywords is defined and page.taxonomy.keywords is not empty %}
+
+        <meta name="keywords" content="{% for keyword in record.taxonomy.keywords %}{{ keyword }}{% if not loop.last %}, {% endif %}{% endfor %}">
+
+    {% else %}
+
+        <meta name="keywords" content="Missional Digerati, Missional, Digerati, Technology, Website Development, Mobile App Development, Christian, Missions, Mission, Protestant">
+        
+    {% endif %}
+
+    <title>Missional Digerati:: {{ page.title }}</title>
+
+{% else %}
+
+    <meta name="description" content="Missional Digerati is a Christian non-profit mobile and web app development team dedicated to leveraging technology for the purpose of delivering the Gospel to every nation.">
+    <meta name="keywords" content="Missional Digerati, Missional, Digerati, Technology, Website Development, Mobile App Development, Christian, Missions, Mission, Protestant">
+    <title>Missional Digerati:: {{ title }}</title>
+
+{% endif %}
 <meta name="author" content="Missional Digerati">
 <link rel="shortcut icon" href="{{ paths.theme }}images/favicon.png">
-<title>Missional Digerati:: {{ page.title }}</title>
 <!-- Bootstrap core CSS -->
 <link href="{{ paths.theme }}stylesheets/bootstrap.css" rel="stylesheet">
 <link href="{{ paths.theme }}stylesheets/settings.css" rel="stylesheet">

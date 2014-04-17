@@ -21,6 +21,14 @@ about_us:
   path: /about-us
   defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'our-ministry' }
 
+projects:
+  path: /projects
+  defaults: { _controller: 'Bolt\Controllers\Frontend::listing', 'contenttypeslug': 'project' }
+
+# project:
+#   path: /projects/{slug}
+#   defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'project' }
+
 root:
   path:     /
   defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'welcome' }
