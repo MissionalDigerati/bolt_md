@@ -73,20 +73,32 @@ submit_an_idea:
   button_text: Submit Your Idea
 
 # A simple contact form. Use as {{ simpleform('contact') }} in your templates.
-contact:
-  recipient_email: info@example.org
-  recipient_name: Info
+contact_us:
+  recipient_email: johnathan@missionaldigerati.org
+  recipient_name: 'Missional Digerati'
+  mail_subject: "[MD] Contact Us"
   fields:
     name:
+      label: 'Your Name'
+      placeholder: 'Your name is...'
       type: text
       required: true
-      placeholder: Your name ..
     email:
       type: email
-      label: Email address
+      label: 'Your Email'
+      placeholder: 'Your email address is...'
       required: true
-      placeholder: Your email address ..
-    message:
+    phone:
+      type: text
+      label: 'Your Phone Number'
+      placeholder: 'Your phone number is...'
+    skype:
+      type: text
+      label: 'Your Skype Handle'
+      placeholder: 'Your Skype handle is...'
+    idea:
       type: textarea
+      label: 'Your Message'
+      placeholder: 'Your message is...'
       required: true
-      placeholder: Your message ..
+  button_text: Submit
