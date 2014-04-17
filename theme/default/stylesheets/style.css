@@ -3414,7 +3414,7 @@ input:focus:-ms-input-placeholder {
     margin: 0;
     border: none;
 }
-.item-details li span {
+.item-details li span.row_title {
     font-weight: 800;
     color: #616161;
     margin-right: 5px;

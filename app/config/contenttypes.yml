@@ -145,7 +145,7 @@ projects:
             label: 'Key Features'
         pictures:
             type: imagelist
-            label: 'Pictures'
+            label: 'Pictures (770 px X 450px)'
         featured:
             type: checkbox
             label: 'Feature Project (Show at Top of Projects)'

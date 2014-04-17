@@ -1,0 +1,144 @@
+{% include '_header.twig' with { "title": project.title } %}
+
+<body class="full-layout">
+<div class="body-wrapper">
+
+  {% include '_nav.twig' %}
+
+  <div class="offset"></div>
+
+  <div class="light-wrapper page-title">
+    <div class="container inner">
+      <h1>{{ project.title }}</h1>
+    </div>
+  </div> 
+
+  <div class="dark-wrapper">
+    <div class="container inner">
+      <div class="row">
+        <div class="col-sm-8">
+          {% if project.pictures is defined and project.pictures is not empty %}
+
+            {% for picture in project.pictures %}
+              <figure>
+                <img src="{{ picture.filename|image }}" width="770" height="500" alt="Image from the Project: {{ project.title }}" />
+              </figure>
+              <div class="divide50"></div>
+
+            {% endfor %}
+
+          {% endif %}
+        </div>
+        <!-- /.col-sm-8 -->
+        <div class="col-sm-4 lp30">
+          <h3>Project Details</h3>
+          
+          {{ project.details }}
+
+          <div class="divide5"></div>
+
+          <h3>Key Features</h3>
+
+          {{ project.key_features }}
+
+          <div class="divide5"></div>
+
+          {% set clients = project.related('clients') %}
+
+          {% if clients is defined and clients is not empty %}
+              <div class="divide5"></div>
+              <h3>Client</h3>
+
+              {% for client in clients %}
+
+                <h5>{{ client.name }}</h5>
+
+                {{ client.about }}
+
+                <ul class="social">
+                  <li><a href="{{ client.url }}" target="_blank"><i class="icon-s-website"></i></a></li>
+                </ul>
+              
+              {% endfor %}
+
+            </ul>
+
+          {% endif %}
+
+          <div class="divide10"></div>
+          <ul class="item-details">
+            {% if project.taxonomy.statuses is defined and project.taxonomy.statuses is not empty %}
+
+                {% for status in project.taxonomy.statuses %}
+
+                  <li>
+                    <span class="row_title">Status:</span><br>
+                    {% if status == 'Archived' %}
+                      <a href="#" title="" data-rel="tooltip" data-placement="top" rel="tooltip" data-original-title="Project is no longer available.">Archived</a>
+                    {% else %}
+                      {{ status }}
+                    {% endif %}
+                  </li>      
+                
+                {% endfor %}
+
+            {% endif %}
+
+            {% if project.taxonomy.languages is defined and project.taxonomy.languages is not empty %}
+              <li>
+                <span class="row_title">Languages:</span><span class="languages meta tags">
+
+                {% for language in project.taxonomy.languages %}
+
+                  <span class="language-tag">{{ language }}</span>         
+                
+                {% endfor %}
+
+                </span>
+              </li>
+            {% endif %}
+
+            {% if project.taxonomy.libraries is defined and project.taxonomy.libraries is not empty %}
+              <li>
+                <span class="row_title">Libraries:</span><span class="languages meta tags">
+
+                {% for library in project.taxonomy.libraries %}
+
+                  <span class="language-tag">{{ library }}</span>         
+                
+                {% endfor %}
+
+                </span>
+              </li>
+            {% endif %}
+
+          </ul>
+          <div class="divide10"></div>
+          <div class="text-center">
+            {% if project.action_url is defined and project.action_url is not empty %}
+              <a href="{{ project.action_url }}" class="btn btn-large btn-purple">
+                {% if project.action_text is defined and project.action_text is not empty %}
+                  {{ project.action_text }}
+                {% else %}
+                  Learn More
+                {% endif %}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+        <!-- /.col-sm-4 --> 
+      </div>
+      <!-- /.row --> 
+
+    </div>
+  </div>
+  
+{% include '_footer.twig' %}
+
+</div>
+<!-- /.body-wrapper --> 
+
+{% include '_scripts.twig' %}
+
+</body>
+</html>
