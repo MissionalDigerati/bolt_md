@@ -9,7 +9,21 @@
 
   <div class="light-wrapper page-title">
     <div class="container inner">
-      <h1>{{ project.title }}</h1>
+      <h1 class="pull-left">{{ project.title }}</h1>
+      <div class="navigation pull-right">
+        {% setcontent prev_project = 'projects' where { status: 'published', id: "<" ~ project.id } orderby '-id' limit 1 %}
+        {% setcontent next_project = 'projects' where { status: 'published', id: ">" ~ project.id } orderby 'id' limit 1 %}
+        {% if prev_project is defined and prev_project is not empty %}
+          {% for prev in prev_project %}
+            <a href="/projects/{{ prev.slug }}" title="{{ prev.title }}"><i class='icon-left-open-1'></i></a>&nbsp;
+          {% endfor %}
+        {% endif %}
+        {% if next_project is defined and next_project is not empty %}
+          {% for next in next_project %}
+            <a href="/projects/{{ next.slug }}" title="{{ next.title }}"><i class='icon-right-open-1'></i></a>
+          {% endfor %}
+        {% endif %}
+      </div>
     </div>
   </div> 
 
