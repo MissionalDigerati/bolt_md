@@ -18,12 +18,14 @@
         {% setcontent current_projects = 'projects' where { status: 'published', featured: '1' } limit 1 %}
 
         {% if current_projects is defined and current_projects is not empty %}
+          {% set current_project_id = "" %}
+          {% for project in current_projects %}
 
-            {% for project in current_projects %}
+              {% set current_project_id = project.id %}
 
-                {% include '_project.twig' with {'project': project} %}
+              {% include '_project.twig' with {'project': project} %}
 
-            {% endfor %}
+          {% endfor %}
 
         {% endif %}
         <div class="section-title text-center">
@@ -34,21 +36,25 @@
         <div class="row">
 
             {% if projects is defined and projects is not empty %}
-
+                {% set cnt = 1 %}
                 {% for project in projects %}
+                    {% if project.id != current_project_id %}
 
-                    <div class="col-sm-6">
+                      {% set cnt = cnt+1 %}
 
-                        {% include '_project.twig' with {'project': project} %}
+                      <div class="col-sm-6">
 
-                    </div>
+                          {% include '_project.twig' with {'project': project} %}
 
-                    {% if loop.index0 % 2 %}
+                      </div>
 
-                      <div class="clearfix"></div>
+                      {% if cnt % 2 %}
+
+                        <div class="clearfix"></div>
+
+                      {% endif %}
 
                     {% endif %}
-
                 {% endfor %}
 
             {% endif %}

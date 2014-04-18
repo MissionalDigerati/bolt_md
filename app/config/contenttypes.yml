@@ -155,7 +155,7 @@ projects:
             label: 'Select the Client'
             order: name
             format: "{{ item.name|escape }}"
-    sort: title
+    sort: -id
     recordsperpage: 100
     taxonomy: [languages, libraries, statuses]
 

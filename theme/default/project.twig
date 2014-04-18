@@ -116,7 +116,7 @@
           <div class="divide10"></div>
           <div class="text-center">
             {% if project.action_url is defined and project.action_url is not empty %}
-              <a href="{{ project.action_url }}" class="btn btn-large btn-purple">
+              <a href="{{ project.action_url }}" class="btn btn-large btn-purple" target="_blank">
                 {% if project.action_text is defined and project.action_text is not empty %}
                   {{ project.action_text }}
                 {% else %}
