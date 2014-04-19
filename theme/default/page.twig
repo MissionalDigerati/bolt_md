@@ -21,6 +21,9 @@
         <span class="icon"><i class="icon-picons-{{ page.tagline_icon }}"></i></span>
       </div>
         {{ page.body_header }}
+        {% if page.slug == 'training' %}
+          {% include '_training_types.twig' %}
+        {% endif %}
         {% if page.body_footer != '' %}
           {{ page.body_footer }}
         {% endif %}

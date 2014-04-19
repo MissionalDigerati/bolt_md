@@ -4134,3 +4134,6 @@ div.caption.bullet_point {
     font-size: 25px;
     text-align: left;
 }
+div.credit {
+    font-size: 10px;
+}

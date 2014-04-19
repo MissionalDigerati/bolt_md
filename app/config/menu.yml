@@ -31,15 +31,6 @@ main:
     title: Check Out Our Classes
     path:  /training
     class: training
-    submenu:
-      - label: Digerati 101
-        title: Learn How to Code
-        path:  /training/digerati-101
-        class: training-digerati-101
-      - label: 'Faith & Tech'
-        title: Learn More About Technology
-        path:  /training/faith-and-tech
-        class: training-faith-and-tech
   - label: Submit an Idea
     title: Got a Great Idea
     path:  /submit-an-idea
