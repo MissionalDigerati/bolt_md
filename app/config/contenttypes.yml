@@ -237,9 +237,10 @@ upcoming_classes:
     relations:
         training:
             multiple: false
-            label: 'Select the Type of Training'
+            label: 'Select the Curriculum'
             order: title
             required: true
-    sort: title
+    sort: date_of_class
+    taxonomy: training_types
 
 
