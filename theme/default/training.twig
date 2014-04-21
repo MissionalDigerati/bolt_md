@@ -1,0 +1,70 @@
+{% include '_header.twig' %}
+
+<body class="full-layout">
+<div class="body-wrapper">
+
+  {% include '_nav.twig' %}
+
+  <div class="offset"></div>
+
+  <div class="light-wrapper page-title">
+    <div class="container inner">
+      <h1>{{ page.title }}</h1>
+    </div>
+  </div> 
+
+  <div class="dark-wrapper">
+    <div class="container inner">
+      {% if page.slug == "digerati-101" %}
+        {% set training_type='Digerati 101' %}
+        <figure class="player">
+          <iframe width="1170" height="658" src="//www.youtube.com/embed/nKIu9yen5nc" frameborder="0" allowfullscreen webkitAllowFullScreen mozallowfullscreen></iframe>
+        </figure>
+        <div class="divide30"></div>
+      {% else %}
+        {% set training_type='Faith & Tech' %}
+      {% endif %}
+      <div class="section-title text-center">
+        <h2>{{ page.tagline }}</h2>
+        <span class="icon"><i class="icon-picons-{{ page.tagline_icon }}"></i></span>
+      </div>
+      {{ page.body_header }}
+      <div class="divide30"></div>
+      <h2>Current Curriculum</h2>
+      {% setcontent available_classes = 'training' where { training_types: training_type } %}
+      {% if available_classes is defined and available_classes is not empty %}
+        {% for class in available_classes %}
+
+          <div class="col-sm-4">
+
+              {% include '_available_class.twig' with {'class': class} %}
+
+          </div>
+
+          {% if loop.index % 2 %}
+
+            <div class="clearfix"></div>
+
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        <p>Sorry, no classes available.  Please check back soon.</p>
+      {% endif %}
+      <div class="divide30"></div>
+      <h2>Upcoming Classes</h2>
+
+      {% if page.body_footer != '' %}
+        {{ page.body_footer }}
+      {% endif %}
+    </div>
+  </div>
+  
+{% include '_footer.twig' %}
+
+</div>
+<!-- /.body-wrapper --> 
+
+{% include '_scripts.twig' %}
+
+</body>
+</html>

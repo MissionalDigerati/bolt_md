@@ -1,0 +1,20 @@
+
+{% if class.thumb_image is defined and class.thumb_image is not empty %}
+    <figure>
+      <img src="{{ class.thumb_image|image }}" alt="{{ class.title }}">
+    </figure>
+{% endif %}
+<div class="image-caption">
+  <h3>{{ class.title }}</h3>
+  <span class="meta">{{ class.tagline }}</span>
+  <div class="divide10"></div>
+  <ul class="item-details">
+    <li><span class="row_title">Class Length:</span> {{ class.duration }}</li>
+    <li><span class="row_title">Suggested Donation:</span> {{ class.suggested_donation_text }}</li>
+    {% if class.points != 0 %}
+      <li><span class="row_title">Points Needed to Unlock:</span> {{ class.points }}</li>
+    {% endif %}
+  </ul>
+  <div class="divide10"></div>
+  <div class="text-center"><a href="/contact-us?message_type=host_class&slug={{ class.slug }}" class="btn btn-blue">Host This Class</a></div>
+</div>

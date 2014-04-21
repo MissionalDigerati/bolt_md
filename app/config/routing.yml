@@ -25,9 +25,9 @@ projects:
   path: /projects
   defaults: { _controller: 'Bolt\Controllers\Frontend::listing', 'contenttypeslug': 'project' }
 
-# project:
-#   path: /projects/{slug}
-#   defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'project' }
+digerati_101:
+  path: /training/digerati-101
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'digerati-101' }
 
 root:
   path:     /
