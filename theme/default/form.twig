@@ -34,6 +34,19 @@
 <!-- /.body-wrapper --> 
 
 {% include '_scripts.twig' %}
+{% if page.slug == 'host-a-class' %}
+{% setcontent curriculum = 'curriculum' %}
+{% set selected = app.request.get('curriculum') %}
+  <script type="text/javascript">
+    $(function() {
+      {% for class in curriculum %};
+        {% if class.slug == selected %}
+          $('#host_a_class_curriculum').val("{{ class.title }}");
+        {% endif %}
+      {% endfor %}
+    });
+  </script>
+{% endif %}
 
 </body>
 </html>

@@ -61,7 +61,7 @@ form.simpleform legend {
 }
 
 form.simpleform select {
-    width: 220px;
+    width: 100%;
 }
 
 form.simpleform input[type="checkbox"] {

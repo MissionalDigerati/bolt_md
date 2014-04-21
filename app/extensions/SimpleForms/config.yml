@@ -102,3 +102,85 @@ contact_us:
       placeholder: 'Your message is...'
       required: true
   button_text: Submit
+
+host_a_class:
+  recipient_email: johnathan@missionaldigerati.org
+  recipient_name: 'Missional Digerati'
+  mail_subject: "[MD] Host a Class"
+  fields:
+    curriculum:
+      type: text
+      label: 'Curriculum'
+    name:
+      label: 'Your Name'
+      placeholder: 'Your name is...'
+      type: text
+      required: true
+    organization_name:
+      label: 'Your Organization/Church'
+      placeholder: 'Your organization or church name is...'
+      type: text
+      required: true
+    email:
+      type: email
+      label: 'Your Email'
+      placeholder: 'Your email address is...'
+      required: true
+    phone:
+      type: text
+      label: 'Your Phone Number'
+      placeholder: 'Your phone number is...'
+    skype:
+      type: text
+      label: 'Your Skype Handle'
+      placeholder: 'Your Skype handle is...'
+    address:
+      type: textarea
+      label: 'Your Address'
+      placeholder: 'Your address is...'
+    preferences:
+      type: textarea
+      label: 'When Would You Prefer to Have the Class?'
+      placeholder: 'You prefer to hold the class on...'
+    message:
+      type: textarea
+      label: 'Do You Want to Tell us Anything Else?'
+      placeholder: 'Tell us more...'
+    adequate_space:
+      type: choice
+      label: 'Do you have adequate space to host the class?'
+      empty_value: Please Select One
+      choices: [ 'Yes', 'No' ]
+      required: true
+    wifi_access:
+      type: choice
+      label: 'Do you have accessible WiFi for all the students?'
+      empty_value: Please Select One
+      choices: [ 'Yes', 'No' ]
+      required: true
+    share_ministry:
+      type: choice
+      label: 'Can we share the vision of our ministry during the last 15 minutes of class?'
+      empty_value: Please Select One
+      choices: [ 'Yes', 'No' ]
+      required: true
+    subsidize_trip:
+      type: choice
+      label: 'Are you willing to subsidize transportation and housing costs for 2 adults?'
+      empty_value: Please Select One
+      choices: [ 'Yes', 'No' ]
+      required: true
+      postfix: '<em>Cost only needs to be subsidized outside of Southern California.</em>'
+    private:
+      type: choice
+      label: 'Are you OK with others outside your oganization to join this class?'
+      empty_value: Please Select One
+      choices: [ 'Yes', 'No' ]
+      required: true
+    statement_of_faith:
+      type: checkbox
+      label: 'Do you agree with our Statement of Faith?'
+      postfix: '<a href="/about-us/statement-of-faith" target="_blank">Read Our Statement of Faith</a>'
+      required: true
+
+
