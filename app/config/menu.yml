@@ -23,6 +23,10 @@ main:
         title: Learn More About Our Team
         path:  /about-us/our-digeratis
         class: about-us-our-digeratis
+      - label: Statement of Faith
+        title: Learn More About What We Believe
+        path:  /about-us/statement-of-faith
+        class: about-us-statement-of-faith
   - label: Projects
     title: Discover Some of Our Projects
     path:  /projects

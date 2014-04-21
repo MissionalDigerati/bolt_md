@@ -18,6 +18,40 @@ clients:
     show_on_dashboard: false
     default_status: publish
 
+curriculum:
+    name: Curriculum
+    singular_name: Curriculum
+    fields:
+        title:
+            type: text
+            class: wide
+        slug:
+            type: slug
+            uses: title
+        thumb_image:
+            type: image
+            label: 'Thumbnail Image'
+        tagline:
+            type: textarea
+            class: wide
+            label: 'Tagline'
+        duration:
+            type: text
+            class: wide
+            label: 'Duration of Class'
+        suggested_donation:
+            type: float
+            label: 'Suggested Donation'
+        suggested_donation_text:
+            type: text
+            class: wide
+            label: 'Suggested Donation Text'
+        points:
+            type: integer
+            label: 'Points to Unlock'
+    sort: title
+    taxonomy: training_types
+
 digeratis:
     name: Digeratis
     singular_name: Digerati
@@ -183,40 +217,6 @@ social_links:
     default_status: publish
     searchable: false
 
-training:
-    name: Training
-    singular_name: Training
-    fields:
-        title:
-            type: text
-            class: wide
-        slug:
-            type: slug
-            uses: title
-        thumb_image:
-            type: image
-            label: 'Thumbnail Image'
-        tagline:
-            type: textarea
-            class: wide
-            label: 'Tagline'
-        duration:
-            type: text
-            class: wide
-            label: 'Duration of Class'
-        suggested_donation:
-            type: float
-            label: 'Suggested Donation'
-        suggested_donation_text:
-            type: text
-            class: wide
-            label: 'Suggested Donation Text'
-        points:
-            type: integer
-            label: 'Points to Unlock'
-    sort: title
-    taxonomy: training_types
-
 upcoming_classes:
     name: Upcoming Classes
     singular_name: Upcoming Class
@@ -235,12 +235,11 @@ upcoming_classes:
         notes:
             type: html
     relations:
-        training:
+        curriculum:
             multiple: false
             label: 'Select the Curriculum'
             order: title
             required: true
     sort: date_of_class
-    taxonomy: training_types
 
 

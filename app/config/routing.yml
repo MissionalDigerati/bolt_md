@@ -17,6 +17,10 @@ digeratis:
   path: /about-us/our-digeratis
   defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug':  'page', 'slug': 'our-digeratis' }
 
+statement_of_faith:
+  path: /about-us/statement-of-faith
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug':  'page', 'slug': 'statement-of-faith' }
+
 about_us:
   path: /about-us
   defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'our-ministry' }

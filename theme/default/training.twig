@@ -31,22 +31,24 @@
       {{ page.body_header }}
       <div class="divide30"></div>
       <h2>Current Curriculum</h2>
-      {% setcontent available_classes = 'training' where { training_types: training_type } %}
-      {% if available_classes is defined and available_classes is not empty %}
-        {% for class in available_classes %}
+      {% setcontent curriculum = 'curriculum' where { training_types: training_type } %}
+      {% if curriculum is defined and curriculum is not empty %}
+        <div class="row">
+          {% for class in curriculum %}
 
-          <div class="col-sm-4">
+            <div class="col-sm-4">
 
-              {% include '_available_class.twig' with {'class': class} %}
+                {% include '_available_class.twig' with {'class': class} %}
 
-          </div>
+            </div>
 
-          {% if loop.index % 2 %}
+            {% if loop.index % 2 %}
 
-            <div class="clearfix"></div>
+              <div class="clearfix"></div>
 
-          {% endif %}
-        {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </div>
         <div class="divide30"></div>
       {% else %}
         <p>Sorry, no classes available.  Please check back soon.</p>
