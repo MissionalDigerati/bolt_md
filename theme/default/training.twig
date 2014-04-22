@@ -31,12 +31,12 @@
       {{ page.body_header }}
       <div class="divide30"></div>
       <h2>Current Curriculum</h2>
-      {% setcontent curriculum = 'curriculum' where { training_types: training_type } orderby 'title' %}
+      {% setcontent curriculum = 'curriculum' where { training_types: training_type } orderby 'points' %}
       {% if curriculum is defined and curriculum is not empty %}
         <div class="row">
           {% for class in curriculum %}
 
-            <div class="col-sm-4">
+            <div class="col-sm-6">
 
                 {% include '_available_class.twig' with {'class': class} %}
                 
@@ -45,6 +45,7 @@
             {% if loop.index0 % 2 %}
 
               <div class="clearfix"></div>
+              <div class="divide20"></div>
 
             {% endif %}
           {% endfor %}

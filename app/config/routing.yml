@@ -33,6 +33,10 @@ digerati_101:
   path: /training/digerati-101
   defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'digerati-101' }
 
+faith_and_tech:
+  path: /training/faith-and-tech
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'faith-and-tech' }
+
 root:
   path:     /
   defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'welcome' }

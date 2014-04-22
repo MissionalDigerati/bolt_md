@@ -30,7 +30,7 @@ curriculum:
             uses: title
         thumb_image:
             type: image
-            label: 'Thumbnail Image'
+            label: 'Thumbnail Image (740px w X 284px h)'
         tagline:
             type: textarea
             class: wide

@@ -10,7 +10,9 @@
   <div class="divide10"></div>
   <ul class="item-details">
     <li><span class="row_title">Class Length:</span> {{ class.duration }}</li>
-    <li><span class="row_title">Suggested Donation:</span> {{ class.suggested_donation_text }}</li>
+    {% if class.suggested_donation_text != '' %}
+      <li><span class="row_title">Suggested Donation:</span> {{ class.suggested_donation_text }}</li>
+    {% endif %}
     {% if class.points != 0 %}
       <li><span class="row_title">Points Needed to Unlock:</span> {{ class.points }}</li>
     {% endif %}
