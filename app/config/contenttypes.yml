@@ -234,6 +234,9 @@ upcoming_classes:
             type: geolocation
         notes:
             type: html
+        public:
+            type: checkbox
+            label: 'Is this class open to the public?'
     relations:
         curriculum:
             multiple: false
@@ -241,5 +244,6 @@ upcoming_classes:
             order: title
             required: true
     sort: date_of_class
+    record_template: upcoming_class.twig
 
 

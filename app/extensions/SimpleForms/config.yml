@@ -182,5 +182,66 @@ host_a_class:
       label: 'Do you agree with our Statement of Faith?'
       postfix: '<a href="/about-us/statement-of-faith" target="_blank">Read Our Statement of Faith</a>'
       required: true
+register_for_faith_and_tech:
+  recipient_email: johnathan@missionaldigerati.org
+  recipient_name: 'Missional Digerati'
+  mail_subject: "[MD] Register for Class"
+  message_ok: "Thank You!  You have been registered for the class."
+  fields:
+    class:
+      type: text
+      label: 'Class'
+    name:
+      label: 'Your Name'
+      placeholder: 'Your name is...'
+      type: text
+      required: true
+    email:
+      type: email
+      label: 'Your Email'
+      placeholder: 'Your email address is...'
+      required: true
+    phone:
+      type: text
+      label: 'Your Phone Number'
+      placeholder: 'Your phone number is...'
+    spouse:
+      type: choice
+      label: 'Will a spouse be joining you?'
+      empty_value: Please Select One
+      choices: [ 'Yes', 'No' ]
+      required: true
+    spouse_name:
+      label: "Your Spouse's Name"
+      placeholder: "Your spouse's name is..."
+      type: text
+    experience_computers:
+      type: choice
+      label: 'How would you rate your experience with computers?'
+      empty_value: Please Select One
+      choices: [ 'Novice', 'Low Experience', 'Moderate Experience', 'Experienced' ]
+      required: true
+    experience_smart_phones:
+      type: choice
+      label: 'How would you rate your experience with smart phones?'
+      empty_value: Please Select One
+      choices: [ 'Novice', 'Low Experience', 'Moderate Experience', 'Experienced' ]
+      required: true
+    spouse_experience_computers:
+      type: choice
+      label: "How would you rate your spouse's experience with computers?"
+      empty_value: Please Select One
+      choices: [ 'Novice', 'Low Experience', 'Moderate Experience', 'Experienced' ]
+    spouse_experience_smart_phones:
+      type: choice
+      label: "How would you rate your spouse's experience with smart phones?"
+      empty_value: Please Select One
+      choices: [ 'Novice', 'Low Experience', 'Moderate Experience', 'Experienced' ]
+    reason:
+      type: textarea
+      label: 'Why are you taking this class?'
+      placeholder: 'Your reason here...'
+  button_text: Register
+
 
 

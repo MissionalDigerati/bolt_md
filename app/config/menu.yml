@@ -35,10 +35,23 @@ main:
     title: Check Out Our Classes
     path:  /training
     class: training
-  - label: Submit an Idea
-    title: Got a Great Idea
-    path:  /submit-an-idea
-    class: submit-an-idea
+  - label: Participate
+    title: Learn How You Can Help
+    path:  /donate
+    class: participate
+    submenu:
+      - label: Donate
+        title: Join Our Financial Partners
+        path:  /donate
+        class: donate
+      - label: Join/Volunteer
+        title: Become a Part of Our Team
+        path:  /join-volunteer
+        class: join-or-volunteer
+      - label: Submit an Idea
+        title: Got a Great Idea
+        path:  /submit-an-idea
+        class: submit-an-idea
   - label: Code
     title: Checkout Our Code
     link:  https://github.com/MissionalDigerati

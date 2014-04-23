@@ -1,0 +1,113 @@
+{% include '_header.twig' with { "title": record.title } %}
+{% set type_of_training = record.related('curriculum') %}
+
+<body class="full-layout">
+<div class="body-wrapper">
+
+  {% include '_nav.twig' %}
+
+  <div class="offset"></div>
+  {% if type_of_training is defined and type_of_training is not empty %}
+    <div class="light-wrapper page-title">
+      <div class="container inner">
+        <h1>{{ type_of_training[0].title }} Class</h1>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="dark-wrapper">
+    <div class="container inner">
+        <div class="section-title text-center">
+          <h2>{{ record.title }}</h2>
+          <span class="icon"><i class="icon-picons-education"></i></span>
+        </div>
+        <div class="row">
+          <div class="col-sm-7">
+            {% if record.location is defined and record.location is not empty %}
+                <figure>
+                  <img src="http://maps.googleapis.com/maps/api/staticmap?center={{ record.location.latitude }},{{ record.location.longitude }}&zoom=18&size=640x400&sensor=false&markers={{ record.location.latitude }},{{ record.location.longitude }}" width="640" height="400" alt="Map to Class" />
+                </figure>
+            {% endif %}
+          </div>
+          <!-- /.col-sm-8 -->
+          <div class="col-sm-5 lp30">
+            <h3>Class Details</h3>
+            {{ record.notes }}
+            <div class="divide5"></div>
+            <div class="divide10"></div>
+            <ul class="item-details">
+              <li>
+                <span class="row_title">Date of Class:</span> {{ record.date_of_class|date("M d, ’y @ g:i a") }}
+              </li>
+              {% if type_of_training is defined and type_of_training is not empty %}
+                <li>
+                  <span class="row_title">Class Length:</span> {{ type_of_training[0].duration }}
+                </li>
+                {% if type_of_training[0].suggested_donation_text != '' %}
+                    <li><span class="row_title">Suggested Donation:</span> {{ type_of_training[0].suggested_donation_text }}</li>
+                {% endif %}
+                {% if type_of_training[0].taxonomy.training_types is defined and type_of_training[0].taxonomy.training_types is not empty %}
+                    <li>
+                      <span class="row_title">Training:</span>
+                        {% set current_training_type = 'Digerati 101' %}
+                        {% for training_type in type_of_training[0].taxonomy.training_types %}
+
+                          {{training_type}}       
+                          {% set current_training_type = training_type %}
+                        {% endfor %}
+                      </li>
+                {% endif %}
+                <li>
+                  <span class="row_title">Curriculum:</span> {{ type_of_training[0].title }}
+                </li>
+                <li>
+                  <span class="row_title">Curriculum Description:</span><br>
+                  {{ type_of_training[0].tagline }}
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+    </div>
+  </div>
+  <div class="light-wrapper">
+    <div class="container inner">
+      <div class="section-title text-center">
+        <h2>Register for the Class</h2>
+        <span class="icon"><i class="icon-picons-new"></i></span>
+      </div>
+      {% if current_training_type == 'Digerati 101' %}
+        {{ simpleform('register_for_digerati_101') }}
+      {% else %}
+        {{ simpleform('register_for_faith_and_tech') }}
+      {% endif %}
+    </div>
+  </div>
+  
+{% include '_footer.twig' %}
+
+</div>
+<!-- /.body-wrapper --> 
+
+{% include '_scripts.twig' %}
+<script type="text/javascript">
+  $(function() {
+    if ($('p.simpleform-message').length != 0) {
+      $('p.simpleform-message').prependTo('div.dark-wrapper div.inner');
+    };
+    $('#register_for_faith_and_tech_class')
+      .val("{{ type_of_training[0].title }} - {{ record.date_of_class|date('M d, ’y @ g:i a') }}");
+    $('#register_for_faith_and_tech_spouse_name, #register_for_faith_and_tech_spouse_experience_computers, #register_for_faith_and_tech_spouse_experience_smart_phones').parent('div').hide();
+    $('#register_for_faith_and_tech_spouse').change(function(event) {
+      var val = $(this).find(':selected').val();
+      if (val == 'Yes') {
+        $('#register_for_faith_and_tech_spouse_name, #register_for_faith_and_tech_spouse_experience_computers, #register_for_faith_and_tech_spouse_experience_smart_phones').parent('div').show();
+      } else {
+        $('#register_for_faith_and_tech_spouse_name, #register_for_faith_and_tech_spouse_experience_computers, #register_for_faith_and_tech_spouse_experience_smart_phones').parent('div').hide();
+      };
+    });
+  });
+</script>
+
+</body>
+</html>
