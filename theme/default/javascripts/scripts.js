@@ -461,3 +461,44 @@ $(document).ready(function() {
         });
     };
 });
+/*-----------------------------------------------------------------------------------*/
+/*  UPCOMING CLASSES
+/*-----------------------------------------------------------------------------------*/
+/**
+ * Setup the registration form
+ * @param String eventInputValue the value to set in the class field
+ * @retun void
+ */
+function UCSetupRegistrationForm(eventInputValue) {
+    if ($('p.simpleform-message').length != 0) {
+      $('p.simpleform-message').prependTo('div.dark-wrapper div.inner');
+    };
+    $('#register_for_faith_and_tech_class').val(eventInputValue);
+    $('#register_for_faith_and_tech_spouse_name, #register_for_faith_and_tech_spouse_experience_computers, #register_for_faith_and_tech_spouse_experience_smart_phones').parent('div').hide();
+    $('#register_for_faith_and_tech_spouse').change(function(event) {
+      var val = $(this).find(':selected').val();
+      if (val == 'Yes') {
+        $('#register_for_faith_and_tech_spouse_name, #register_for_faith_and_tech_spouse_experience_computers, #register_for_faith_and_tech_spouse_experience_smart_phones').parent('div').show();
+      } else {
+        $('#register_for_faith_and_tech_spouse_name, #register_for_faith_and_tech_spouse_experience_computers, #register_for_faith_and_tech_spouse_experience_smart_phones').parent('div').hide();
+      };
+    });
+};
+/**
+ * Lockout the user, and ask for the access key.
+ * @retun void
+ */
+function UCLockOut() {
+    $.fancybox.open({href: '#access_key_required', title: 'Access Key Required'},
+      {
+        closeClick: false,
+        closeBtn: false,
+        openEffect: 'none',
+        closeEffect:  'none',
+        helpers: { 
+            overlay: {
+                closeClick: false
+            }
+        }
+    });
+};
