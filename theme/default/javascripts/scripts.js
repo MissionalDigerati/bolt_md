@@ -486,6 +486,7 @@ function UCSetupRegistrationForm(eventInputValue) {
 };
 /**
  * Lockout the user, and ask for the access key.
+ * String loadImage Path to the loading image
  * @retun void
  */
 function UCLockOut() {
@@ -501,12 +502,18 @@ function UCLockOut() {
             }
         }
     });
+    /**
+     * Add a hidden loader
+     */
+    $("form#private_content_authorize_form fieldset").append('<div id="authorize_loader" class="pull-right form-loading"></div>');
     $("form#private_content_authorize_form").submit(function(event) {
         var url = $(this).attr('action');
         var data = $(this).serialize();
         $(this).find('.btn-submit').attr('disabled', true);
+        $('#authorize_loader').show();
         $.post(url, data, function(data, textStatus, xhr) {
             var form = $("form#private_content_authorize_form");
+            $('#authorize_loader').hide();
             if (data['authorized']) {
                 form.find('div.alert').remove();
                 $.fancybox.close();
