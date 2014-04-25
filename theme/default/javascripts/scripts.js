@@ -501,4 +501,28 @@ function UCLockOut() {
             }
         }
     });
+    $("form#private_content_authorize_form").submit(function(event) {
+        var url = $(this).attr('action');
+        var data = $(this).serialize();
+        $(this).find('.btn-submit').attr('disabled', true);
+        $.post(url, data, function(data, textStatus, xhr) {
+            var form = $("form#private_content_authorize_form");
+            if (data['authorized']) {
+                form.find('div.alert').remove();
+                $.fancybox.close();
+            } else {
+                var alerts = form.find('div.alert');
+                if (alerts.length > 0) {
+                    alerts.fadeOut('slow', function() {
+                        $("form#private_content_authorize_form").prepend('<div class="alert alert-danger"> <strong>Sorry</strong> the access key failed.</div>');
+                        $(this).remove();
+                    });
+                } else {
+                   form.prepend('<div class="alert alert-danger"> <strong>Sorry</strong> the access key failed.</div>'); 
+                };
+                form.find('.btn-submit').attr('disabled', false);
+            };
+        });
+        return false;
+    });
 };
