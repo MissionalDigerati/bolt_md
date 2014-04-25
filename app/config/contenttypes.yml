@@ -236,7 +236,11 @@ upcoming_classes:
             type: html
         public:
             type: checkbox
-            label: 'Is this class open to the public?'
+            label: 'Check if the class is public.'
+        access_key:
+            label: 'Access Key (If this is a private class, add a unique access key)'
+            type: text
+            class: wide
     relations:
         curriculum:
             multiple: false
