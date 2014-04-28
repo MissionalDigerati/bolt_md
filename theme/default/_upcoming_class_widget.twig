@@ -18,18 +18,18 @@
                                 </figure>
                             {% endif %}
 
-                            <h6><a href="/upcoming-classes/{{ class.slug }}">{{ class.title }} ({{ training.title }})</a></h6>
+                            <h6><a href="/upcoming-class/{{ class.slug }}">{{ class.title }} ({{ training.title }})</a></h6>
 
                         {% endfor %}
 
                         
                     {% else %}
 
-                        <h6><a href="/upcoming-classes/{{ class.slug }}">{{ class.title }}</a></h6>
+                        <h6><a href="/upcoming-class/{{ class.slug }}">{{ class.title }}</a></h6>
 
                     {% endif %}
                     <p class="colored">{{ class.date_of_class|date("M d, ’y @ g:i a") }}</p>
-                    <a href="/upcoming-classes/{{ class.slug }}" class="btn btn-blue">Register</a>
+                    <a href="/upcoming-class/{{ class.slug }}" class="btn btn-blue">Register</a>
                 </div>
             </li>
 

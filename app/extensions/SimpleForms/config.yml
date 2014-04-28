@@ -229,7 +229,7 @@ host_a_class:
 register_for_faith_and_tech:
   recipient_email: johnathan@missionaldigerati.org
   recipient_name: 'Missional Digerati'
-  mail_subject: "[MD] Register for Class"
+  mail_subject: "[MD] Register for Faith & Tech Class"
   message_ok: "Thank You!  You have been registered for the class."
   fields:
     class:
@@ -287,5 +287,49 @@ register_for_faith_and_tech:
       placeholder: 'Your reason here...'
   button_text: Register
 
+register_for_digerati_101:
+  recipient_email: johnathan@missionaldigerati.org
+  recipient_name: 'Missional Digerati'
+  mail_subject: "[MD] Register for Digerati 101 Class"
+  message_ok: "Thank You!  You have been registered for the class."
+  fields:
+    class:
+      type: text
+      label: 'Class'
+    name:
+      label: 'Your Name'
+      placeholder: 'Your name is...'
+      type: text
+      required: true
+    ministry:
+      label: 'Your Ministry'
+      placeholder: 'Your ministry is...'
+      type: text
+      required: true
+      postfix: '<em>In order to take this class, you must be currently serving in a qualified nonprofit Evangelical Protestant mission agency.</em>'
+    email:
+      type: email
+      label: 'Your Email'
+      placeholder: 'Your email address is...'
+      required: true
+    phone:
+      type: text
+      label: 'Your Phone Number'
+      placeholder: 'Your phone number is...'
+    experience_programming:
+      type: choice
+      label: 'How would you rate your experience with programming?'
+      empty_value: Please Select One
+      choices: [ 'Novice', 'Low Experience', 'Moderate Experience', 'Experienced' ]
+      required: true
+    programming_languages:
+      type: textarea
+      label: 'Programming Languages You Know?'
+      placeholder: 'PHP, CSS, HTML ...'
+    reason:
+      type: textarea
+      label: 'Why are you taking this class?'
+      placeholder: 'Your reason here...'
+  button_text: Register
 
 

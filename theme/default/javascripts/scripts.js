@@ -464,16 +464,18 @@ $(document).ready(function() {
 /*-----------------------------------------------------------------------------------*/
 /*  UPCOMING CLASSES
 /*-----------------------------------------------------------------------------------*/
+$(document).ready(function() {
+    if ($('p.simpleform-message').length != 0) {
+        $('div.section-title').after($('p.simpleform-message'));
+    };
+});
 /**
  * Setup the registration form
  * @param String eventInputValue the value to set in the class field
  * @retun void
  */
 function UCSetupRegistrationForm(eventInputValue) {
-    if ($('p.simpleform-message').length != 0) {
-      $('p.simpleform-message').prependTo('div.dark-wrapper div.inner');
-    };
-    $('#register_for_faith_and_tech_class').val(eventInputValue);
+    $('#register_for_faith_and_tech_class, #register_for_digerati_101_class').val(eventInputValue);
     $('#register_for_faith_and_tech_spouse_name, #register_for_faith_and_tech_spouse_experience_computers, #register_for_faith_and_tech_spouse_experience_smart_phones').parent('div').hide();
     $('#register_for_faith_and_tech_spouse').change(function(event) {
       var val = $(this).find(':selected').val();
