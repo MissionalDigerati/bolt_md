@@ -1,5 +1,5 @@
 <h3 class="section-title widget-title upper">Upcoming Training</h3>
-{% setcontent classes = 'upcoming-classes' where { status: 'published', date_of_class: '>= today' } orderby 'date_of_class' limit 1 %}
+{% setcontent classes = 'upcoming-classes' where { status: 'published', date_of_class: '>= today', public: 1 } orderby 'date_of_class' limit 1 %}
 
 <ul class="post-list">
     {% if classes is defined and classes is not empty %}
