@@ -103,6 +103,49 @@ contact_us:
       required: true
   button_text: Submit
 
+join_volunteer:
+  recipient_email: johnathan@missionaldigerati.org
+  recipient_name: 'Missional Digerati'
+  mail_subject: "[MD] Join/Volunteer"
+  fields:
+    type_of_services:
+      type: choice
+      label: 'How Would You Like To Help?'
+      empty_value: Please Select One
+      choices: [ 'Micro-Volunteering Digerati', 'Full-Time Digerati', 'Not Sure?!?' ]
+      required: true
+    name:
+      label: 'Your Name'
+      placeholder: 'Your name is...'
+      type: text
+      required: true
+    email:
+      type: email
+      label: 'Your Email'
+      placeholder: 'Your email address is...'
+      required: true
+    phone:
+      type: text
+      label: 'Your Phone Number'
+      placeholder: 'Your phone number is...'
+    skype:
+      type: text
+      label: 'Your Skype Handle'
+      placeholder: 'Your Skype handle is...'
+    bio:
+      type: textarea
+      label: 'Tell Us More About You!'
+      placeholder: 'You are...'
+    skills:
+      type: textarea
+      label: 'Tell Us How God Has Gifted You!'
+      placeholder: 'Your gifts are...'
+    message:
+      type: textarea
+      label: 'If You Would Like To Tell us More.'
+      placeholder: 'Your message is...'
+  button_text: Submit
+
 host_a_class:
   recipient_email: johnathan@missionaldigerati.org
   recipient_name: 'Missional Digerati'
@@ -182,6 +225,7 @@ host_a_class:
       label: 'Do you agree with our Statement of Faith?'
       postfix: '<a href="/about-us/statement-of-faith" target="_blank">Read Our Statement of Faith</a>'
       required: true
+
 register_for_faith_and_tech:
   recipient_email: johnathan@missionaldigerati.org
   recipient_name: 'Missional Digerati'
