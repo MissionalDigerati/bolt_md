@@ -461,3 +461,113 @@ $(document).ready(function() {
         });
     };
 });
+/*-----------------------------------------------------------------------------------*/
+/*  UPCOMING CLASSES
+/*-----------------------------------------------------------------------------------*/
+/**
+ * Setup the registration form
+ * @param String eventInputValue the value to set in the class field
+ * @retun void
+ */
+function UCSetupRegistrationForm(eventInputValue) {
+    if ($('p.simpleform-message').length != 0) {
+      $('p.simpleform-message').prependTo('div.dark-wrapper div.inner');
+    };
+    $('#register_for_faith_and_tech_class').val(eventInputValue);
+    $('#register_for_faith_and_tech_spouse_name, #register_for_faith_and_tech_spouse_experience_computers, #register_for_faith_and_tech_spouse_experience_smart_phones').parent('div').hide();
+    $('#register_for_faith_and_tech_spouse').change(function(event) {
+      var val = $(this).find(':selected').val();
+      if (val == 'Yes') {
+        $('#register_for_faith_and_tech_spouse_name, #register_for_faith_and_tech_spouse_experience_computers, #register_for_faith_and_tech_spouse_experience_smart_phones').parent('div').show();
+      } else {
+        $('#register_for_faith_and_tech_spouse_name, #register_for_faith_and_tech_spouse_experience_computers, #register_for_faith_and_tech_spouse_experience_smart_phones').parent('div').hide();
+      };
+    });
+};
+/**
+ * Lockout the user, and ask for the access key.
+ * @param String hashKey the md5 key to check/store in cookie once approved
+ * @retun void
+ */
+function UCLockOut(hashKey) {
+    if (!hasAccessToClass(hashKey)) {
+        $.fancybox.open({href: '#access_key_required', title: 'Access Key Required'},
+          {
+            closeClick: false,
+            closeBtn: false,
+            openEffect: 'none',
+            closeEffect:  'none',
+            helpers: { 
+                overlay: {
+                    closeClick: false
+                }
+            }
+        });
+    };
+    /**
+     * Add a hidden loader
+     */
+    $("form#private_content_authorize_form fieldset").append('<div id="authorize_loader" class="pull-right form-loading"></div>');
+    $("form#private_content_authorize_form").submit(function(event) {
+        var url = $(this).attr('action');
+        var data = $(this).serialize();
+        $(this).find('.btn-submit').attr('disabled', true);
+        $('#authorize_loader').show();
+        $.post(url, data, function(data, textStatus, xhr) {
+            var form = $("form#private_content_authorize_form");
+            $('#authorize_loader').hide();
+            if (data['authorized']) {
+                form.find('div.alert').remove();
+                $.fancybox.close();
+                addAccessToClass(hashKey);
+            } else {
+                var alerts = form.find('div.alert');
+                if (alerts.length > 0) {
+                    alerts.fadeOut('slow', function() {
+                        $("form#private_content_authorize_form").prepend('<div class="alert alert-danger"> <strong>Sorry</strong> the access key failed.</div>');
+                        $(this).remove();
+                    });
+                } else {
+                   form.prepend('<div class="alert alert-danger"> <strong>Sorry</strong> the access key failed.</div>'); 
+                };
+                form.find('.btn-submit').attr('disabled', false);
+            };
+        });
+        return false;
+    });
+};
+/**
+ * Checks if the user has access to the class.  Have they given us the access key before?
+ *
+ * @param String hashKey the md5 key to check/store in cookie once approved
+ * @return Boolean Has access?
+ **/
+function hasAccessToClass(hashKey) {
+    var accessibleClasses = $.cookie('accessible_classes');
+    if (accessibleClasses) {
+        accessibleClassesArray = accessibleClasses.split('|');
+        if ($.inArray(hashKey, accessibleClassesArray)!== -1) {
+            return true;
+        } else {
+            return false;
+        };
+    } else {
+        return false;
+    };
+};
+/**
+ * Adds the hashKey to the accessble classes cookie for future access
+ *
+ * @param String hashKey the md5 key to check/store in cookie once approved
+ * @return void
+ **/
+function addAccessToClass(hashKey) {
+    var accessibleClasses = $.cookie('accessible_classes');
+    if (accessibleClasses) {
+        accessibleClassesArray = accessibleClasses.split('|');
+        accessibleClassesArray.push(hashKey);
+        $.cookie('accessible_classes', accessibleClassesArray.join('|'));
+    } else {
+        $.cookie('accessible_classes', hashKey);
+    };
+};

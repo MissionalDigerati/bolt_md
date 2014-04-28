@@ -2,7 +2,8 @@
 <!-- Bootstrap core JavaScript
 ================================================== --> 
 <!-- Placed at the end of the document so the pages load faster --> 
-<script src="{{ paths.theme }}javascripts/jquery.min.js"></script> 
+<script src="{{ paths.theme }}javascripts/jquery.min.js"></script>
+<script src="{{ paths.theme }}javascripts/jquery.cookie-1.4.1.min.js"></script>
 <script src="{{ paths.theme }}javascripts/bootstrap.min.js"></script> 
 <script src="{{ paths.theme }}javascripts/twitter-bootstrap-hover-dropdown.min.js"></script> 
 <script src="{{ paths.theme }}javascripts/jquery.themepunch.plugins.min.js"></script> 
@@ -19,15 +20,22 @@
 <script src="{{ paths.theme }}javascripts/jquery.slickforms.js"></script> 
 <script src="{{ paths.theme }}javascripts/retina.js"></script> 
 <script src="{{ paths.theme }}javascripts/scripts.js"></script>
-<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4e8f96635c6b8081"></script>
-<script type="text/javascript">
-  addthis.layers({
-    'theme' : 'transparent',
-    'share' : {
-      'position' : 'left',
-      'numPreferredServices' : 5,
-      'services' : 'facebook,twitter,google_plusone_share,linkedin,more'
-    }   
-  });
-</script>
-<!-- AddThis Smart Layers END -->
+{% if hide_add_this is not defined %}
+    {% set hide_add_this = false %}
+{% endif %}
+{% if hide_add_this is defined %}
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4e8f96635c6b8081"></script>
+    {% if not hide_add_this %}
+        <script type="text/javascript">
+          addthis.layers({
+            'theme' : 'transparent',
+            'share' : {
+              'position' : 'left',
+              'numPreferredServices' : 5,
+              'services' : 'facebook,twitter,google_plusone_share,linkedin,more'
+            }   
+          });
+        </script>
+        <!-- AddThis Smart Layers END -->
+    {% endif %}
+{% endif %}

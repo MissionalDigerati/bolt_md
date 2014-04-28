@@ -1434,6 +1434,12 @@ hr {
     -khtml-opacity: 0;
     opacity: 0;
 }
+div.form-loading {
+    display: none;
+    background: url(../images/loading.gif) no-repeat;
+    height: 30px;
+    width: 30px;
+}
 .tp-loader {
     background: url(../images/loading.gif) no-repeat;
     background-color: #fff;
@@ -1450,6 +1456,9 @@ hr {
 	.tp-loader {
 	    background-image: url(../images/loading@2x.gif)
 	}
+    div.form-loading {
+        background: url(../images/loading@2x.gif) no-repeat;
+    }
 }
 .tp-bannertimer {
     width: 100%;
