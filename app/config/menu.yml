@@ -42,15 +42,15 @@ main:
     submenu:
       - label: Donate
         title: Join Our Financial Partners
-        path:  /donate
+        path:  /participate/donate
         class: donate
       - label: Join/Volunteer
         title: Become a Part of Our Team
-        path:  /join-volunteer
+        path:  /participate/join-volunteer
         class: join-or-volunteer
       - label: Submit an Idea
         title: Got a Great Idea
-        path:  /submit-an-idea
+        path:  /participate/submit-an-idea
         class: submit-an-idea
   - label: Code
     title: Checkout Our Code
@@ -72,9 +72,9 @@ footer:
     title: Visit the Home Page
     path:  /
     class: home
-  - label: About Us
+  - label: About Our Ministry
     title: Learn More About Us
-    path:  /about-us
+    path:  /about-us/our-ministry
     class: about
   - label: Projects
     title: Discover Some of Our Projects
@@ -86,13 +86,13 @@ footer:
     class: training
   - label: Submit an Idea
     title: Got a Great Idea
-    path:  /submit-an-idea
+    path:  /participate/submit-an-idea
     class: submit-an-idea
-  - label: Code
-    title: Checkout Our Code
-    link:  https://github.com/MissionalDigerati
-    class: code-repo
-  - label: Contact Us
+  - label: Donate
+    title: Give Back to Missions
+    link:  /donate
+    class: donate
+  - label: Join Us
     title: Get in Touch
-    path:  /contact-us
-    class: contact-us
+    path:  /participate/join-volunteer
+    class: join-us

@@ -37,6 +37,18 @@ faith_and_tech:
   path: /training/faith-and-tech
   defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'faith-and-tech' }
 
+submit_an_idea:
+  path: /participate/submit-an-idea
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'submit-an-idea' }
+
+join_volunteer:
+  path: /participate/join-volunteer
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'join-volunteer' }
+
+donate:
+  path: /participate/donate
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'donate' }
+
 root:
   path:     /
   defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'welcome' }
