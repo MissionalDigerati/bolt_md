@@ -4146,3 +4146,7 @@ div.caption.bullet_point {
 div.credit {
     font-size: 10px;
 }
+div.cten_logos img {
+    display: inline-block;
+    max-height: 75px;
+}
