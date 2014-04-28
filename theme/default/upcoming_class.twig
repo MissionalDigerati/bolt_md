@@ -103,7 +103,7 @@
   $(function() {
     UCSetupRegistrationForm("{{ record.title }} - {{ record.date_of_class|date('M d, ’y @ g:i a') }}");
     {% if record.public == 0 %}
-      UCLockOut();
+      UCLockOut('{{ md5(record.slug) }}');
     {% endif %}
   });
 </script>
