@@ -46,6 +46,7 @@ submit_an_idea:
   recipient_email: johnathan@missionaldigerati.org
   recipient_name: 'Missional Digerati'
   mail_subject: "[MD] Submit an Idea"
+  insert_into_table: form_submit_idea
   fields:
     name:
       label: 'Your Name'
@@ -77,6 +78,7 @@ contact_us:
   recipient_email: johnathan@missionaldigerati.org
   recipient_name: 'Missional Digerati'
   mail_subject: "[MD] Contact Us"
+  insert_into_table: form_contact_us
   fields:
     name:
       label: 'Your Name'
@@ -96,7 +98,7 @@ contact_us:
       type: text
       label: 'Your Skype Handle'
       placeholder: 'Your Skype handle is...'
-    idea:
+    message:
       type: textarea
       label: 'Your Message'
       placeholder: 'Your message is...'
@@ -107,8 +109,9 @@ join_volunteer:
   recipient_email: johnathan@missionaldigerati.org
   recipient_name: 'Missional Digerati'
   mail_subject: "[MD] Join/Volunteer"
+  insert_into_table: form_join_us
   fields:
-    type_of_services:
+    type_of_service:
       type: choice
       label: 'How Would You Like To Help?'
       empty_value: Please Select One
@@ -150,6 +153,7 @@ host_a_class:
   recipient_email: johnathan@missionaldigerati.org
   recipient_name: 'Missional Digerati'
   mail_subject: "[MD] Host a Class"
+  insert_into_table: form_host_class
   fields:
     curriculum:
       type: text
@@ -231,6 +235,7 @@ register_for_faith_and_tech:
   recipient_name: 'Missional Digerati'
   mail_subject: "[MD] Register for Faith & Tech Class"
   message_ok: "Thank You!  You have been registered for the class."
+  insert_into_table: form_register_faith_tech
   fields:
     class:
       type: text
@@ -292,6 +297,7 @@ register_for_digerati_101:
   recipient_name: 'Missional Digerati'
   mail_subject: "[MD] Register for Digerati 101 Class"
   message_ok: "Thank You!  You have been registered for the class."
+  insert_into_table: form_register_digerati_101
   fields:
     class:
       type: text
