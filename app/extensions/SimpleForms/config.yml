@@ -240,6 +240,8 @@ register_for_faith_and_tech:
     class:
       type: text
       label: 'Class'
+    class_id:
+      type: hidden
     name:
       label: 'Your Name'
       placeholder: 'Your name is...'
@@ -302,6 +304,8 @@ register_for_digerati_101:
     class:
       type: text
       label: 'Class'
+    class_id:
+      type: hidden
     name:
       label: 'Your Name'
       placeholder: 'Your name is...'

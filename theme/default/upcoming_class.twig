@@ -101,7 +101,7 @@
 {% endif %}
 <script type="text/javascript">
   $(function() {
-    UCSetupRegistrationForm("{{ record.title }} - {{ record.date_of_class|date('M d, ’y @ g:i a') }}");
+    UCSetupFTRegistrationForm("{{ record.title }} - {{ record.date_of_class|date('M d, ’y @ g:i a') }}", {{record.id}});
     {% if record.public == 0 %}
       UCLockOut('{{ md5(record.slug) }}');
     {% endif %}

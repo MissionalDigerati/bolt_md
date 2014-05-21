@@ -474,8 +474,9 @@ $(document).ready(function() {
  * @param String eventInputValue the value to set in the class field
  * @retun void
  */
-function UCSetupRegistrationForm(eventInputValue) {
+function UCSetupFTRegistrationForm(eventInputValue, classId) {
     $('#register_for_faith_and_tech_class, #register_for_digerati_101_class').val(eventInputValue);
+    $('#register_for_faith_and_tech_class_id, #register_for_digerati_101_class_id').val(classId);
     $('#register_for_faith_and_tech_spouse_name, #register_for_faith_and_tech_spouse_experience_computers, #register_for_faith_and_tech_spouse_experience_smart_phones').parent('div').hide();
     $('#register_for_faith_and_tech_spouse').change(function(event) {
       var val = $(this).find(':selected').val();
