@@ -78,7 +78,6 @@ pages:
             type: templateselect
             filter: '*.twig'
     taxonomy: [ chapters ]
-    sort: title
     recordsperpage: 100
 
 # The 'Kitchensink' is not particularly useful in most cases, but it does a good
@@ -147,6 +146,10 @@ kitchensink:
             values: [ A-tuin, Donatello, Rafael, Leonardo, Michelangelo, Koopa, Squirtle ]
             multiple: true
             postfix: "Select your favourite turtle(s)."
+        selectentry:
+            type: select
+            values: entries/id,title
+            postfix: "Select an entry"
     relations:
         entries:
             multiple: false

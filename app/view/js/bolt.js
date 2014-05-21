@@ -162,7 +162,6 @@ function initKeyboardShortcuts() {
         // Initialize watching for changes on "the form".
         window.setTimeout(function(){
             var $form = $('form').watchChanges();
-            console.log('watch');
         }, 1000);
 
         function confirmExit()
@@ -366,27 +365,8 @@ function bindFileUpload(key) {
             var progress = Math.round(100 * data._bitrateTimer.loaded / data.files[0].size);
             $('#progress-' + key).show().addClass('progress-striped active');
             $('#progress-' + key + ' div.bar').css('width', progress+"%");
-        })
-        .bind('fileuploadsubmit', function (e, data) {
-                var that = this,
-                fileTypes = $('#field-' + key).attr('accept');
+        });
 
-                if( typeof fileTypes !== 'undefined' ) {
-                    var pattern = new RegExp( "(\.|\/)(" + fileTypes + ")$", "gi" );
-                    $.each( data.files , function (index, file) {
-                        if( !pattern.test(file.type) ) {
-                            var message = "Oops! There was an error uploading the file. Make sure that the file type is correct."
-                            + "\n\n(accept type was: "
-                            + fileTypes + ")";
-
-                            alert(message);
-                            e.preventDefault();
-                            return false;
-                        }
-                    });
-                }
-        })
-        ;
 }
 
 
@@ -493,7 +473,6 @@ function bindVideoEmbedAjax(key) {
 
 
     $.getJSON(url, function(data) {
-        console.log(data);
         if (data.html) {
             $('#video-'+key+'-html').val(data.html);
             $('#video-'+key+'-width').val(data.width);
@@ -588,7 +567,6 @@ function updateGeoCoords(key) {
         geocoder.geocode({ 'latLng': latlng }, function(results, status) {
             $('#' + key + '-reversegeo').html(results[0].formatted_address);
             $('#' + key + '-formatted_address').val(results[0].formatted_address);
-            // console.log(results);
         });
 
     }
@@ -672,15 +650,8 @@ var Stack = Backbone.Model.extend({
     defaults: {
     },
 
-    /**
-     * If we have a 'stackholder' on the page, bind the uploader and file-selector.
-     */
     initialize: function() {
-
-        if ($('#stackholder').is('*')) {
-            this.bindEvents();
-        }
-
+        this.bindEvents();
     },
 
     bindEvents: function() {
@@ -709,7 +680,7 @@ var Stack = Backbone.Model.extend({
             type = "other";
         }
 
-        // We don't need 'files/' in the path. Accept intput with or without it, but strip
+        // We don't need 'files/' in the path. Accept input with or without it, but strip
         // it out here..
         filename = filename.replace(/files\//ig, '');
 
@@ -756,7 +727,6 @@ var Stack = Backbone.Model.extend({
 
         // For "normal" file and image fields..
         if ($('#field-' + key).is('*')) {
-            console.log('is!');
             $('#field-' + key).val(filename);
         }
 
@@ -1131,3 +1101,4 @@ function openVideo(url) {
     $('body').append(modal);
 
 }
+
