@@ -5,78 +5,6 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Escaper;
 
 /**
- * Recursively creates chmodded directories. Returns true on success,
- * and false on failure.
- *
- * NB! Directories are created with permission 777 - worldwriteable -
- * unless you have set 'chmod_dir' to 0XYZ in the advanced config.
- *
- * @param string $name
- * @return boolean
- */
-function makeDir($name)
-{
-    // if it exists, just return.
-    if (file_exists($name)) {
-        return true;
-    }
-
-    // If more than one level, try parent first..
-    // If creating parent fails, we can abort immediately.
-    if (dirname($name) != ".") {
-        $success = makeDir(dirname($name));
-        if (!$success) {
-            return false;
-        }
-    }
-
-    $mode_dec = octdec('0777');
-
-    $oldumask = umask(0);
-    $success = @mkdir($name, $mode_dec);
-    @chmod($name, $mode_dec);
-    umask($oldumask);
-
-    return $success;
-}
-
-/**
- * Generate a CSRF-like token, to use in GET requests for stuff that ought to be POST-ed forms.
- *
- * @return string $token
- */
-function getToken()
-{
-    $seed = $_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . $_COOKIE['bolt_session'];
-    $token = substr(md5($seed), 0, 8);
-
-    return $token;
-}
-
-/**
- * Check if a given token matches the current (correct) CSRF-like token
- *
- * @param string $token
- * @return bool
- */
-function checkToken($token = "")
-{
-    global $app;
-
-    if (empty($token)) {
-        $token = $app['request']->get('token');
-    }
-
-    if ($token === getToken()) {
-        return true;
-    } else {
-        $app['session']->getFlashBag()->set('error', "The security token was incorrect. Please try again.");
-
-        return false;
-    }
-}
-
-/**
  * Clean posted data. Convert tabs to spaces (primarily for yaml) and
  * stripslashes when magic quotes are turned on.
  *
@@ -680,12 +608,12 @@ function hackislyParseRegexTemplates($obj)
 {
     $str = print_r($obj, true);
 
-    preg_match_all('/(\/[a-z0-9_\/-]+\.twig)/i', $str, $matches);
+    preg_match_all('| => (.+\.twig)|i', $str, $matches);
 
     $templates = array();
 
     foreach ($matches[1] as $match) {
-        $templates[] = basename(dirname($match)) . "/" . basename($match);
+        $templates[] = str_replace(BOLT_PROJECT_ROOT_DIR . DIRECTORY_SEPARATOR, '', $match);
     }
 
     return $templates;
@@ -1238,12 +1166,20 @@ function str_replace_first($search, $replace, $subject)
  * @return array
  * @author Daniel <daniel (at) danielsmedegaardbuus (dot) dk>
  * @author Gabriel Sobrinho <gabriel (dot) sobrinho (at) gmail (dot) com>
+ * @author Bob for bolt-specific excludes
  */
 function array_merge_recursive_distinct (array &$array1, array &$array2)
 {
     $merged = $array1;
 
     foreach ($array2 as $key => &$value) {
+
+        // if $key = 'accept_file_types, don't merge..
+        if ($key == 'accept_file_types') {
+            $merged[$key] = $array2[$key];
+            continue;
+        }
+
         if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
             $merged[$key] = array_merge_recursive_distinct($merged [$key], $value);
         } else {

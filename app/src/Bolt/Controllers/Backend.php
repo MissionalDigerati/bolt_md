@@ -425,7 +425,7 @@ class Backend implements ControllerProviderInterface
 
         $contenttype = $app['storage']->getContentType($contenttypeslug);
 
-        $order = $app['request']->query->get('order', '');
+        $order = $app['request']->query->get('order', $contenttype['sort']);
         $page = $app['request']->query->get('page');
         $filter = $app['request']->query->get('filter');
 
@@ -605,7 +605,7 @@ class Backend implements ControllerProviderInterface
         $contenttype = $app['storage']->getContentType($contenttypeslug);
 
         if ($request->getMethod() == "POST") {
-            if (!checkToken()) {
+            if (!$app['users']->checkAntiCSRFToken()) {
                 $app->abort(400, __("Something went wrong"));
             }
             if (!empty($id)) {
@@ -729,7 +729,7 @@ class Backend implements ControllerProviderInterface
             $content->setValue('slug', "");
             $content->setValue('datecreated', "");
             $content->setValue('datepublish', "");
-            $content->setValue('datedepublish', "1900-01-01 00:00:00");
+            $content->setValue('datedepublish', "1900-01-01 00:00:00"); // Not all DB-engines can handle a date like '0000-00-00'
             $content->setValue('datechanged', "");
             $content->setValue('username', "");
             $content->setValue('ownerid', "");
@@ -767,7 +767,7 @@ class Backend implements ControllerProviderInterface
 
         if (!$app['users']->isAllowed("contenttype:{$contenttype['slug']}:delete:$id")) {
             $app['session']->getFlashBag()->set('error', __("Permission denied", array()));
-        } elseif (checkToken() && $app['storage']->deleteContent($contenttype['slug'], $id)) {
+        } elseif ($app['users']->checkAntiCSRFToken() && $app['storage']->deleteContent($contenttype['slug'], $id)) {
             $app['session']->getFlashBag()->set('info', __("Content '%title%' has been deleted.", array('%title%' => $title)));
         } else {
             $app['session']->getFlashBag()->set('info', __("Content '%title%' could not be deleted.", array('%title%' => $title)));
@@ -1029,7 +1029,7 @@ class Backend implements ControllerProviderInterface
      */
     public function useraction(Silex\Application $app, $action, $id)
     {
-        if (!checkToken()) {
+        if (!$app['users']->checkAntiCSRFToken()) {
             $app['session']->getFlashBag()->set('info', __("An error occurred."));
             return redirect('users');
         }
@@ -1064,7 +1064,7 @@ class Backend implements ControllerProviderInterface
 
             case "delete":
 
-                if (checkToken() && $app['users']->deleteUser($id)) {
+                if ($app['users']->checkAntiCSRFToken() && $app['users']->deleteUser($id)) {
                     $app['log']->add("Deleted user '" . $user['displayname'] . "'.", 3, '', 'user');
                     $app['session']->getFlashBag()->set('info', __("User '%s' is deleted.", array('%s' => $user['displayname'])));
                 } else {
@@ -1131,25 +1131,31 @@ class Backend implements ControllerProviderInterface
                 $form->bind($request);
                 if ($form->isValid()) {
                     $files = $request->files->get($form->getName());
-                    // clean up and validate filename
-                    $originalFilename = $files['FileUpload']->getClientOriginalName();
-                    $filename = preg_replace('/[^a-zA-Z0-9_\\.]/', '_', basename($originalFilename));
-                    if ($app['filepermissions']->allowedUpload($filename)) {
-                        $files['FileUpload']->move($currentfolder, $filename);
-                        $app['session']->getFlashBag()->set('info', __("File '%file%' was uploaded successfully.", array('%file%' => $filename)));
 
-                        // Add the file to our stack..
-                        $app['stack']->add($path . "/" . $filename);
-                    }
-                    else {
-                        $extensionList = array();
-                        foreach ($app['filepermissions']->getAllowedUploadExtensions() as $extension) {
-                            $extensionList[] = '<code>.' . htmlspecialchars($extension, ENT_QUOTES) . '</code>';
+                    // Check if we even have an uploaded file.
+                    if (isset($files['FileUpload'])) {
+
+                        // clean up and validate filename
+                        $originalFilename = $files['FileUpload']->getClientOriginalName();
+                        $filename = preg_replace('/[^a-zA-Z0-9_\\.]/', '_', basename($originalFilename));
+
+                        if ($app['filepermissions']->allowedUpload($filename)) {
+                            $files['FileUpload']->move($currentfolder, $filename);
+                            $app['session']->getFlashBag()->set('info', __("File '%file%' was uploaded successfully.", array('%file%' => $filename)));
+
+                            // Add the file to our stack..
+                            $app['stack']->add($path . "/" . $filename);
+                        } else {
+                            $extensionList = array();
+                            foreach ($app['filepermissions']->getAllowedUploadExtensions() as $extension) {
+                                $extensionList[] = '<code>.' . htmlspecialchars($extension, ENT_QUOTES) . '</code>';
+                            }
+                            $extensionList = implode(' ', $extensionList);
+                            $app['session']->getFlashBag()->set('error',
+                                __("File '%file%' could not be uploaded (wrong/disallowed file type). Make sure the file extension is one of the following: ", array('%file%' => $filename))
+                                . $extensionList);
                         }
-                        $extensionList = implode(' ', $extensionList);
-                        $app['session']->getFlashBag()->set('error',
-                            __("File '%file%' could not be uploaded (wrong/disallowed file type). Make sure the file extension is one of the following: ", array('%file%' => $filename))
-                            . $extensionList);
+                        
                     }
                 } else {
                     $app['session']->getFlashBag()->set('error', __("File '%file%' could not be uploaded.", array('%file%' => $filename)));

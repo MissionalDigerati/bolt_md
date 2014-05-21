@@ -45,8 +45,13 @@ class Maid {
 		}
 		else {
 			$this->tagNameWhitelist = array(
-					'html', 'head', 'body', 'section',
-					'div', 'p', 'strong', 'em', 'i', 'b', 'li', 'ul', 'ol', 'menu', 'blockquote', 'pre', 'code', 'tt',
+					// Document structure
+					'html', 'head', 'body', 'section', 'footer',
+					'div', 'p', 'strong', 'em',
+					'i', 'b', 'u', 's', 'sup', 'sub',
+					'li', 'ul', 'ol', 'menu',
+					'blockquote', 'pre', 'code', 'tt',
+					'hr', 'br',
 					'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
 					'dd', 'dl', 'dh',
 					'table', 'tbody', 'thead', 'tfoot', 'th', 'td', 'tr');

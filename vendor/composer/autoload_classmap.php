@@ -11,4 +11,7 @@ return array(
     'Locale' => $vendorDir . '/symfony/intl/Symfony/Component/Intl/Resources/stubs/Locale.php',
     'NumberFormatter' => $vendorDir . '/symfony/intl/Symfony/Component/Intl/Resources/stubs/NumberFormatter.php',
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Symfony/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php',
+    'Whoops\\Module' => $vendorDir . '/filp/whoops/src/deprecated/Zend/Module.php',
+    'Whoops\\Provider\\Zend\\ExceptionStrategy' => $vendorDir . '/filp/whoops/src/deprecated/Zend/ExceptionStrategy.php',
+    'Whoops\\Provider\\Zend\\RouteNotFoundStrategy' => $vendorDir . '/filp/whoops/src/deprecated/Zend/RouteNotFoundStrategy.php',
 );
