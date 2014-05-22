@@ -19,7 +19,7 @@
                 <th data-sort="string" class="sortable">{{ __('Phone') }}</th>
                 <th data-sort="string" class="sortable">{{ __('Programming Experience') }}</th>
                 <th>{{ __('Languages') }}</th>
-                <th>{{ __('Date Registered') }}</th>
+                <th data-sort="datetime" class="sortable">{{ __('Date Registered') }}</th>
                 <th>{{ __('Actions') }}</th>
             </tr>
         </thead>
@@ -35,7 +35,7 @@
                         <td>{{student.phone}}</td>
                         <td>{{student.experience_programming}}</td>
                         <td>{{student.programming_languages}}</td>
-                        <td>{{student.timestamp|date("M d, ’y @ g:i a")}}</td>
+                        <td>{{student.timestamp|date("M d, Y @ g:i a")}}</td>
                         <td></td>
                     </tr>
                     

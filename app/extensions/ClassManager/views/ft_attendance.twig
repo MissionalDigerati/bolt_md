@@ -18,7 +18,7 @@
                 <th data-sort="string" class="sortable">{{ __('Phone') }}</th>
                 <th data-sort="string" class="sortable">{{ __('Computer Experience') }}</th>
                 <th data-sort="string" class="sortable">{{ __('Smart Device Experience') }}</th>
-                <th>{{ __('Date Registered') }}</th>
+                <th data-sort="datetime" class="sortable">{{ __('Date Registered') }}</th>
                 <th>{{ __('Actions') }}</th>
             </tr>
         </thead>
@@ -33,7 +33,7 @@
                         <td>{{student.phone}}</td>
                         <td>{{student.experience_computers}}</td>
                         <td>{{student.experience_smart_phones}}</td>
-                        <td>{{student.timestamp|date("M d, ’y @ g:i a")}}</td>
+                        <td>{{student.timestamp|date("M d, Y @ g:i a")}}</td>
                         <td></td>
                     </tr>
 
@@ -44,7 +44,7 @@
                             <td>{{student.phone}}</td>
                             <td>{{student.spouse_experience_computers}}</td>
                             <td>{{student.spouse_experience_smart_phones}}</td>
-                            <td>{{student.timestamp|date("M d, ’y @ g:i a")}}</td>
+                            <td>{{student.timestamp|date("M d, Y @ g:i a")}}</td>
                             <td></td>
                         </tr>
                     {% endif %}
