@@ -21,6 +21,13 @@ class Extension extends \Bolt\BaseExtension
      * @access private
      **/
     private $brandingPath;
+    /**
+     * The path to the roster page
+     *
+     * @var string
+     * @access private
+     **/
+    private $rosterPath;
 
     /**
      * Setup information about the extension
@@ -89,8 +96,8 @@ class Extension extends \Bolt\BaseExtension
         /**
          * Add the clickable links for this page
          */
-        $attendancePath = $this->path = $this->brandingPath . '/extensions/class-manager/attendance/';
-        $this->app->match($attendancePath . "{class_slug}/{id}", array($this, 'classManagerLoadAttendance'));
+        $this->rosterPath = $this->path = $this->brandingPath . '/extensions/class-manager/roster/';
+        $this->app->match($this->rosterPath . "{class_slug}/{id}", array($this, 'classManagerLoadRoster'));
         /**
          * Add ClassManager template namespace to twig
          */
@@ -108,15 +115,10 @@ class Extension extends \Bolt\BaseExtension
     {
         $classes = $this->app['storage']->getContent('upcoming_classes', array('order' => 'date_of_class DESC'));
 
-        /**
-         * Add the clickable links for this page
-         */
-        $attendancePath = $this->path = $this->brandingPath . '/extensions/class-manager/attendance/';
-
         $body = $this->app['render']->render('@ClassManager/base.twig',
             array(
                 'classes'           =>  $classes,
-                'attendance_path'   =>  $attendancePath
+                'roster_path'   =>  $this->rosterPath
             )
         );
 
@@ -124,28 +126,28 @@ class Extension extends \Bolt\BaseExtension
     }
 
     /**
-     * Load the Attendance Page for the class
+     * Load the Roster Page for the class
      *
      * @param integer $id the id of the class to retrieve attendance for
      * @return Response \Symfony\Component\HttpFoundation\JsonResponse
      * @access private
      * @author Johnathan Pulos
      **/
-    public function classManagerLoadAttendance($class_slug = '', $id = null)
+    public function classManagerLoadRoster($class_slug = '', $id = null)
     {
         $id = (int) $id;
         switch ($class_slug) {
             case 'faith_and_tech':
                 $table = 'form_register_faith_tech';
-                $view = 'ft_attendance.twig';
+                $view = 'roster_faith_tech.twig';
                 break;
             case 'digerati_101':
                 $table = 'form_register_digerati_101';
-                $view = 'digerati_attendance.twig';
+                $view = 'roster_digerati.twig';
                 break;
             default:
                 $table = 'form_register_faith_tech';
-                $view = 'ft_attendance.twig';
+                $view = 'roster_faith_tech.twig';
                 break;
         }
         $sql = "Select * FROM $table WHERE class_id = ? ORDER BY name ASC";
