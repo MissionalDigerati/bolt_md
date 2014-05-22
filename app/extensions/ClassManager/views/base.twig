@@ -1,0 +1,56 @@
+{% include '_header.twig' %}
+
+<div class="row-fluid">
+    <h1><strong>{{ __('Class Manager') }}</strong></h1>
+    <table class='dashboardlisting' style="width: 100%;">
+        <tr>
+            <th>{{ __('Date') }}</th>
+            <th>{{ __('Title') }}</th>
+            <th>{{ __('Training') }}</th>
+            <th>{{ __('Curriculum') }}</th>
+            <th>{{ __('Actions') }}</th>
+        </tr>
+    {% if classes is defined and classes is not empty %}
+
+        {% for class in classes %}
+            {% set type_of_training = class.related('curriculum') %}
+
+            <tr>
+                <td>
+                    {{ class.date_of_class|date("M d, ’y @ g:i a") }}
+                </td>
+                <td>
+                    {{ class.title }}
+                </td>
+                <td>
+                    {% for training_type in type_of_training[0].taxonomy.training_types %}
+                      {{training_type}}
+                    {% endfor %}
+                </td>
+                <td>
+                    {{ type_of_training[0].title }}
+                </td>
+                <td class='actions'>
+                    <div class="btn-group">
+                        <a class="btn btn-mini" href="">
+                            <i class="icon-user"></i> {{ __('Attendance') }}
+                        </a>
+                        <a class="btn btn-mini">
+                            <i class="icon-file"></i> {{ __('Flyer') }}
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            
+        {% endfor %}
+
+    {% else %}
+
+        <tr>
+            <td colspan="3">Sorry, no classes currently.</td>
+        </tr>
+
+    {% endif %}
+    </table>
+</div>
+{% include '_footer.twig' %}
