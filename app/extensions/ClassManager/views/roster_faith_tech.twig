@@ -1,24 +1,36 @@
 {% include '_header.twig' %}
 
 <div class="row-fluid">
-    <h1><strong>{{ __('Attendance') }}</strong></h1>
+    {% if is_sign_in %}
+        <h1><strong>{{ __('Sign In') }}</strong></h1>
+    {% else %}
+        <h1><strong>{{ __('Roster') }}</strong></h1>
+    {% endif %}
     <h2>{{ class_record.title }} (<em>{{class_record.date_of_class|date("M d, ’y @ g:i a")}}</em>)</h2>
     {% set type_of_training = class_record.related('curriculum') %}
-    <p><strong>Training</strong>:&nbsp;
+    <p><strong>{{ __('Training') }}</strong>:&nbsp;
         {% for training_type in type_of_training[0].taxonomy.training_types %}
             {{training_type}}
         {% endfor %}
     </p>
-    <p><strong>Curriculum</strong>:&nbsp;{{ type_of_training[0].title }}</p>
+    <p><strong>{{ __('Curriculum') }}</strong>:&nbsp;{{ type_of_training[0].title }}</p>
+    {% if is_sign_in %}
+        <br>
+        <p><em>{{ __('Please check your information, and make any corrections.  Then initial in the right hand box.') }}</em></p>
+    {% endif %}
     <table class='dashboardlisting' style="width: 100%;">
         <thead>
             <tr>
                 <th data-sort="string" class="sortable sort_on_load">{{ __('Name') }}</th>
                 <th data-sort="string" class="sortable">{{ __('Email') }}</th>
-                <th data-sort="string" class="sortable">{{ __('Phone') }}</th>
-                <th data-sort="string" class="sortable">{{ __('Computer Experience') }}</th>
-                <th data-sort="string" class="sortable">{{ __('Smart Device Experience') }}</th>
-                <th data-sort="datetime" class="sortable">{{ __('Date Registered') }}</th>
+                {% if is_sign_in %}
+                    <th>{{ __('Initials') }}</th>
+                {% else %}
+                    <th data-sort="string" class="sortable">{{ __('Phone') }}</th>
+                    <th data-sort="string" class="sortable">{{ __('Computer Experience') }}</th>
+                    <th data-sort="string" class="sortable">{{ __('Smart Device Experience') }}</th>
+                    <th data-sort="datetime" class="sortable">{{ __('Date Registered') }}</th>
+                {% endif %}
                 <th>{{ __('Actions') }}</th>
             </tr>
         </thead>
@@ -30,10 +42,14 @@
                     <tr>
                         <td>{{student.name}}</td>
                         <td>{{student.email}}</td>
-                        <td>{{student.phone}}</td>
-                        <td>{{student.experience_computers}}</td>
-                        <td>{{student.experience_smart_phones}}</td>
-                        <td>{{student.timestamp|date("M d, Y @ g:i a")}}</td>
+                        {% if is_sign_in %}
+                            <td></td>
+                        {% else %}
+                            <td>{{student.phone}}</td>
+                            <td>{{student.experience_computers}}</td>
+                            <td>{{student.experience_smart_phones}}</td>
+                            <td>{{student.timestamp|date("M d, Y @ g:i a")}}</td>
+                        {% endif %}
                         <td></td>
                     </tr>
 
@@ -41,10 +57,14 @@
                         <tr>
                             <td>{{student.spouse_name}}</td>
                             <td>{{student.email}}</td>
-                            <td>{{student.phone}}</td>
-                            <td>{{student.spouse_experience_computers}}</td>
-                            <td>{{student.spouse_experience_smart_phones}}</td>
-                            <td>{{student.timestamp|date("M d, Y @ g:i a")}}</td>
+                            {% if is_sign_in %}
+                                <td></td>
+                            {% else %}
+                                <td>{{student.phone}}</td>
+                                <td>{{student.spouse_experience_computers}}</td>
+                                <td>{{student.spouse_experience_smart_phones}}</td>
+                                <td>{{student.timestamp|date("M d, Y @ g:i a")}}</td>
+                            {% endif %}
                             <td></td>
                         </tr>
                     {% endif %}
@@ -54,7 +74,9 @@
             {% else %}
 
                 <tr>
-                    <td colspan="3">Sorry, no students enrolled currently.</td>
+                    <td colspan="{% if is_sign_in %}4{% else %}7{% endif %}">
+                        {{ __('Sorry, no students enrolled currently.') }}
+                    </td>
                 </tr>
 
             {% endif %}

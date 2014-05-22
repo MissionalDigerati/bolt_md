@@ -2,21 +2,21 @@
 
 <div class="row-fluid">
     {% if is_sign_in %}
-        <h1><strong>{{ __('Sign in') }}</strong></h1>
+        <h1><strong>{{ __('Sign In') }}</strong></h1>
     {% else %}
         <h1><strong>{{ __('Roster') }}</strong></h1>
     {% endif %}
     <h2>{{ class_record.title }} (<em>{{class_record.date_of_class|date("M d, ’y @ g:i a")}}</em>)</h2>
     {% set type_of_training = class_record.related('curriculum') %}
-    <p><strong>Training</strong>:&nbsp;
+    <p><strong>{{ __('Training') }}</strong>:&nbsp;
         {% for training_type in type_of_training[0].taxonomy.training_types %}
             {{training_type}}
         {% endfor %}
     </p>
-    <p><strong>Curriculum</strong>:&nbsp;{{ type_of_training[0].title }}</p>
+    <p><strong>{{ __('Curriculum') }}</strong>:&nbsp;{{ type_of_training[0].title }}</p>
     {% if is_sign_in %}
         <br>
-        <p><em>Please check your name and email, and make any corrections.  Then initial in the right hand box.</em></p>
+        <p><em>{{ __('Please check your information, and make any corrections.  Then initial in the right hand box.') }}</em></p>
     {% endif %}
     <table class='dashboardlisting' style="width: 100%;">
         <thead>
@@ -60,7 +60,9 @@
             {% else %}
 
                 <tr>
-                    <td colspan="{% if is_sign_in %}5{% else %}8{% endif %}">Sorry, no students enrolled currently.</td>
+                    <td colspan="{% if is_sign_in %}5{% else %}8{% endif %}">
+                        {{ __('Sorry, no students enrolled currently.') }}
+                    </td>
                 </tr>
 
             {% endif %}
