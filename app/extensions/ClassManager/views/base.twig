@@ -8,6 +8,7 @@
             <th>{{ __('Title') }}</th>
             <th>{{ __('Training') }}</th>
             <th>{{ __('Curriculum') }}</th>
+            <th>{{ __('Access Key') }}</th>
             <th>{{ __('Actions') }}</th>
         </tr>
     {% if classes is defined and classes is not empty %}
@@ -23,20 +24,33 @@
                     {{ class.title }}
                 </td>
                 <td>
+                    {% set training_type_slug = '' %}
                     {% for training_type in type_of_training[0].taxonomy.training_types %}
-                      {{training_type}}
+                        {% if training_type|lower == 'faith & tech' %}
+                            {% set training_type_slug = 'faith_and_tech' %}
+                        {% else %}
+                            {% set training_type_slug = 'digerati_101' %}
+                        {% endif %}
+                        {{training_type}}
                     {% endfor %}
                 </td>
                 <td>
                     {{ type_of_training[0].title }}
                 </td>
+                <td>
+                    {% if class.public == 1 %}
+                        Public
+                    {% else %}
+                        {{ class.access_key }}
+                    {% endif %}
+                </td>
                 <td class='actions'>
                     <div class="btn-group">
-                        <a class="btn btn-mini" href="">
+                        <a class="btn btn-mini" href="{{attendance_path}}{{training_type_slug}}/{{ class.id }}">
                             <i class="icon-user"></i> {{ __('Attendance') }}
                         </a>
-                        <a class="btn btn-mini">
-                            <i class="icon-file"></i> {{ __('Flyer') }}
+                        <a class="btn btn-mini" href="/upcoming-class/{{ class.slug }}" target="_blank">
+                            <i class="icon-file"></i> {{ __('Class Page') }}
                         </a>
                     </div>
                 </td>

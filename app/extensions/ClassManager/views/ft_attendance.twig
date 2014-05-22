@@ -1,0 +1,52 @@
+{% include '_header.twig' %}
+
+<div class="row-fluid">
+    <h1><strong>{{ __('Attendance') }}</strong></h1>
+    <table class='dashboardlisting' style="width: 100%;">
+        <tr>
+            <th>{{ __('Name') }}</th>
+            <th>{{ __('Email') }}</th>
+            <th>{{ __('Phone') }}</th>
+            <th>{{ __('Computer Experience') }}</th>
+            <th>{{ __('Smart Device Experience') }}</th>
+            <th>{{ __('Date Registered') }}</th>
+            <th>{{ __('Actions') }}</th>
+        </tr>
+    {% if students is defined and students is not empty %}
+
+        {% for student in students %}
+
+            <tr>
+                <td>{{student.name}}</td>
+                <td>{{student.email}}</td>
+                <td>{{student.phone}}</td>
+                <td>{{student.experience_computers}}</td>
+                <td>{{student.experience_smart_phones}}</td>
+                <td>{{student.timestamp|date("M d, ’y @ g:i a")}}</td>
+                <td></td>
+            </tr>
+
+            {% if student.spouse|lower == 'yes' %}
+                <tr>
+                    <td>{{student.spouse_name}} [Spouse]</td>
+                    <td>{{student.email}}</td>
+                    <td>{{student.phone}}</td>
+                    <td>{{student.spouse_experience_computers}}</td>
+                    <td>{{student.spouse_experience_smart_phones}}</td>
+                    <td>{{student.timestamp|date("M d, ’y @ g:i a")}}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+            
+        {% endfor %}
+
+    {% else %}
+
+        <tr>
+            <td colspan="3">Sorry, no students enrolled currently.</td>
+        </tr>
+
+    {% endif %}
+    </table>
+</div>
+{% include '_footer.twig' %}

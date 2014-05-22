@@ -15,6 +15,14 @@ use Symfony\Component\HttpFoundation\Response;
 class Extension extends \Bolt\BaseExtension
 {
     /**
+     * The prefix path for all urls based on the branding url
+     *
+     * @var string
+     * @access private
+     **/
+    private $brandingPath;
+
+    /**
      * Setup information about the extension
      *
      * @return array
@@ -48,6 +56,7 @@ class Extension extends \Bolt\BaseExtension
     public function initialize()
     {
         $this->config = $this->getConfig();
+        $this->brandingPath = $this->app['config']->get('general/branding/path');
 
         /**
          * ensure proper config
@@ -70,35 +79,104 @@ class Extension extends \Bolt\BaseExtension
         }
 
         if ($this->authorized) {
-            $this->path = $this->app['config']->get('general/branding/path') . '/extensions/class-manager';
+            /**
+             * Add the button in the extensions navigation
+             */
+            $this->path = $this->brandingPath . '/extensions/class-manager';
             $this->app->match($this->path, array($this, 'classManagerLoad'));
             $this->addMenuOption(__('Manage Classes'), $this->app['paths']['bolt'] . 'extensions/class-manager', "icon-group");
         }
+        /**
+         * Add the clickable links for this page
+         */
+        $attendancePath = $this->path = $this->brandingPath . '/extensions/class-manager/attendance/';
+        $this->app->match($attendancePath . "{class_slug}/{id}", array($this, 'classManagerLoadAttendance'));
+        /**
+         * Add ClassManager template namespace to twig
+         */
+        $this->app['twig.loader.filesystem']->addPath(__DIR__.'/views/', 'ClassManager');
     }
 
     /**
      * Load the ClassManager Response
      *
-     * @return Response|\Symfony\Component\HttpFoundation\JsonResponse
+     * @return Response \Symfony\Component\HttpFoundation\JsonResponse
      * @access public
      * @author Johnathan Pulos
      **/
     public function classManagerLoad()
     {
-        /**
-         * Add ClassManager template namespace to twig
-         */
-        $this->app['twig.loader.filesystem']->addPath(__DIR__.'/views/', 'ClassManager');
-
         $classes = $this->app['storage']->getContent('upcoming_classes', array('order' => 'date_of_class DESC'));
+
+        /**
+         * Add the clickable links for this page
+         */
+        $attendancePath = $this->path = $this->brandingPath . '/extensions/class-manager/attendance/';
 
         $body = $this->app['render']->render('@ClassManager/base.twig',
             array(
-                'classes'   =>  $classes
+                'classes'           =>  $classes,
+                'attendance_path'   =>  $attendancePath
             )
         );
 
         return new Response($body);
+    }
+
+    /**
+     * Load the Attendance Page for the class
+     *
+     * @param integer $id the id of the class to retrieve attendance for
+     * @return Response \Symfony\Component\HttpFoundation\JsonResponse
+     * @access private
+     * @author Johnathan Pulos
+     **/
+    public function classManagerLoadAttendance($class_slug = '', $id = null)
+    {
+        switch ($class_slug) {
+            case 'faith_and_tech':
+                $table = 'form_register_faith_tech';
+                $view = 'ft_attendance.twig';
+                break;
+            case 'digerati_101':
+                $table = 'form_register_digerati_101';
+                $view = 'digerati_attendance.twig';
+                break;
+            default:
+                $table = 'form_register_faith_tech';
+                $view = 'ft_attendance.twig';
+                break;
+        }
+        $sql = "Select * FROM $table WHERE class_id = ? ORDER BY timestamp DESC";
+        $students = $this->app['db']->fetchAll($sql, array((int) $id));
+
+        foreach ($students as $key => $value) {
+            $students[$key]['phone'] = $this->formatPhoneNumber($students[$key]['phone']);
+        }
+        
+        $body = $this->app['render']->render("@ClassManager/$view",
+            array(
+                'students'  =>  $students
+            )
+        );
+
+        return new Response($body);
+    }
+
+    /**
+     * Formats a phone number for better display.
+     *
+     * @link http://stackoverflow.com/a/6604465
+     *
+     * @param string $number The number to format.
+     * @return string The proper formatted number.
+     * @access private
+     * @author Johnathan Pulos
+     **/
+    private function formatPhoneNumber($number)
+    {
+        $cleanedNumber = preg_replace("/[^0-9]/", "", $number);
+        return preg_replace('~.*(\d{3})[^\d]*(\d{3})[^\d]*(\d{4}).*~', '($1) $2-$3', $cleanedNumber);
     }
 
 }
