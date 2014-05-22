@@ -95,6 +95,8 @@ class Extension extends \Bolt\BaseExtension
          */
         $this->extensionPaths['roster'] = $this->extensionPaths['branding'] . '/extensions/class-manager/roster/';
         $this->app->match($this->extensionPaths['roster'] . "{class_slug}/{id}", array($this, 'classManagerLoadRoster'));
+        $this->extensionPaths['sign_in'] = $this->extensionPaths['branding'] . '/extensions/class-manager/sign_in_sheet/';
+        $this->app->match($this->extensionPaths['sign_in'] . "{class_slug}/{id}", array($this, 'classManagerLoadSignInSheet'));
         /**
          * Add ClassManager template namespace to twig
          */
@@ -115,7 +117,8 @@ class Extension extends \Bolt\BaseExtension
         $body = $this->app['render']->render('@ClassManager/base.twig',
             array(
                 'classes'       =>  $classes,
-                'roster_path'   =>  $this->extensionPaths['roster']
+                'roster_path'   =>  $this->extensionPaths['roster'],
+                'sign_in_path'  =>  $this->extensionPaths['sign_in']
             )
         );
 
@@ -125,7 +128,7 @@ class Extension extends \Bolt\BaseExtension
     /**
      * Load the Roster Page for the class
      *
-     * @param integer $id the id of the class to retrieve attendance for
+     * @param integer $id the id of the class to retrieve
      * @return Response \Symfony\Component\HttpFoundation\JsonResponse
      * @access private
      * @author Johnathan Pulos
@@ -133,20 +136,9 @@ class Extension extends \Bolt\BaseExtension
     public function classManagerLoadRoster($class_slug = '', $id = null)
     {
         $id = (int) $id;
-        switch ($class_slug) {
-            case 'faith_and_tech':
-                $table = 'form_register_faith_tech';
-                $view = 'roster_faith_tech.twig';
-                break;
-            case 'digerati_101':
-                $table = 'form_register_digerati_101';
-                $view = 'roster_digerati.twig';
-                break;
-            default:
-                $table = 'form_register_faith_tech';
-                $view = 'roster_faith_tech.twig';
-                break;
-        }
+        $view = $this->getViewTemplate($class_slug);
+        $table = $this->getClassTable($class_slug);
+
         $sql = "Select * FROM $table WHERE class_id = ? ORDER BY name ASC";
         $students = $this->app['db']->fetchAll($sql, array($id));
 
@@ -159,7 +151,42 @@ class Extension extends \Bolt\BaseExtension
         $body = $this->app['render']->render("@ClassManager/$view",
             array(
                 'students'      =>  $students,
-                'class_record'  =>  $classRecord
+                'class_record'  =>  $classRecord,
+                'is_sign_in'    =>  false
+            )
+        );
+
+        return new Response($this->injectAssets($body));
+    }
+
+    /**
+     * Load the Sign In Sheet
+     *
+     * @param integer $id the id of the class to retrieve
+     * @return Response \Symfony\Component\HttpFoundation\JsonResponse
+     * @access private
+     * @author Johnathan Pulos
+     **/
+    public function classManagerLoadSignInSheet($class_slug = '', $id = null)
+    {
+        $id = (int) $id;
+        $view = $this->getViewTemplate($class_slug);
+        $table = $this->getClassTable($class_slug);
+        
+        $sql = "Select * FROM $table WHERE class_id = ? ORDER BY name ASC";
+        $students = $this->app['db']->fetchAll($sql, array($id));
+
+        foreach ($students as $key => $value) {
+            $students[$key]['phone'] = $this->formatPhoneNumber($students[$key]['phone']);
+        }
+
+        $classRecord = $this->app['storage']->getContent('upcoming_classes', array('id' => $id, 'returnsingle' => true));
+
+        $body = $this->app['render']->render("@ClassManager/$view",
+            array(
+                'students'      =>  $students,
+                'class_record'  =>  $classRecord,
+                'is_sign_in'    =>  true
             )
         );
 
@@ -204,6 +231,31 @@ class Extension extends \Bolt\BaseExtension
         preg_match("~^([ \t]*)</head~mi", $html, $matches);
         $replacement = sprintf("%s\t%s\n%s", $matches[1], $assets, $matches[0]);
         return str_replace_first($matches[0], $replacement, $html);
+    }
+
+    /**
+     * Retrieve the name of the SQL table based on the given slug
+     * 
+     * @param string $slug the slug of the training type
+     * @return string The SQL table to retrieve data from
+     * @access private
+     * @author Johnathan Pulos
+     **/
+    private function getClassTable($slug)
+    {
+        return ($slug == 'digerati_101') ? 'form_register_digerati_101' : 'form_register_faith_tech';
+    }
+    /**
+     * Retrieve the view template to use
+     * 
+     * @param string $slug the slug of the training type
+     * @return string The view template to use
+     * @access private
+     * @author Johnathan Pulos
+     **/
+    private function getViewTemplate($slug)
+    {
+        return ($slug == 'digerati_101') ? 'roster_digerati.twig' : 'roster_faith_tech.twig';
     }
 
 }

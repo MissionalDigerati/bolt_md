@@ -1,11 +1,11 @@
-{% include '_header.twig' with { 'active':'settings' } %}
+{% include '_header.twig' %}
 
 <div class="row-fluid">
     <h1><strong>{{ __('Class Manager') }}</strong></h1>
     <table class='dashboardlisting' style="width: 100%;">
         <thead>
             <tr>
-                <th data-sort="datetime" class="sortable">{{ __('Date') }}</th>
+                <th data-sort="datetime" class="sortable sort_on_load">{{ __('Date') }}</th>
                 <th data-sort="string" class="sortable">{{ __('Title') }}</th>
                 <th data-sort="string" class="sortable">{{ __('Training') }}</th>
                 <th data-sort="string" class="sortable">{{ __('Curriculum') }}</th>
