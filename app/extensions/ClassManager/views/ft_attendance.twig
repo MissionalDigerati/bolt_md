@@ -3,6 +3,13 @@
 <div class="row-fluid">
     <h1><strong>{{ __('Attendance') }}</strong></h1>
     <h2>{{ class_record.title }} (<em>{{class_record.date_of_class|date("M d, ’y @ g:i a")}}</em>)</h2>
+    {% set type_of_training = class_record.related('curriculum') %}
+    <p><strong>Training</strong>:&nbsp;
+        {% for training_type in type_of_training[0].taxonomy.training_types %}
+            {{training_type}}
+        {% endfor %}
+    </p>
+    <p><strong>Curriculum</strong>:&nbsp;{{ type_of_training[0].title }}</p>
     <table class='dashboardlisting' style="width: 100%;">
         <tr>
             <th>{{ __('Name') }}</th>
