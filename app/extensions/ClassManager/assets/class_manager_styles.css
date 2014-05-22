@@ -41,4 +41,8 @@ th.sortable:hover i {
     th.sortable {
         color: #888 !important;
     }
+
+    th i {
+        display: none !important;
+    }
 }
