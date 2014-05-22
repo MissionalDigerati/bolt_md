@@ -133,6 +133,7 @@ class Extension extends \Bolt\BaseExtension
      **/
     public function classManagerLoadAttendance($class_slug = '', $id = null)
     {
+        $id = (int) $id;
         switch ($class_slug) {
             case 'faith_and_tech':
                 $table = 'form_register_faith_tech';
@@ -148,15 +149,18 @@ class Extension extends \Bolt\BaseExtension
                 break;
         }
         $sql = "Select * FROM $table WHERE class_id = ? ORDER BY timestamp DESC";
-        $students = $this->app['db']->fetchAll($sql, array((int) $id));
+        $students = $this->app['db']->fetchAll($sql, array($id));
 
         foreach ($students as $key => $value) {
             $students[$key]['phone'] = $this->formatPhoneNumber($students[$key]['phone']);
         }
-        
+
+        $classRecord = $this->app['storage']->getContent('upcoming_classes', array('id' => $id, 'returnsingle' => true));
+
         $body = $this->app['render']->render("@ClassManager/$view",
             array(
-                'students'  =>  $students
+                'students'      =>  $students,
+                'class_record'  =>  $classRecord
             )
         );
 
