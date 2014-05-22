@@ -148,7 +148,7 @@ class Extension extends \Bolt\BaseExtension
                 $view = 'ft_attendance.twig';
                 break;
         }
-        $sql = "Select * FROM $table WHERE class_id = ? ORDER BY timestamp DESC";
+        $sql = "Select * FROM $table WHERE class_id = ? ORDER BY name ASC";
         $students = $this->app['db']->fetchAll($sql, array($id));
 
         foreach ($students as $key => $value) {
@@ -195,7 +195,9 @@ class Extension extends \Bolt\BaseExtension
     {
         $urlbase = $this->app['paths']['app'];
 
-        $assets = '<link rel="stylesheet" href="{urlbase}/extensions/ClassManager/assets/print.css">';
+        $assets = '<link rel="stylesheet" href="{urlbase}/extensions/ClassManager/assets/class_manager_styles.css">';
+        $assets .= '<script src="{urlbase}/extensions/ClassManager/assets/stupidtable.min.js"></script>';
+        $assets .= '<script src="{urlbase}/extensions/ClassManager/assets/class_manager_scripts.js"></script>';
 
         $assets = preg_replace('~\{urlbase\}~', $urlbase, $assets);
 

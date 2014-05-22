@@ -1,3 +1,16 @@
+th.sortable {
+    color: #194770;
+}
+
+th.sortable:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+th.sortable:hover i {
+    text-decoration: none;
+}
+
 @media print
 {    
     .no-print, .no-print *
@@ -23,5 +36,9 @@
     table td:last-child, table th:last-child
     {
         display: none !important;
+    }
+
+    th.sortable {
+        color: #888 !important;
     }
 }
