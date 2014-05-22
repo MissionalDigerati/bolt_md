@@ -15,19 +15,16 @@ use Symfony\Component\HttpFoundation\Response;
 class Extension extends \Bolt\BaseExtension
 {
     /**
-     * The prefix path for all urls based on the branding url
+     * Array of extension pathes
      *
-     * @var string
+     * @var array
      * @access private
      **/
-    private $brandingPath;
-    /**
-     * The path to the roster page
-     *
-     * @var string
-     * @access private
-     **/
-    private $rosterPath;
+    private $extensionPaths = array(
+        'roster'    =>  '',
+        'sign_in'   =>  '',
+        'branding'  =>  ''
+    );
 
     /**
      * Setup information about the extension
@@ -63,7 +60,7 @@ class Extension extends \Bolt\BaseExtension
     public function initialize()
     {
         $this->config = $this->getConfig();
-        $this->brandingPath = $this->app['config']->get('general/branding/path');
+        $this->extensionPaths['branding'] = $this->app['config']->get('general/branding/path');
 
         /**
          * ensure proper config
@@ -89,15 +86,15 @@ class Extension extends \Bolt\BaseExtension
             /**
              * Add the button in the extensions navigation
              */
-            $this->path = $this->brandingPath . '/extensions/class-manager';
+            $this->path = $this->extensionPaths['branding'] . '/extensions/class-manager';
             $this->app->match($this->path, array($this, 'classManagerLoad'));
             $this->addMenuOption(__('Manage Classes'), $this->app['paths']['bolt'] . 'extensions/class-manager', "icon-group");
         }
         /**
          * Add the clickable links for this page
          */
-        $this->rosterPath = $this->path = $this->brandingPath . '/extensions/class-manager/roster/';
-        $this->app->match($this->rosterPath . "{class_slug}/{id}", array($this, 'classManagerLoadRoster'));
+        $this->extensionPaths['roster'] = $this->extensionPaths['branding'] . '/extensions/class-manager/roster/';
+        $this->app->match($this->extensionPaths['roster'] . "{class_slug}/{id}", array($this, 'classManagerLoadRoster'));
         /**
          * Add ClassManager template namespace to twig
          */
@@ -117,8 +114,8 @@ class Extension extends \Bolt\BaseExtension
 
         $body = $this->app['render']->render('@ClassManager/base.twig',
             array(
-                'classes'           =>  $classes,
-                'roster_path'   =>  $this->rosterPath
+                'classes'       =>  $classes,
+                'roster_path'   =>  $this->extensionPaths['roster']
             )
         );
 
