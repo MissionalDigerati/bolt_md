@@ -120,7 +120,7 @@ class Extension extends \Bolt\BaseExtension
             )
         );
 
-        return new Response($body);
+        return new Response($this->injectAssets($body));
     }
 
     /**
@@ -164,7 +164,7 @@ class Extension extends \Bolt\BaseExtension
             )
         );
 
-        return new Response($body);
+        return new Response($this->injectAssets($body));
     }
 
     /**
@@ -181,6 +181,28 @@ class Extension extends \Bolt\BaseExtension
     {
         $cleanedNumber = preg_replace("/[^0-9]/", "", $number);
         return preg_replace('~.*(\d{3})[^\d]*(\d{3})[^\d]*(\d{4}).*~', '($1) $2-$3', $cleanedNumber);
+    }
+
+    /**
+     * Injects the assets into the head tag
+     *
+     * @param string $html the HTML to replace
+     * @return mixed
+     * @access private
+     * @author Johnathan Pulos
+     **/
+    private function injectAssets($html)
+    {
+        $urlbase = $this->app['paths']['app'];
+
+        $assets = '<link rel="stylesheet" href="{urlbase}/extensions/ClassManager/assets/print.css">';
+
+        $assets = preg_replace('~\{urlbase\}~', $urlbase, $assets);
+
+        // Insert just before </head>
+        preg_match("~^([ \t]*)</head~mi", $html, $matches);
+        $replacement = sprintf("%s\t%s\n%s", $matches[1], $assets, $matches[0]);
+        return str_replace_first($matches[0], $replacement, $html);
     }
 
 }

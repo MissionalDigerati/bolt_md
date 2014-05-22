@@ -1,0 +1,27 @@
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+
+    div.navbar, div.navbar *
+    {
+        display: none !important;
+    }
+
+    div.sf-toolbar, div.sf-toolbar *
+    {
+        display: none !important;
+    }
+
+    footer#bolt-footer, footer#bolt-footer *
+    {
+        display: none !important;
+    }
+
+    table td:last-child, table th:last-child
+    {
+        display: none !important;
+    }
+}
