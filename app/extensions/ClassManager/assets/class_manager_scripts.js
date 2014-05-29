@@ -35,4 +35,8 @@ $(function(){
         th.eq(data.column).append('<i class="' + arrow +' arrow" style="padding-left: 5px;"></i>');
     });
     $('th.sort_on_load').click();
+    $('form.delete_from_class').submit(function(event) {
+        var c = confirm($(this).attr('data-confirm'));
+        return c;
+    });
 });

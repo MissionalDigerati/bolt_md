@@ -56,7 +56,7 @@
                             <td>{{student.timestamp|date("M d, Y @ g:i a")}}</td>
                         {% endif %}
                         <td>
-                            <form action="{{remove_student_path}}{{training_type_slug}}/{{class_id}}/remove-student/{{student.id}}?redirect={% if is_sign_in %}sign_in{% else %}roster{% endif %}" name="delete_from_class" class="delete_from_class" method="POST">
+                            <form action="{{remove_student_path}}{{training_type_slug}}/{{class_id}}/remove-student/{{student.id}}?redirect={% if is_sign_in %}sign_in{% else %}roster{% endif %}" name="delete_from_class" class="delete_from_class" data-confirm="{{ __('Are you sure you want to remove this student and their spouse?') }}" method="POST">
                                 <input type="hidden" name="_method" value="DELETE">
                                 <button type="submit" class="btn btn btn-danger btn-mini">Remove</button>
                             </form>
