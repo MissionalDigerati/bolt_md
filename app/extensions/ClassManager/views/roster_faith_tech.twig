@@ -6,6 +6,11 @@
     {% else %}
         <h1><strong>{{ __('Roster') }}</strong></h1>
     {% endif %}
+    {% if delete_success == 'true' %}
+        <div class="alert alert-success">
+            The student has been successfully removed from the class.
+        </div>
+    {% endif %}
     <h2>{{ class_record.title }} (<em>{{class_record.date_of_class|date("M d, ’y @ g:i a")}}</em>)</h2>
     {% set type_of_training = class_record.related('curriculum') %}
     <p><strong>{{ __('Training') }}</strong>:&nbsp;
@@ -50,7 +55,12 @@
                             <td>{{student.experience_smart_phones}}</td>
                             <td>{{student.timestamp|date("M d, Y @ g:i a")}}</td>
                         {% endif %}
-                        <td></td>
+                        <td>
+                            <form action="{{remove_student_path}}{{training_type_slug}}/{{class_id}}/remove-student/{{student.id}}?redirect={% if is_sign_in %}sign_in{% else %}roster{% endif %}" name="delete_from_class" class="delete_from_class" method="POST">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn btn-danger btn-mini">Remove</button>
+                            </form>
+                        </td>
                     </tr>
 
                     {% if student.spouse|lower == 'yes' %}
@@ -65,7 +75,7 @@
                                 <td>{{student.spouse_experience_smart_phones}}</td>
                                 <td>{{student.timestamp|date("M d, Y @ g:i a")}}</td>
                             {% endif %}
-                            <td></td>
+                            <td><em>Spouse of {{student.name}}</em></td>
                         </tr>
                     {% endif %}
                     

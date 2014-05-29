@@ -2,6 +2,11 @@
 
 <div class="row-fluid">
     <h1><strong>{{ __('Class Manager') }}</strong></h1>
+    {% if delete_success == 'true' %}
+        <div class="alert alert-success">
+            The student has been successfully removed from the class.
+        </div>
+    {% endif %}
     <table class='dashboardlisting' style="width: 100%;">
         <thead>
             <tr>
