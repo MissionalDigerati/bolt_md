@@ -169,7 +169,8 @@ class Extension extends \Bolt\BaseExtension
                 'training_type_slug'    =>  $class_slug,
                 'class_id'              =>  $id,
                 'delete_success'        =>  $deleteSuccess,
-                'remove_student_path'   =>  $this->extensionPaths['remove_student']
+                'remove_student_path'   =>  $this->extensionPaths['remove_student'],
+                'home_path'             =>  $this->extensionPaths['home']
             )
         );
 
@@ -209,7 +210,8 @@ class Extension extends \Bolt\BaseExtension
                 'class_id'              =>  $id,
                 'is_sign_in'            =>  true,
                 'delete_success'        =>  $deleteSuccess,
-                'remove_student_path'   =>  $this->extensionPaths['remove_student']
+                'remove_student_path'   =>  $this->extensionPaths['remove_student'],
+                'home_path'             =>  $this->extensionPaths['home']
             )
         );
 

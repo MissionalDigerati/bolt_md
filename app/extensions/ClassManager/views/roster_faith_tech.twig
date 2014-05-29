@@ -6,6 +6,7 @@
     {% else %}
         <h1><strong>{{ __('Roster') }}</strong></h1>
     {% endif %}
+    <a href="{{home_path}}" class="btn pull-right back-link" type="button">Back to Class Manager</a>
     {% if delete_success == 'true' %}
         <div class="alert alert-success">
             The student has been successfully removed from the class.

@@ -48,4 +48,8 @@ th.sortable:hover i {
     th i {
         display: none !important;
     }
+
+    a.back-link {
+        display: none !important;
+    }
 }
