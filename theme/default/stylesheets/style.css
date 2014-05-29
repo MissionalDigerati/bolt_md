@@ -418,9 +418,9 @@ hr {
 	background: none;
 	color: #3f8dbf;    
 }
-.nav > li.current > a, .footer-menu > li.current > a {
+.nav > li.current > a, ul.dropdown-menu > li.current > a, .footer-menu > li.current > a {
 	background: none;
-	color: #3f8dbf;
+	color: #3f8dbf !important;
 }
 .navbar .dropdown-menu {
     padding: 0;
