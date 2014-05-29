@@ -16,7 +16,7 @@ class Extension extends \Bolt\BaseExtension
      * @var string
      * @access private
      **/
-    private $authorizeURL = '/pc_authorize.json';
+    private $authorizeURL = '/private-content/pc_authorize.json';
     /**
      * Describe the extension
      *
@@ -48,7 +48,7 @@ class Extension extends \Bolt\BaseExtension
      * @author Johnathan Pulos
      **/
     public function initialize() {
-        $this->app->post($this->authorizeURL, array($this, 'authorizeAccess'))->bind('authorizeAccess');
+        $this->app->post($this->authorizeURL, array($this, 'authorizeAccess'));
         $this->addTwigFunction('private_content_form', 'createAuthorizeForm');
     }
     /**
