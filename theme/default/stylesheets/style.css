@@ -4150,3 +4150,20 @@ div.cten_logos img {
     display: inline-block;
     max-height: 75px;
 }
+/*-----------------------------------------------------------------------------------*/
+/*  GAMIFICATION
+/*-----------------------------------------------------------------------------------*/
+#gamify_section {
+    text-align: center;
+}
+#gamify_section span.heading {
+    font-size: 11px;
+    font-style: italic;
+}
+#gamify_section a.change_church {
+    font-size: 11px;
+}
+.page-title .inner.gamify {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
