@@ -146,10 +146,11 @@ organizations:
         subsidize:
             type: checkbox
             label: "Willing to Subsidize"
-        share_code:
+        gamify_token:
             type: text
             class: wide
             label: 'Share Code'
+            postfix: "<em>Do not use symbols that JSON will choke on.  Best to stick to alphanumeric characters.</em>"
         notes:
             type: html
             label: 'Notes'

@@ -579,4 +579,18 @@ function addAccessToClass(hashKey) {
 /*-----------------------------------------------------------------------------------*/
 function mdGamify() {
     $(".fancybox").fancybox();
+    $("form#gamify_org_selector_form").append('<div id="authorize_loader" class="pull-right form-loading"></div>');
+    $("form#gamify_org_selector_form").submit(function(event) {
+        console.log('here');
+        var url = $(this).attr('action');
+        var data = $(this).serialize();
+        $(this).find('.btn-submit').attr('disabled', true);
+        $('#authorize_loader').show();
+        $.post(url, data, function(data, textStatus, xhr) {
+            var form = $("form#gamify_org_selector_form");
+            $('#authorize_loader').hide();
+            console.log(data);
+        });
+        return false;
+    });
 };

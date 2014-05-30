@@ -4,6 +4,8 @@
 
 namespace GamifyClasses;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * GamifyClasses is an Extension for the Bolt CMS (@link http://bolt.cm)
  *
@@ -12,7 +14,22 @@ namespace GamifyClasses;
  **/
 class Extension extends \Bolt\BaseExtension
 {
-
+    /**
+     * Array of extension pathes
+     *
+     * @var array
+     * @access private
+     **/
+    private $extensionPaths = array(
+        'org_selector_action'   =>  '/gamify_classes/organization.json'
+    );
+    /**
+     * The table prefix
+     *
+     * @var string
+     * @access private
+     **/
+    private $tablePrefix;
     /**
      * Setup information about the extension
      *
@@ -45,7 +62,9 @@ class Extension extends \Bolt\BaseExtension
      **/
     function initialize() {
         $this->config = $this->getConfig();
+        $this->tablePrefix = $this->app['config']->get('general/database/prefix', "bolt_");
         $this->addTwigFunction('organization_select_form', 'createOrgSelectForm');
+        $this->app->match($this->extensionPaths['org_selector_action'], array($this, 'processOrgSelectorForm'));
     }
     /**
      * Gets the form to select an organization that will receive the points
@@ -81,10 +100,68 @@ class Extension extends \Bolt\BaseExtension
             'assets/org_selector_form.twig',
             array(
                 'form'      =>  $form->createView(),
-                'action'    =>  ''
+                'action'    =>  $this->extensionPaths['org_selector_action']
             )
         );
         return new \Twig_Markup($html, 'UTF-8');
+    }
+    /**
+     * process the organization selector form, and return the organization details.
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request the request Object
+     * @return string A JSON object of the org info
+     * @access public
+     * @author Johnathan Pulos
+     **/
+    public function processOrgSelectorForm(Request $request)
+    {
+        $response = array();
+        $data = $request->request->all();
+        if ($request->getMethod() != 'POST') {
+            $response = array(
+                'success'       =>  false,
+                'error'         =>  true,
+                'organization'  =>  array(),
+                'message'       =>  __('The request must be sent as a POST!')
+            );
+        } else {
+            if ((isset($data['form']['organization'])) && ($data['form']['organization'] != '')) {
+                $id = (int) $data['form']['organization'];
+                $orgData = $this->app['storage']->getContent('organizations', array('id' => $id, 'returnsingle' => true));
+                $table = $this->tablePrefix . "organizations";
+                $sql = "Select * FROM $table WHERE id = ?";
+                $orgData = $this->app['db']->fetchAll($sql, array($id));
+                if (!empty($orgData)) {
+                    $org = array(
+                        'id'                    =>  $orgData[0]['id'],
+                        'address'               =>  strip_tags($orgData[0]['address']),
+                        'game_points_earned'    =>  $orgData[0]['game_points_earned'],
+                        'gamify_token'          =>  $orgData[0]['gamify_token']
+                    );
+                    $response = array(
+                        'success'       =>  true,
+                        'error'         =>  false,
+                        'organization'  =>  $org,
+                        'message'       =>  ''
+                    );
+                } else {
+                    $response = array(
+                        'success'       =>  false,
+                        'error'         =>  true,
+                        'organization'  =>  array(),
+                        'message'       =>  __('The organization does not exist!')
+                    );                     
+                }
+            } else {
+                $response = array(
+                    'success'       =>  false,
+                    'error'         =>  true,
+                    'organization'  =>  array(),
+                    'message'       =>  __('The request requires an ID to be set!')
+                );      
+            }
+        }
+        return $this->app->json($response);
     }
     /**
      * Get an array of organizations ideal for a selector.  Key is the id, and value is the name - address
