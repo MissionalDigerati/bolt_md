@@ -33,8 +33,7 @@
           <div class="col-sm-5 lp30">
             <h3>Class Details</h3>
             {{ record.notes }}
-            <div class="divide5"></div>
-            <div class="divide10"></div>
+            <div class="divide15"></div>
             <ul class="item-details">
               <li>
                 <span class="row_title">Date of Class:</span> {{ record.date_of_class|date("M d, ’y @ g:i a") }}
@@ -66,6 +65,16 @@
                 </li>
               {% endif %}
             </ul>
+            {% set orgs = record.related('organizations') %}
+            {% if orgs is defined and orgs is not empty %}
+              <div class="divide15"></div>
+              <h4>Hosted By</h4>
+              {% for org in orgs %}
+                <div class="divide10"></div>
+                <h5>{{ org.name }}</h5>
+                {{ org.address }}
+              {% endfor %}
+            {% endif %}
           </div>
         </div>
     </div>

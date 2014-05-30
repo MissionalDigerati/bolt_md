@@ -106,6 +106,64 @@ faqs:
     sort: question
     recordsperpage: 100
 
+organizations:
+    name: Organizations
+    singular_name: Organization
+    fields:
+        name:
+            type: text
+            class: wide
+        address:
+            type: html
+            label: 'Address'
+        location:
+            type: geolocation
+        contact_name:
+            type: text
+            label: 'Contact Name'
+            class: wide
+        email:
+            type: text
+            class: wide
+            label: 'Contact Email'
+        phone:
+            type: text
+            class: wide
+            label: 'Contact Phone #'
+        skype:
+            type: text
+            class: wide
+            label: 'Contact Skype Handle'
+        space:
+            type: checkbox
+            label: "Has Adequate Space"
+        wifi_access:
+            type: checkbox
+            label: "Can provide WiFi Access"
+        share_vision:
+            type: checkbox
+            label: "Can Share Vision of MD"
+        subsidize:
+            type: checkbox
+            label: "Willing to Subsidize"
+        notes:
+            type: html
+            label: 'Notes'
+        game_points_earned:
+            type: integer
+            label: 'Earned Game Points'
+        shares:
+            type: integer
+            label: 'Total Shares'
+    relations:
+        upcoming_classes:
+            multiple: true
+            label: 'Upcoming Classes'
+            order: title
+    sort: name
+    show_on_dashboard: false
+    default_status: publish
+
 pages:
     name: Pages
     singular_name: Page
@@ -193,7 +251,6 @@ projects:
     recordsperpage: 100
     taxonomy: [languages, libraries, statuses]
 
-
 social_links:
     name: Social Links
     singular_name: Social Link
@@ -230,6 +287,7 @@ upcoming_classes:
         date_of_class:
             type: datetime
             label: 'Date of Class'
+            postfix: '<em>Use military time. (ie. 21:00 for 9 PM)</em>'
         location:
             type: geolocation
         notes:
@@ -247,6 +305,11 @@ upcoming_classes:
             label: 'Select the Curriculum'
             order: title
             required: true
+        organizations:
+            multiple: false
+            label: 'Organization'
+            order: name
+            format: "{{ item.name|escape }}, {{ item.address|striptags }}"
     sort: date_of_class
     record_template: upcoming_class.twig
 
