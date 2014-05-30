@@ -146,6 +146,10 @@ organizations:
         subsidize:
             type: checkbox
             label: "Willing to Subsidize"
+        share_code:
+            type: text
+            class: wide
+            label: 'Share Code'
         notes:
             type: html
             label: 'Notes'
