@@ -11,8 +11,8 @@
     <div class="container inner gamify">
       <h1 class="pull-left">{{ page.title }}</h1>
       <div class="pull-right" id="gamify_section">
-        <p class="hidden has_church"><span class="heading">Your Sharing Supports</span><br><a href="#" class="church_link">San Gabriel Community Church</a><br><a href="#" class="change_church trigger_church_change">Change</a></p>
-        <p class="needs_church"><span class="heading">Make Your Sharing Count</span><br><a href="#" class="church_link trigger_church_change">Choose a Church to Support</a></p>
+        <p class="hidden has_church"><span class="heading">Your Sharing Supports</span><br><a href="#" class="church_link">San Gabriel Community Church</a><br><a href="#org_selector_form" class="change_church trigger_church_change fancybox">Change</a></p>
+        <p class="needs_church"><span class="heading">Make Your Sharing Count</span><br><a href="#org_selector_form" class="church_link trigger_church_change fancybox">Choose a Church to Support</a></p>
       </div>
       <div class="clearfix"></div>
     </div>
@@ -69,9 +69,16 @@
 {% include '_footer.twig' %}
 
 </div>
+<div style="display:none;" id="org_selector_form">
+  {{ organization_select_form() }}
+</div>
 <!-- /.body-wrapper --> 
 
 {% include '_scripts.twig' %}
-
+<script type="text/javascript">
+  $(function() {
+    mdGamify();
+  });
+</script>
 </body>
 </html>

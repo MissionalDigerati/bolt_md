@@ -574,3 +574,9 @@ function addAccessToClass(hashKey) {
         $.cookie('accessible_classes', hashKey);
     };
 };
+/*-----------------------------------------------------------------------------------*/
+/*  GAMIFY
+/*-----------------------------------------------------------------------------------*/
+function mdGamify() {
+    $(".fancybox").fancybox();
+};
