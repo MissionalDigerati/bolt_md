@@ -602,6 +602,26 @@ function mdGamify() {
         });
         return false;
     });
+    checkHasBenefitingChurch();
+};
+/**
+ * Checks if they have a benefiting church set in their cookies, and sets it
+ *
+ * @return void
+ **/
+function checkHasBenefitingChurch() {
+    var supportingChurch = $.cookie('supporting_church');
+    if (supportingChurch) {
+        var org = $.parseJSON(supportingChurch);
+        if (typeof org === 'object') {
+            setBenefitingChurch(org, false);
+        } else {
+            /**
+             * It is a broken object so erase it
+             **/
+            $.cookie('supporting_church', '');
+        };
+    };
 };
 /**
  * Set the church that will benefit from the sharing.
