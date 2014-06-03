@@ -578,10 +578,10 @@ function addAccessToClass(hashKey) {
 /*  GAMIFY
 /*-----------------------------------------------------------------------------------*/
 function mdGamify() {
+    $('p.has_church').hide();
     $(".fancybox").fancybox();
     $("form#gamify_org_selector_form").append('<div id="authorize_loader" class="pull-right form-loading"></div>');
     $("form#gamify_org_selector_form").submit(function(event) {
-        console.log('here');
         var url = $(this).attr('action');
         var data = $(this).serialize();
         $(this).find('.btn-submit').attr('disabled', true);
@@ -589,7 +589,17 @@ function mdGamify() {
         $.post(url, data, function(data, textStatus, xhr) {
             var form = $("form#gamify_org_selector_form");
             $('#authorize_loader').hide();
-            console.log(data);
+            if (data.success === true) {
+                var org = data.organization;
+                $('p.needs_church').hide();
+                $('p.has_church a.church_link').text(org.name).attr('data-original-title', 'Everytime you share this web page with your friends, '+org.name+' will earn points towards new classes they can host at their church.  Start sharing today!');
+                $.cookie('supporting_church', JSON.stringify(org));
+                $('p.has_church').show('fast', function() {
+                   $.fancybox.close(); 
+                });
+            } else {
+                console.log('No org returned.');
+            };
         });
         return false;
     });

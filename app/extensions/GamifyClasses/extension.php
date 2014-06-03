@@ -134,6 +134,7 @@ class Extension extends \Bolt\BaseExtension
                 if (!empty($orgData)) {
                     $org = array(
                         'id'                    =>  $orgData[0]['id'],
+                        'name'                  =>  $orgData[0]['name'],
                         'address'               =>  strip_tags($orgData[0]['address']),
                         'game_points_earned'    =>  $orgData[0]['game_points_earned'],
                         'gamify_token'          =>  $orgData[0]['gamify_token']
