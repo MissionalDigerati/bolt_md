@@ -577,6 +577,11 @@ function addAccessToClass(hashKey) {
 /*-----------------------------------------------------------------------------------*/
 /*  GAMIFY
 /*-----------------------------------------------------------------------------------*/
+/**
+ * Sets up gamification feature
+ *
+ * @return void
+ **/
 function mdGamify() {
     $('p.has_church').hide();
     $(".fancybox").fancybox();
@@ -590,17 +595,26 @@ function mdGamify() {
             var form = $("form#gamify_org_selector_form");
             $('#authorize_loader').hide();
             if (data.success === true) {
-                var org = data.organization;
-                $('p.needs_church').hide();
-                $('p.has_church a.church_link').text(org.name).attr('data-original-title', 'Everytime you share this web page with your friends, '+org.name+' will earn points towards new classes they can host at their church.  Start sharing today!');
-                $.cookie('supporting_church', JSON.stringify(org));
-                $('p.has_church').show('fast', function() {
-                   $.fancybox.close(); 
-                });
+                setBenefitingChurch(data.organization, true);
             } else {
                 console.log('No org returned.');
             };
         });
         return false;
+    });
+};
+/**
+ * Set the church that will benefit from the sharing.
+ *
+ * @param Hash org The org data provided by the backend
+ * @param Boolean closeFancybox do you want to close fancybox
+ * @return void
+ **/
+function setBenefitingChurch(org, closeFancybox) {
+    $('p.needs_church').hide();
+    $('p.has_church a.church_link').text(org.name).attr('data-original-title', 'Everytime you share this web page with your friends, '+org.name+' will earn points towards new classes they can host at their church.  Start sharing today!');
+    $.cookie('supporting_church', JSON.stringify(org));
+    $('p.has_church').show('fast', function() {
+        if (closeFancybox === true) {$.fancybox.close();}; 
     });
 };
