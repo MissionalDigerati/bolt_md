@@ -597,7 +597,16 @@ function mdGamify() {
             if (data.success === true) {
                 setBenefitingChurch(data.organization, true);
             } else {
-                console.log('No org returned.');
+                var form = $("form#gamify_org_selector_form");
+                var alerts = form.find('div.alert');
+                if (alerts.length > 0) {
+                    alerts.fadeOut('slow', function() {
+                        form.prepend('<div class="alert alert-danger"> <strong>Sorry</strong> you need to select a valid organization.</div>');
+                        $(this).remove();
+                    });
+                } else {
+                   form.prepend('<div class="alert alert-danger"> <strong>Sorry</strong> you need to select a valid organization.</div>'); 
+                };
             };
         });
         return false;
