@@ -27,6 +27,9 @@
     <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4e8f96635c6b8081"></script>
     {% if not hide_add_this %}
         <script type="text/javascript">
+          addthis_share = { 
+                url: "{{ app.request.uri }}"
+          };
           addthis.layers({
             'theme' : 'transparent',
             'share' : {

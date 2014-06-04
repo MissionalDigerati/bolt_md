@@ -7,7 +7,6 @@
 
     <title>Missional Digerati:: {{ page.title }}</title>
     <meta property="og:title" content="Missional Digerati:: {{ page.title }}"/>
-    <meta property="og:image" content="http://{{ app.request.host }}{{ paths.theme }}images/share_logo_sq.png"/>
     <meta property="og:site_name" content="Missional Digerati"/>
 
     {% if page.seo_description is not empty %}
@@ -36,14 +35,22 @@
     <meta name="description" content="Missional Digerati is a Christian non-profit mobile and web app development team dedicated to leveraging technology for the purpose of delivering the Gospel to every nation.">
     <meta name="keywords" content="Missional Digerati, Missional, Digerati, Technology, Website Development, Mobile App Development, Christian, Missions, Mission, Protestant">
     <title>Missional Digerati:: {{ title }}</title>
-    <meta property="og:title" content="Missional Digerati:: {{ page.title }}"/>
-    <meta property="og:image" content="http://{{ app.request.host }}{{ paths.theme }}images/share_logo_sq.png"/>
+    <meta property="og:title" content="Missional Digerati:: {{ title }}"/>
     <meta property="og:site_name" content="Missional Digerati"/>
     <meta property="og:description" content="Missional Digerati is a Christian non-profit mobile and web app development team dedicated to leveraging technology for the purpose of delivering the Gospel to every nation."/>
 
 {% endif %}
 <meta name="author" content="Missional Digerati">
 <meta property="og:type" content="website"/>
+
+{% if ogg_image is defined and ogg_image is not empty %}
+    {% set ogg_image_file = ogg_image %} 
+{% else %}
+    {% set ogg_image_file = "share_logo.png" %}
+{% endif %}
+
+<meta property="og:image" content="http://{{ app.request.host }}{{ paths.theme }}images/{{ ogg_image_file }}" />
+<meta property="og:url" content="{{ app.request.uri }}"/>
 <link rel="shortcut icon" href="{{ paths.theme }}images/favicon.png">
 <!-- Bootstrap core CSS -->
 <link href="{{ paths.theme }}stylesheets/bootstrap.css" rel="stylesheet">
