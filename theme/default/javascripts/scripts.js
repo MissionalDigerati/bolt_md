@@ -605,7 +605,7 @@ function mdGamify() {
     checkHasBenefitingChurch();
 };
 /**
- * Checks if they have a benefiting church set in their cookies, and sets it
+ * Checks if they have a benefiting church set in their cookies or share_code in url, and sets it
  *
  * @return void
  **/
@@ -621,6 +621,17 @@ function checkHasBenefitingChurch() {
              **/
             $.cookie('supporting_church', '');
         };
+        return;
+    };
+    var gamifyToken = $.QueryString["gamify_token"];
+    if (gamifyToken != undefined) {
+        $.getJSON('/gamify_classes/organization.json', {gamify_token: gamifyToken}, function(data, textStatus) {
+            if (data.success === true) {
+                setBenefitingChurch(data.organization, false);
+            } else {
+                console.log('No org returned.');
+            };
+        });
     };
 };
 /**
@@ -638,3 +649,22 @@ function setBenefitingChurch(org, closeFancybox) {
         if (closeFancybox === true) {$.fancybox.close();}; 
     });
 };
+/**
+ * Extends JQuery in order to get the named parameter from the Query String
+ *
+ * @link http://stackoverflow.com/a/901144
+ * @return void
+ **/
+(function($) {
+    $.QueryString = (function(a) {
+        if (a == "") return {};
+        var b = {};
+        for (var i = 0; i < a.length; ++i)
+        {
+            var p=a[i].split('=');
+            if (p.length != 2) continue;
+            b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+        }
+        return b;
+    })(window.location.search.substr(1).split('&'))
+})(jQuery);

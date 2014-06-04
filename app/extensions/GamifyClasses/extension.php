@@ -21,7 +21,8 @@ class Extension extends \Bolt\BaseExtension
      * @access private
      **/
     private $extensionPaths = array(
-        'org_selector_action'   =>  '/gamify_classes/organization.json'
+        'org_selector_action'   =>  '/gamify_classes/organization.json',
+        'org_find_action'       =>  '/gamify_classes/organization.json'
     );
     /**
      * The table prefix
@@ -117,18 +118,36 @@ class Extension extends \Bolt\BaseExtension
     {
         $response = array();
         $data = $request->request->all();
-        if ($request->getMethod() != 'POST') {
-            $response = array(
-                'success'       =>  false,
-                'error'         =>  true,
-                'organization'  =>  array(),
-                'message'       =>  __('The request must be sent as a POST!')
-            );
-        } else {
+        $table = $this->tablePrefix . "organizations";
+        $noOrg = false;
+        if ($request->getMethod() == 'GET') {
+            $gamifyToken = $this->app['request']->get('gamify_token');
+            if ((isset($gamifyToken)) && ($gamifyToken != "")) {
+                $sql = "Select * FROM $table WHERE gamify_token = ?";
+                $orgData = $this->app['db']->fetchAll($sql, array($gamifyToken));
+                if (!empty($orgData)) {
+                    $org = array(
+                        'id'                    =>  $orgData[0]['id'],
+                        'name'                  =>  $orgData[0]['name'],
+                        'address'               =>  strip_tags($orgData[0]['address']),
+                        'game_points_earned'    =>  $orgData[0]['game_points_earned'],
+                        'gamify_token'          =>  $orgData[0]['gamify_token']
+                    );
+                    $response = array(
+                        'success'       =>  true,
+                        'error'         =>  false,
+                        'organization'  =>  $org,
+                        'message'       =>  ''
+                    );
+                } else {
+                    $noOrg = true;
+                }
+            } else {
+                $noOrg = true;
+            }
+        } else if (($request->getMethod() == 'POST')) {
             if ((isset($data['form']['organization'])) && ($data['form']['organization'] != '')) {
                 $id = (int) $data['form']['organization'];
-                $orgData = $this->app['storage']->getContent('organizations', array('id' => $id, 'returnsingle' => true));
-                $table = $this->tablePrefix . "organizations";
                 $sql = "Select * FROM $table WHERE id = ?";
                 $orgData = $this->app['db']->fetchAll($sql, array($id));
                 if (!empty($orgData)) {
@@ -146,12 +165,7 @@ class Extension extends \Bolt\BaseExtension
                         'message'       =>  ''
                     );
                 } else {
-                    $response = array(
-                        'success'       =>  false,
-                        'error'         =>  true,
-                        'organization'  =>  array(),
-                        'message'       =>  __('The organization does not exist!')
-                    );                     
+                    $noOrg = true;
                 }
             } else {
                 $response = array(
@@ -161,6 +175,21 @@ class Extension extends \Bolt\BaseExtension
                     'message'       =>  __('The request requires an ID to be set!')
                 );      
             }
+        } else {
+            $response = array(
+                'success'       =>  false,
+                'error'         =>  true,
+                'organization'  =>  array(),
+                'message'       =>  __('The request must be sent as a POST!')
+            );
+        }
+        if ($noOrg === true) {
+            $response = array(
+                'success'       =>  false,
+                'error'         =>  true,
+                'organization'  =>  array(),
+                'message'       =>  __('The organization does not exist!')
+            );
         }
         return $this->app->json($response);
     }
