@@ -584,7 +584,7 @@ function addAccessToClass(hashKey) {
  **/
 function mdGamify() {
     $('p.has_church').hide();
-    $(".fancybox").fancybox();
+    $(".gamify_fancybox").fancybox();
     $("form#gamify_org_selector_form").append('<div id="authorize_loader" class="pull-right form-loading"></div>');
     $("form#gamify_org_selector_form").submit(function(event) {
         var url = $(this).attr('action');
@@ -655,7 +655,11 @@ function setBenefitingChurch(org, closeFancybox) {
     $('p.has_church a.church_link').text(org.name).attr('data-original-title', 'Everytime you share this web page with your friends, '+org.name+' will earn points towards new classes they can host at their church.  Start sharing today!');
     $.cookie('supporting_church', JSON.stringify(org));
     $('p.has_church').show('fast', function() {
-        if (closeFancybox === true) {$.fancybox.close();}; 
+        if (closeFancybox === true) {
+            $.fancybox.close();
+        } else {
+            $("select#form_organization").val(org.id);
+        }; 
     });
 };
 /**
