@@ -1,5 +1,11 @@
 {% include '_header.twig' with { "ogg_image": "share_faith_tech.png" } %}
-
+{% if page.slug == "digerati-101" %}
+  {% set has_gamification=false %}
+  {% set training_type='Digerati 101' %}
+{% else %}
+  {% set has_gamification=true %}
+  {% set training_type='Faith & Tech' %}
+{% endif %}
 <body class="full-layout">
 <div class="body-wrapper">
 
@@ -8,26 +14,29 @@
   <div class="offset"></div>
 
   <div class="light-wrapper page-title">
-    <div class="container inner gamify">
-      <h1 class="pull-left">{{ page.title }}</h1>
-      <div class="pull-right" id="gamify_section">
-        <p class="has_church"><span class="heading">Your Sharing Supports</span><br><a href="#" class="church_link" data-rel="tooltip" data-placement="left" rel="tooltip" data-original-title="">San Gabriel Community Church</a><br><a href="#org_selector_form_holder" class="change_church trigger_church_change gamify_fancybox">Change</a></p>
-        <p class="needs_church"><span class="heading">Make Your Sharing Count</span><br><a href="#org_selector_form_holder" class="church_link trigger_church_change gamify_fancybox" data-rel="tooltip" data-placement="left" rel="tooltip" data-original-title="Make your sharing count.  Everytime you share this page you can earn points for your favorite church.  These points open up new free classes they can host.">Choose a Church to Support</a></p>
+    {% if has_gamification %}
+      <div class="container inner gamify">
+        <h1 class="pull-left">{{ page.title }}</h1>
+        <div class="pull-right" id="gamify_section">
+          <p class="has_church"><span class="heading">Your Sharing Supports</span><br><a href="#" class="church_link" data-rel="tooltip" data-placement="left" rel="tooltip" data-original-title="">San Gabriel Community Church</a><br><a href="#org_selector_form_holder" class="change_church trigger_church_change gamify_fancybox">Change</a></p>
+          <p class="needs_church"><span class="heading">Make Your Sharing Count</span><br><a href="#org_selector_form_holder" class="church_link trigger_church_change gamify_fancybox" data-rel="tooltip" data-placement="left" rel="tooltip" data-original-title="Make your sharing count.  Everytime you share this page you can earn points for your favorite church.  These points open up new free classes they can host.">Choose a Church to Support</a></p>
+        </div>
+        <div class="clearfix"></div>
       </div>
-      <div class="clearfix"></div>
-    </div>
+    {% else %}
+      <div class="container inner gamify">
+        <h1>{{ page.title }}</h1>
+      </div>
+    {% endif %}
   </div> 
 
   <div class="dark-wrapper">
     <div class="container inner">
       {% if page.slug == "digerati-101" %}
-        {% set training_type='Digerati 101' %}
         <figure class="player">
           <iframe width="1170" height="658" src="//www.youtube.com/embed/nKIu9yen5nc" frameborder="0" allowfullscreen webkitAllowFullScreen mozallowfullscreen></iframe>
         </figure>
         <div class="divide30"></div>
-      {% else %}
-        {% set training_type='Faith & Tech' %}
       {% endif %}
       <div class="section-title text-center">
         <h2>{{ page.tagline }}</h2>
@@ -75,10 +84,12 @@
 <!-- /.body-wrapper --> 
 
 {% include '_scripts.twig' %}
-<script type="text/javascript">
-  $(function() {
-    mdGamify();
-  });
-</script>
+{% if has_gamification %}
+  <script type="text/javascript">
+    $(function() {
+      mdGamify();
+    });
+  </script>
+{% endif %}
 </body>
 </html>
