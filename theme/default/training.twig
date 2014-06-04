@@ -1,11 +1,13 @@
-{% include '_header.twig' with { "ogg_image": "share_faith_tech.png" } %}
 {% if page.slug == "digerati-101" %}
   {% set has_gamification=false %}
   {% set training_type='Digerati 101' %}
+  {% set ogg_image='share_digerati_101.png' %}
 {% else %}
   {% set has_gamification=true %}
   {% set training_type='Faith & Tech' %}
+  {% set ogg_image='share_faith_tech.png' %}
 {% endif %}
+{% include '_header.twig' with { "ogg_image": ogg_image } %}
 <body class="full-layout">
 <div class="body-wrapper">
 
