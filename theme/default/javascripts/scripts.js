@@ -661,6 +661,12 @@ function setBenefitingChurch(org, closeFancybox) {
             $("select#form_organization").val(org.id);
         }; 
     });
+    shareURL = location.protocol + '//' + location.host + location.pathname + '?gamify_token=' + org.gamify_token;
+    addthis_share = { 
+        url: shareURL,
+        title: 'Free Faith and Tech Training for Your Church',
+        description: 'Faith and Tech is a training course consisting of guided instruction and hands-on activities to equip believers to use current technology as a crucial ministry tool.'
+    };
 };
 /**
  * Extends JQuery in order to get the named parameter from the Query String
