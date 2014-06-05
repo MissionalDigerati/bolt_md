@@ -32,7 +32,7 @@ curriculum:
             type: image
             label: 'Thumbnail Image (740px w X 284px h)'
         tagline:
-            type: textarea
+            type: html
             class: wide
             label: 'Tagline'
         duration:
