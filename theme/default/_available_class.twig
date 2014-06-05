@@ -18,5 +18,11 @@
     {% endif %}
   </ul>
   <div class="divide10"></div>
-  <div class="text-center"><a href="/host-a-class?curriculum={{ class.slug }}" class="btn btn-blue">Host This Class</a></div>
+  <div class="text-center">
+    {% if class.points != 0 %}
+      <a href="#" class="btn btn-red btn-large" data-rel="tooltip" data-placement="top" rel="tooltip" data-original-title="When a church receives {{ class.points }} points from sharing this page, they will be notified that this class has been unlocked.  They will then have an opportunity to host this class.">Locked</a>
+    {% else %}
+      <a href="/host-a-class?curriculum={{ class.slug }}" class="btn btn-blue btn-large">Host This Class</a>
+    {% endif %}
+  </div>
 </div>
