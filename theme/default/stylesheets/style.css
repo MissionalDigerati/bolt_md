@@ -4167,3 +4167,14 @@ div.cten_logos img {
     padding-top: 10px;
     padding-bottom: 10px;
 }
+/*-----------------------------------------------------------------------------------*/
+/*  STICKY BUTTON
+/*-----------------------------------------------------------------------------------*/
+.sticky-button-container {
+    /*position: relative;*/
+}
+.sticky-button-btm {
+    position: relative;
+    bottom: 10px;
+    display: inline-block;
+}

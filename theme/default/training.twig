@@ -49,24 +49,29 @@
       <h2>Current Curriculum</h2>
       {% setcontent curriculum = 'curriculum' where { training_types: training_type } orderby 'points' %}
       {% if curriculum is defined and curriculum is not empty %}
-        <div class="row">
-          {% for class in curriculum %}
+        <div class="container">
+          {% for row in curriculum|batch(2) %}
 
-            <div class="col-sm-6">
+            <div class="row">
 
-                {% include '_available_class.twig' with {'class': class} %}
-                
-            </div>
+              {% for class in row %}
 
-            {% if loop.index0 % 2 %}
+                <div class="col-sm-6">
+
+                    {% include '_available_class.twig' with {'class': class} %}
+                    
+                </div>
+
+              {% endfor %}
 
               <div class="clearfix"></div>
-              <div class="divide20"></div>
 
-            {% endif %}
+            </div>
+            <div class="divide20"></div>
+
           {% endfor %}
+          <div class="divide30"></div>
         </div>
-        <div class="divide30"></div>
       {% else %}
         <p>Sorry, no classes available.  Please check back soon.</p>
         <div class="divide30"></div>
@@ -86,12 +91,13 @@
 <!-- /.body-wrapper --> 
 
 {% include '_scripts.twig' %}
-{% if has_gamification %}
   <script type="text/javascript">
     $(function() {
-      mdGamify();
+    {% if has_gamification %}
+        mdGamify();
+    {% endif %}
+        $('.row .same-height').matchHeight(true);
     });
   </script>
-{% endif %}
 </body>
 </html>

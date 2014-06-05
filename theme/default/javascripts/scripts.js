@@ -668,6 +668,13 @@ function setBenefitingChurch(org, closeFancybox) {
         description: 'Faith and Tech is a training course consisting of guided instruction and hands-on activities to equip believers to use current technology as a crucial ministry tool.'
     };
 };
+/*-----------------------------------------------------------------------------------*/
+/*  Utilities
+/*-----------------------------------------------------------------------------------*/
+
+/*-----------------------------------------------------------------------------------*/
+/*  EXTENSIONS
+/*-----------------------------------------------------------------------------------*/
 /**
  * Extends JQuery in order to get the named parameter from the Query String
  *
