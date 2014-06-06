@@ -12,7 +12,7 @@
   <!--/.nav-collapse --> 
 </div>
 <!--/.navbar -->
-<ul id="social-share-nav">
+<ul id="social-share-nav" class="hidden-xs social-sharing-widget">
   {% if share_description is defined and share_description is not empty %}
       {% set share_description_text = share_description|url_encode %} 
   {% else %}

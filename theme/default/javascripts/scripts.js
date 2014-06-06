@@ -80,7 +80,7 @@ $(document).ready(function () {
             return false;
         }
     );
-    $('ul#social-share-nav li.google a, ul#social-share-nav li.pinterest a, ul#social-share-nav li.linkedin a').click(
+    $('ul.social-sharing-widget li.google a, ul.social-sharing-widget li.pinterest a, ul.social-sharing-widget li.linkedin a').click(
         function(event) {
             window.open(
                 this.href,
