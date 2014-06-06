@@ -21,8 +21,9 @@ class Extension extends \Bolt\BaseExtension
      * @access private
      **/
     private $extensionPaths = array(
-        'org_selector_action'   =>  '/gamify_classes/organization.json',
-        'org_find_action'       =>  '/gamify_classes/organization.json'
+        'org_selector_action'           =>  '/gamify_classes/organization.json',
+        'org_find_action'               =>  '/gamify_classes/organization.json',
+        'org_points_earned_action'      =>  '/gamify_classes/organization/{id}/shared.json'
     );
     /**
      * The table prefix
@@ -62,10 +63,13 @@ class Extension extends \Bolt\BaseExtension
      * @author Johnathan Pulos
      **/
     function initialize() {
-        $this->config = $this->getConfig();
         $this->tablePrefix = $this->app['config']->get('general/database/prefix', "bolt_");
+        if (empty($this->config['points_per_share'])) {
+            $this->config['points_per_share'] = 0;
+        }
         $this->addTwigFunction('organization_select_form', 'createOrgSelectForm');
         $this->app->match($this->extensionPaths['org_selector_action'], array($this, 'processOrgSelectorForm'));
+        $this->app->match($this->extensionPaths['org_points_earned_action'], array($this, 'orgSharedClass'));
     }
     /**
      * Gets the form to select an organization that will receive the points
@@ -145,7 +149,7 @@ class Extension extends \Bolt\BaseExtension
             } else {
                 $noOrg = true;
             }
-        } else if (($request->getMethod() == 'POST')) {
+        } else if ($request->getMethod() == 'POST') {
             if ((isset($data['form']['organization'])) && ($data['form']['organization'] != '')) {
                 $id = (int) $data['form']['organization'];
                 $sql = "Select * FROM $table WHERE id = ?";
@@ -189,6 +193,59 @@ class Extension extends \Bolt\BaseExtension
                 'error'         =>  true,
                 'organization'  =>  array(),
                 'message'       =>  __('The organization does not exist!')
+            );
+        }
+        return $this->app->json($response);
+    }
+    /**
+     * Update the organization by adding the points they get per share
+     *
+     * @param Symfony\Component\HttpFoundation\Request $request the request Object
+     * @return string A JSON object with new point total, and wether it was added
+     * @access public
+     * @author Johnathan Pulos
+     **/
+    public function orgSharedClass(Request $request, $id)
+    {
+        $failed = false;
+        $response = array();
+        $pointsEarned = (int) $this->config['points_per_share'];
+        $table = $this->tablePrefix . "organizations";
+        if ($request->getMethod() == 'POST') {
+            $id = (int) $id;
+            if (isset($id)) {
+                $sql = "Select * FROM $table WHERE id = ?";
+                $orgData = $this->app['db']->fetchAll($sql, array($id));
+                if (!empty($orgData)) {
+                    $newPoints = $orgData[0]['game_points_earned'] + $pointsEarned;
+                    $sql = "UPDATE $table SET game_points_earned = ?, shares = shares + 1 WHERE  id = ?";
+                    $updateQuery = $this->app['db']->executeQuery(
+                        $sql,
+                        array($newPoints, $id),
+                        array(\PDO::PARAM_INT, \PDO::PARAM_INT)
+                    );
+                    $response = array(
+                        'success'       =>  true,
+                        'error'         =>  false,
+                        'current_points'=>  $newPoints,
+                        'message'       =>  __('The points have been added!')
+                    );
+                } else {
+                    $failed = true;
+                }
+            } else {
+                $failed = true;
+            }
+        } else {
+            $failed = true;
+        }
+
+        if ($failed === true) {
+            $response = array(
+                'success'       =>  false,
+                'error'         =>  true,
+                'current_points'=>  2,
+                'message'       =>  __('The points were no able to be added!')
             );
         }
         return $this->app->json($response);

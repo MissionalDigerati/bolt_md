@@ -4163,6 +4163,9 @@ div.cten_logos img {
 #gamify_section a.change_church {
     font-size: 11px;
 }
+#gamify_section .total_points {
+    font-size: 20px;
+}
 .page-title .inner.gamify {
     padding-top: 10px;
     padding-bottom: 10px;

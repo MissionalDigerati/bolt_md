@@ -16,20 +16,9 @@
   <div class="offset"></div>
 
   <div class="light-wrapper page-title">
-    {% if has_gamification %}
-      <div class="container inner gamify">
-        <h1 class="pull-left">{{ page.title }}</h1>
-        <div class="pull-right" id="gamify_section">
-          <p class="has_church"><span class="heading">Your Sharing Supports</span><br><a href="#" class="church_link" data-rel="tooltip" data-placement="left" rel="tooltip" data-original-title="">San Gabriel Community Church</a><br><a href="#org_selector_form_holder" class="change_church trigger_church_change gamify_fancybox">Change</a></p>
-          <p class="needs_church"><span class="heading">Make Your Sharing Count</span><br><a href="#org_selector_form_holder" class="church_link trigger_church_change gamify_fancybox" data-rel="tooltip" data-placement="left" rel="tooltip" data-original-title="Make your sharing count.  Everytime you share this page you can earn points for your favorite church.  These points open up new free classes they can host.">Choose a Church to Support</a></p>
-        </div>
-        <div class="clearfix"></div>
-      </div>
-    {% else %}
       <div class="container inner gamify">
         <h1>{{ page.title }}</h1>
       </div>
-    {% endif %}
   </div> 
 
   <div class="dark-wrapper">
@@ -44,7 +33,54 @@
         <h2>{{ page.tagline }}</h2>
         <span class="icon"><i class="icon-picons-{{ page.tagline_icon }}"></i></span>
       </div>
-      {{ page.body_header }}
+      {% if has_gamification %}
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-8">
+              {{ page.body_header }}
+            </div>
+            <div class="col-sm-4">
+              <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a data-toggle="collapse" class="panel-toggle active" data-parent="#accordion" href="#collapseOne">Your Sharing Supports</a>
+                    </h4>
+                  </div>
+                  <div id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body" id="gamify_section">
+                      <p class="has_church" style="display: none;">
+                        <a href="#" class="church_link" data-rel="tooltip" data-placement="left" rel="tooltip" data-original-title="">San Gabriel Community Church</a><br>
+                        <span data-rel="tooltip" data-placement="left" rel="tooltip" data-original-title="The total points earned by this church." class="total_points"></span><br>
+                        <a href="#org_selector_form_holder" class="change_church trigger_church_change gamify_fancybox">Change Church</a>
+                      </p>
+                      <p class="needs_church">
+                        <span class="heading">Make Your Sharing Count</span><br>
+                        <a href="#org_selector_form_holder" class="church_link trigger_church_change gamify_fancybox" data-rel="tooltip" data-placement="left" rel="tooltip" data-original-title="Make your sharing count.  Everytime you share this page you can earn points for your favorite church.  These points open up new free classes they can host.">Choose a Church to Support</a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a data-toggle="collapse" class="panel-toggle" data-parent="#accordion" href="#collapseTwo">How Does the Game Work?</a>
+                    </h4>
+                  </div>
+                  <div id="collapseTwo" class="panel-collapse collapse">
+                    <div class="panel-body">
+                      <p>First you need to select a church by clicking the <em>Choose a Church to Support</em> link in the <em>Your Sharing Supports</em> tab above.  Then you choose the church you want to support from the selector that is displayed.  Finally, click the <strong>Select</strong> button to select your church.</p>
+
+                      <p>Now you are ready to help that church unlock new Faith &amp; Tech classes.  Each time you share this web page using the links on the left side of this page,  the church will earn 5 points towards opening future classes.  Once a church unlocks a class, they will be notified that they can host a new class.  That's it!</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        {{ page.body_header }}
+      {% endif %}
       <div class="divide30"></div>
       <h2>Current Curriculum</h2>
       {% setcontent curriculum = 'curriculum' where { training_types: training_type } orderby 'points' %}

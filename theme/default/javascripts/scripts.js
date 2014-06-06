@@ -582,8 +582,9 @@ function addAccessToClass(hashKey) {
  *
  * @return void
  **/
+ var currentOrganization = {};
 function mdGamify() {
-    $('p.has_church').hide();
+    addthis.addEventListener('addthis.menu.share', shareEventHandler);
     $(".gamify_fancybox").fancybox();
     $("form#gamify_org_selector_form").append('<div id="authorize_loader" class="pull-right form-loading"></div>');
     $("form#gamify_org_selector_form").submit(function(event) {
@@ -623,6 +624,17 @@ function checkHasBenefitingChurch() {
     if (supportingChurch) {
         var org = $.parseJSON(supportingChurch);
         if (typeof org === 'object') {
+            /**
+             * Update the org settings
+             *
+             **/
+            $.getJSON('/gamify_classes/organization.json', {gamify_token: org.gamify_token}, function(data, textStatus) {
+                if (data.success === true) {
+                    setBenefitingChurch(data.organization, false);
+                } else {
+                    console.log('No org returned.');
+                };
+            });
             setBenefitingChurch(org, false);
         } else {
             /**
@@ -651,22 +663,39 @@ function checkHasBenefitingChurch() {
  * @return void
  **/
 function setBenefitingChurch(org, closeFancybox) {
-    $('p.needs_church').hide();
-    $('p.has_church a.church_link').text(org.name).attr('data-original-title', 'Everytime you share this web page with your friends, '+org.name+' will earn points towards new classes they can host at their church.  Start sharing today!');
     $.cookie('supporting_church', JSON.stringify(org));
-    $('p.has_church').show('fast', function() {
-        if (closeFancybox === true) {
-            $.fancybox.close();
-        } else {
-            $("select#form_organization").val(org.id);
-        }; 
-    });
+    currentOrganization = org;
     shareURL = location.protocol + '//' + location.host + location.pathname + '?gamify_token=' + org.gamify_token;
     addthis_share = { 
         url: shareURL,
         title: 'Free Faith and Tech Training for Your Church',
         description: 'Faith and Tech is a training course consisting of guided instruction and hands-on activities to equip believers to use current technology as a crucial ministry tool.'
     };
+    $('p.needs_church').fadeOut('slow', function() {
+        $('p.has_church a.church_link').text(org.name).attr('data-original-title', 'Everytime you share this web page with your friends, '+org.name+' will earn points towards new classes they can host at their church.  Start sharing today!');
+        $('p.has_church span.total_points').html(org.game_points_earned+' <i class="icon-picons-winner"></i>');
+        $('p.has_church').fadeIn('slow', function() {
+            if (closeFancybox === true) {
+                $.fancybox.close();
+            } else {
+                $("select#form_organization").val(org.id);
+            }; 
+        });
+    });
+};
+function shareEventHandler(evt) {
+    if (evt.type == 'addthis.menu.share') { 
+        var pointEarnedURL = '/gamify_classes/organization/' + currentOrganization.id + '/shared.json';
+        var supportingChurch = $.cookie('supporting_church');
+        var org = $.parseJSON(supportingChurch);
+        $.post(pointEarnedURL, {}, function(data, textStatus, xhr) {
+            if (data.success === true) {
+                org.game_points_earned = data.current_points;
+                $.cookie('supporting_church', JSON.stringify(org));
+                $('p.has_church span.total_points').html(org.game_points_earned+' <i class="icon-picons-winner"></i>');
+            };
+        });
+    }
 };
 /*-----------------------------------------------------------------------------------*/
 /*  Utilities
