@@ -1,3 +1,8 @@
+/**
+ * A group of pathes where people earn points for sharing
+ * @param Array
+ **/
+var gamifiedPaths = ['/training/faith-and-tech'];
 /*-----------------------------------------------------------------------------------*/
 /*	OWL CAROUSEL
 /*-----------------------------------------------------------------------------------*/
@@ -53,8 +58,23 @@ $(document).ready(function () {
     }, function() {
         $(this).css('margin-left', '-20px');
     });
-    
 
+    /**
+     * Handle the clicking of share links
+     **/
+    $('ul#social-share-nav li.facebook a').click(
+        function(event) {
+            FB.ui({
+              method: 'share',
+              href: document.URL,
+            }, function(response) {
+                if ($.inArray(location.pathname, gamifiedPaths)!== -1) {
+                    gamifyIncreasePoints();
+                };
+            });
+            return false;
+        }
+    );
 });
 /*-----------------------------------------------------------------------------------*/
 /*	FANCYBOX
@@ -688,10 +708,15 @@ function setBenefitingChurch(org, closeFancybox) {
         });
     });
 };
-function shareEventHandler(evt) {
-    if (evt.type == 'addthis.menu.share') { 
-        var pointEarnedURL = '/gamify_classes/organization/' + currentOrganization.id + '/shared.json';
-        var supportingChurch = $.cookie('supporting_church');
+/**
+ * The org has earned points for sharing, so add it up
+ *
+ * @return void
+ **/
+function gamifyIncreasePoints() {
+    var pointEarnedURL = '/gamify_classes/organization/' + currentOrganization.id + '/shared.json';
+    var supportingChurch = $.cookie('supporting_church');
+    if (supportingChurch) {
         var org = $.parseJSON(supportingChurch);
         $.post(pointEarnedURL, {}, function(data, textStatus, xhr) {
             if (data.success === true) {
@@ -700,7 +725,7 @@ function shareEventHandler(evt) {
                 $('p.has_church span.total_points').html(org.game_points_earned+' <i class="icon-picons-winner"></i>');
             };
         });
-    }
+    };
 };
 /*-----------------------------------------------------------------------------------*/
 /*  Utilities

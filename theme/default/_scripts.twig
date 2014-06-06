@@ -19,5 +19,23 @@
 <script src="{{ paths.theme }}javascripts/google-code-prettify/prettify.js"></script> 
 <script src="{{ paths.theme }}javascripts/jquery.slickforms.js"></script> 
 <script src="{{ paths.theme }}javascripts/retina.js"></script>
-<script src="{{ paths.theme }}javascripts/jquery.match_height.min.js"></script> 
+<script src="{{ paths.theme }}javascripts/jquery.match_height.min.js"></script>
+<script>
+//load the Facebook Javascript Files Asynchronously
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId         : '1376795352606314',
+      xfbml         : true,
+      version       : 'v2.0'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
 <script src="{{ paths.theme }}javascripts/scripts.js"></script>
