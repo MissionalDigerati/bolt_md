@@ -21,21 +21,29 @@
 <script src="{{ paths.theme }}javascripts/retina.js"></script>
 <script src="{{ paths.theme }}javascripts/jquery.match_height.min.js"></script>
 <script>
-//load the Facebook Javascript Files Asynchronously
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId         : '1376795352606314',
-      xfbml         : true,
-      version       : 'v2.0'
-    });
-  };
+/*load the Facebook Javascript Files Asynchronously*/
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId         : '1376795352606314',
+            xfbml         : true,
+            version       : 'v2.0'
+        });
+    };
 
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "//connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+/*load the Twitter Javascript Files Asynchronously*/
+    window.twttr = (function (d, s, id) {
+      var t, js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id; js.src= "https://platform.twitter.com/widgets.js";
+      fjs.parentNode.insertBefore(js, fjs);
+      return window.twttr || (t = { _e: [], ready: function (f) { t._e.push(f) } });
+    }(document, "script", "twitter-wjs"));
 </script>
 <script src="{{ paths.theme }}javascripts/scripts.js"></script>

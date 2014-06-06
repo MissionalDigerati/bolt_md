@@ -3,6 +3,11 @@
  * @param Array
  **/
 var gamifiedPaths = ['/training/faith-and-tech'];
+/**
+ * A string used for sharing during gamification
+ * @param String
+ **/
+var gamifyShareText = 'Free Faith and Tech Training for Your Church: ';
 /*-----------------------------------------------------------------------------------*/
 /*	OWL CAROUSEL
 /*-----------------------------------------------------------------------------------*/
@@ -75,6 +80,13 @@ $(document).ready(function () {
             return false;
         }
     );
+    twttr.ready(function (twttr) {
+        twttr.events.bind('tweet', function (event) { 
+            if ($.inArray(location.pathname, gamifiedPaths)!== -1) {
+                gamifyIncreasePoints();
+            };
+        });
+    });
 });
 /*-----------------------------------------------------------------------------------*/
 /*	FANCYBOX
@@ -690,12 +702,9 @@ function checkHasBenefitingChurch() {
 function setBenefitingChurch(org, closeFancybox) {
     $.cookie('supporting_church', JSON.stringify(org));
     currentOrganization = org;
-    shareURL = location.protocol + '//' + location.host + location.pathname + '?gamify_token=' + org.gamify_token;
-    // addthis_share = { 
-    //     url: shareURL,
-    //     title: 'Free Faith and Tech Training for Your Church',
-    //     description: 'Faith and Tech is a training course consisting of guided instruction and hands-on activities to equip believers to use current technology as a crucial ministry tool.'
-    // };
+    var shareURL = location.protocol + '//' + location.host + location.pathname + '?gamify_token=' + org.gamify_token;
+    var twitterlink = 'https://twitter.com/intent/tweet?url=' + encodeURIComponent(shareURL) + '&text=' + encodeURIComponent(gamifyShareText) + '&via=M_Digerati';
+    $('li.twitter a').attr('href', twitterlink);
     $('p.needs_church').fadeOut('slow', function() {
         $('p.has_church a.church_link').text(org.name).attr('data-original-title', 'Everytime you share this web page with your friends, '+org.name+' will earn points towards new classes they can host at their church.  Start sharing today!');
         $('p.has_church span.total_points').html(org.game_points_earned+' <i class="icon-picons-winner"></i>');
