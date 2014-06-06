@@ -4171,13 +4171,73 @@ div.cten_logos img {
     padding-bottom: 10px;
 }
 /*-----------------------------------------------------------------------------------*/
-/*  STICKY BUTTON
+/*  SOCIAL SHARE NAV
 /*-----------------------------------------------------------------------------------*/
-.sticky-button-container {
-    /*position: relative;*/
+ul#social-share-nav {
+    position: fixed; 
+    top: 25%;
+    left: 0;
+    z-index: 9999;
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
 }
-.sticky-button-btm {
+ul#social-share-nav li {
     position: relative;
-    bottom: 10px;
-    display: inline-block;
+    width: 84px;
+    list-style: none;
+    cursor: pointer;
+    left: 0px;
+}
+ul#social-share-nav li a {
+    display: block;
+    background-repeat:no-repeat;
+    text-decoration: none;
+    width: 84px;
+    height: 64px;
+    margin-left: -20px;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+ul#social-share-nav li.twitter a {
+    background-image: url(../images/social_share/twitter.png);
+    background-color: ;
+}
+ul#social-share-nav li.facebook a {
+    background-image: url(../images/social_share/facebook.png);
+}
+ul#social-share-nav li.google a {
+    background-image: url(../images/social_share/googleplus.png);
+}
+ul#social-share-nav li.pinterest a {
+    background-image: url(../images/social_share/pinterest.png);
+}
+ul#social-share-nav li.twitter a:hover,
+ul#social-share-nav li.facebook a:hover,
+ul#social-share-nav li.google a:hover,
+ul#social-share-nav li.pinterest a:hover {
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+@media only screen and (-Webkit-min-device-pixel-ratio: 1.5), only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min-device-pixel-ratio: 1.5) { 
+    ul#social-share-nav li.twitter a {
+        background-color: #56a3d9;
+        background-image: url(../images/social_share/twitter@2x.png);
+    }
+    ul#social-share-nav li.facebook a {
+        background-image: url(../images/social_share/facebook@2x.png);
+    }
+    ul#social-share-nav li.google a {
+        background-image: url(../images/social_share/googleplus@2x.png);
+    }
+    ul#social-share-nav li.pinterest a {
+        background-image: url(../images/social_share/pinterest@2x.png);
+    }
 }

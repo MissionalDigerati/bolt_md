@@ -46,8 +46,13 @@ $(document).ready(function () {
     })
     $(".slider-prev").click(function () {
         owl.trigger('owl.prev');
-    })
-    
+    });
+
+    $('ul#social-share-nav li a').hover(function() {
+        $(this).css('margin-left', '0px');
+    }, function() {
+        $(this).css('margin-left', '-20px');
+    });
     
 
 });
@@ -584,7 +589,7 @@ function addAccessToClass(hashKey) {
  **/
  var currentOrganization = {};
 function mdGamify() {
-    addthis.addEventListener('addthis.menu.share', shareEventHandler);
+    // addthis.addEventListener('addthis.menu.share', shareEventHandler);
     $(".gamify_fancybox").fancybox();
     $("form#gamify_org_selector_form").append('<div id="authorize_loader" class="pull-right form-loading"></div>');
     $("form#gamify_org_selector_form").submit(function(event) {
@@ -666,11 +671,11 @@ function setBenefitingChurch(org, closeFancybox) {
     $.cookie('supporting_church', JSON.stringify(org));
     currentOrganization = org;
     shareURL = location.protocol + '//' + location.host + location.pathname + '?gamify_token=' + org.gamify_token;
-    addthis_share = { 
-        url: shareURL,
-        title: 'Free Faith and Tech Training for Your Church',
-        description: 'Faith and Tech is a training course consisting of guided instruction and hands-on activities to equip believers to use current technology as a crucial ministry tool.'
-    };
+    // addthis_share = { 
+    //     url: shareURL,
+    //     title: 'Free Faith and Tech Training for Your Church',
+    //     description: 'Faith and Tech is a training course consisting of guided instruction and hands-on activities to equip believers to use current technology as a crucial ministry tool.'
+    // };
     $('p.needs_church').fadeOut('slow', function() {
         $('p.has_church a.church_link').text(org.name).attr('data-original-title', 'Everytime you share this web page with your friends, '+org.name+' will earn points towards new classes they can host at their church.  Start sharing today!');
         $('p.has_church span.total_points').html(org.game_points_earned+' <i class="icon-picons-winner"></i>');
