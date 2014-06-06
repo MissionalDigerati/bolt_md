@@ -4204,19 +4204,23 @@ ul#social-share-nav li a {
 }
 ul#social-share-nav li.twitter a {
     background-image: url(../images/social_share/twitter.png);
-    background-color: ;
+    background-size: 84px 64px;
 }
 ul#social-share-nav li.facebook a {
     background-image: url(../images/social_share/facebook.png);
+    background-size: 84px 64px;
 }
 ul#social-share-nav li.google a {
     background-image: url(../images/social_share/googleplus.png);
+    background-size: 84px 64px;
 }
 ul#social-share-nav li.pinterest a {
     background-image: url(../images/social_share/pinterest.png);
+    background-size: 84px 64px;
 }
 ul#social-share-nav li.linkedin a {
     background-image: url(../images/social_share/linkedin.png);
+    background-size: 84px 64px;
 }
 ul#social-share-nav li.twitter a:hover,
 ul#social-share-nav li.facebook a:hover,
@@ -4234,17 +4238,22 @@ ul#social-share-nav li.linkedin a:hover {
     ul#social-share-nav li.twitter a {
         background-color: #56a3d9;
         background-image: url(../images/social_share/twitter@2x.png);
+        background-size: 84px 64px;
     }
     ul#social-share-nav li.facebook a {
         background-image: url(../images/social_share/facebook@2x.png);
+        background-size: 84px 64px;
     }
     ul#social-share-nav li.google a {
         background-image: url(../images/social_share/googleplus@2x.png);
+        background-size: 84px 64px;
     }
     ul#social-share-nav li.pinterest a {
         background-image: url(../images/social_share/pinterest@2x.png);
+        background-size: 84px 64px;
     }
     ul#social-share-nav li.linkedin a {
         background-image: url(../images/social_share/linkedin@2x.png);
+        background-size: 84px 64px;
     }
 }
