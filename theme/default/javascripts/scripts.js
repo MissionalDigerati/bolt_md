@@ -7,7 +7,7 @@ var gamifiedPaths = ['/training/faith-and-tech'];
  * A string used for sharing during gamification
  * @param String
  **/
-var gamifyShareText = 'Free Faith and Tech Training for Your Church: ';
+var gamifyShareText = 'Free Faith and Tech Training for Your Church! ';
 /*-----------------------------------------------------------------------------------*/
 /*	OWL CAROUSEL
 /*-----------------------------------------------------------------------------------*/
@@ -77,6 +77,19 @@ $(document).ready(function () {
                     gamifyIncreasePoints();
                 };
             });
+            return false;
+        }
+    );
+    $('ul#social-share-nav li.google a, ul#social-share-nav li.pinterest a').click(
+        function(event) {
+            window.open(
+                this.href,
+                '',
+                'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=600'
+            );
+            if ($.inArray(location.pathname, gamifiedPaths)!== -1) {
+                gamifyIncreasePoints();
+            };
             return false;
         }
     );
@@ -702,9 +715,12 @@ function checkHasBenefitingChurch() {
 function setBenefitingChurch(org, closeFancybox) {
     $.cookie('supporting_church', JSON.stringify(org));
     currentOrganization = org;
+    var ogImage = $('meta[property="og:image"]').attr('content');
     var shareURL = location.protocol + '//' + location.host + location.pathname + '?gamify_token=' + org.gamify_token;
     var twitterlink = 'https://twitter.com/intent/tweet?url=' + encodeURIComponent(shareURL) + '&text=' + encodeURIComponent(gamifyShareText) + '&via=M_Digerati';
+    var pinterestLink = 'http://pinterest.com/pin/create/button/?url=' + encodeURIComponent(shareURL) + '&description=' + encodeURIComponent(gamifyShareText) + '&media=' + encodeURIComponent(ogImage);
     $('li.twitter a').attr('href', twitterlink);
+    $('li.pinterest a').attr('href', pinterestLink);
     $('p.needs_church').fadeOut('slow', function() {
         $('p.has_church a.church_link').text(org.name).attr('data-original-title', 'Everytime you share this web page with your friends, '+org.name+' will earn points towards new classes they can host at their church.  Start sharing today!');
         $('p.has_church span.total_points').html(org.game_points_earned+' <i class="icon-picons-winner"></i>');

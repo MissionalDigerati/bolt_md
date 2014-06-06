@@ -4215,10 +4215,14 @@ ul#social-share-nav li.google a {
 ul#social-share-nav li.pinterest a {
     background-image: url(../images/social_share/pinterest.png);
 }
+ul#social-share-nav li.linkedin a {
+    background-image: url(../images/social_share/linkedin.png);
+}
 ul#social-share-nav li.twitter a:hover,
 ul#social-share-nav li.facebook a:hover,
 ul#social-share-nav li.google a:hover,
-ul#social-share-nav li.pinterest a:hover {
+ul#social-share-nav li.pinterest a:hover,
+ul#social-share-nav li.linkedin a:hover {
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
     -ms-transition: all 0.3s ease;
@@ -4239,5 +4243,8 @@ ul#social-share-nav li.pinterest a:hover {
     }
     ul#social-share-nav li.pinterest a {
         background-image: url(../images/social_share/pinterest@2x.png);
+    }
+    ul#social-share-nav li.linkedin a {
+        background-image: url(../images/social_share/linkedin@2x.png);
     }
 }

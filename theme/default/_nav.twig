@@ -13,8 +13,10 @@
 </div>
 <!--/.navbar -->
 <ul id="social-share-nav">
-  <li class="twitter"><a href="https://twitter.com/intent/tweet?url={{ app.request.uri|url_encode }}&text=Missional%20Digerati%20is%20a%20Christian%20mobile%20%26%20web%20app%20dev%20team%20serving%20the%20missional%20community&via=M_Digerati"></a></li>
+  {% set share_description = 'Missional Digerati is a Christian mobile & web app dev team serving the missional community.'|url_encode %}
+  <li class="twitter"><a href="https://twitter.com/intent/tweet?url={{ app.request.uri|url_encode }}&{{share_description}}&via=M_Digerati"></a></li>
   <li class="facebook"><a href=""></a></li>
-  <li class="google"><a href=""></a></li>
-  <li class="pinterest"><a href=""></a></li>
+  <li class="google"><a href="https://plus.google.com/share?url={{ app.request.uri|url_encode }}"></a></li>
+  <li class="pinterest"><a href="http://pinterest.com/pin/create/button/?url={{ app.request.uri|url_encode }}&media=http%3A%2F%2F{{ app.request.host }}{{ paths.theme }}images%2Fshare_logo.png&description={{share_description}}"></a></li>
+  <li class="linkedin"><a href=""></a></li>
 </ul>
