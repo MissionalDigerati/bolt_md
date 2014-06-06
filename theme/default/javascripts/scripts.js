@@ -80,7 +80,7 @@ $(document).ready(function () {
             return false;
         }
     );
-    $('ul#social-share-nav li.google a, ul#social-share-nav li.pinterest a').click(
+    $('ul#social-share-nav li.google a, ul#social-share-nav li.pinterest a, ul#social-share-nav li.linkedin a').click(
         function(event) {
             window.open(
                 this.href,
@@ -719,8 +719,10 @@ function setBenefitingChurch(org, closeFancybox) {
     var shareURL = location.protocol + '//' + location.host + location.pathname + '?gamify_token=' + org.gamify_token;
     var twitterlink = 'https://twitter.com/intent/tweet?url=' + encodeURIComponent(shareURL) + '&text=' + encodeURIComponent(gamifyShareText) + '&via=M_Digerati';
     var pinterestLink = 'http://pinterest.com/pin/create/button/?url=' + encodeURIComponent(shareURL) + '&description=' + encodeURIComponent(gamifyShareText) + '&media=' + encodeURIComponent(ogImage);
+    var linkedInLink = 'http://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(shareURL) + '&title=' + encodeURIComponent('Faith & Tech Training') + '&summary=' + encodeURIComponent(gamifyShareText) + '&source=' + encodeURIComponent('Missional Digerati');
     $('li.twitter a').attr('href', twitterlink);
     $('li.pinterest a').attr('href', pinterestLink);
+    $('li.linkedin a').attr('href', linkedInLink);
     $('p.needs_church').fadeOut('slow', function() {
         $('p.has_church a.church_link').text(org.name).attr('data-original-title', 'Everytime you share this web page with your friends, '+org.name+' will earn points towards new classes they can host at their church.  Start sharing today!');
         $('p.has_church span.total_points').html(org.game_points_earned+' <i class="icon-picons-winner"></i>');

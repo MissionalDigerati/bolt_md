@@ -18,6 +18,11 @@
   {% else %}
       {% set share_description = 'Missional Digerati is a Christian mobile & web app dev team serving the missional community.'|url_encode %}
   {% endif %}
+  {% if share_title is defined and share_title is not empty %}
+      {% set share_title_text = share_title|url_encode %} 
+  {% else %}
+      {% set share_title_text = 'Missional Digerati'|url_encode %}
+  {% endif %}
   {% if ogg_image is defined and ogg_image is not empty %}
       {% set ogg_image_file = ogg_image %} 
   {% else %}
@@ -27,5 +32,5 @@
   <li class="facebook"><a href=""></a></li>
   <li class="google"><a href="https://plus.google.com/share?url={{ app.request.uri|url_encode }}"></a></li>
   <li class="pinterest"><a href="http://pinterest.com/pin/create/button/?url={{ app.request.uri|url_encode }}&media=http%3A%2F%2F{{ app.request.host }}{{ paths.theme }}images%2F{{ogg_image_file}}&description={{share_description}}"></a></li>
-  <li class="linkedin"><a href=""></a></li>
+  <li class="linkedin"><a href="http://www.linkedin.com/shareArticle?mini=true&url={{ app.request.uri|url_encode }}&title={{share_title_text}}&summary={{share_description}}&source={{'Missional Digerati'|url_encode}}"></a></li>
 </ul>
