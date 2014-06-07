@@ -98,6 +98,14 @@ $(document).ready(function () {
             return false;
         }
     );
+    $('#slideup-share-panel li.google a, #slideup-share-panel li.pinterest a, #slideup-share-panel li.linkedin a').click(
+        function(event) {
+            if ($.inArray(location.pathname, gamifiedPaths)!== -1) {
+                gamifyIncreasePoints();
+            };
+            return true;
+        }
+    );
     twttr.ready(function (twttr) {
         twttr.events.bind('tweet', function (event) { 
             if ($.inArray(location.pathname, gamifiedPaths)!== -1) {

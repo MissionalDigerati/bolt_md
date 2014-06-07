@@ -65,7 +65,7 @@
   </div>
 </footer>
 <!-- /footer -->
-<div id="trigger-sldeup-panel" class="toggle-slideup-panel visible-xs"><i class="icon-picons-like"></i> Share</div>
+<div id="trigger-sldeup-panel" class="toggle-slideup-panel"><i class="icon-picons-like"></i> Share</div>
 <div id="slideup-share-panel">
   <ul class="list-group">
     <li class="list-group-item twitter">
@@ -79,17 +79,17 @@
       </a>
     </li>
     <li class="list-group-item google">
-      <a href="https://plus.google.com/share?url={{ app.request.uri|url_encode }}">
+      <a href="https://plus.google.com/share?url={{ app.request.uri|url_encode }}" target="_blank">
         <div class="google-small-icon mobile-share-icon"></div> Google +
       </a>
     </li>
     <li class="list-group-item pinterest">
-      <a href="http://pinterest.com/pin/create/button/?url={{ app.request.uri|url_encode }}&media=http%3A%2F%2F{{ app.request.host }}{{ paths.theme }}images%2F{{ogg_image_file}}&description={{share_description}}">
+      <a href="http://pinterest.com/pin/create/button/?url={{ app.request.uri|url_encode }}&media=http%3A%2F%2F{{ app.request.host }}{{ paths.theme }}images%2F{{ogg_image_file}}&description={{share_description}}" target="_blank">
         <div class="pinterest-small-icon mobile-share-icon"></div> Pinterest
       </a>
     </li>
     <li class="list-group-item linkedin">
-      <a href="http://www.linkedin.com/shareArticle?mini=true&url={{ app.request.uri|url_encode }}&title={{share_title_text}}&summary={{share_description}}&source={{'Missional Digerati'|url_encode}}">
+      <a href="http://www.linkedin.com/shareArticle?mini=true&url={{ app.request.uri|url_encode }}&title={{share_title_text}}&summary={{share_description}}&source={{'Missional Digerati'|url_encode}}" target="_blank">
         <div class="linkedin-small-icon mobile-share-icon"></div> LinkedIn
       </a>
     </li>
