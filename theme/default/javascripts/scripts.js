@@ -72,7 +72,7 @@ $(document).ready(function () {
     /**
      * Handle the clicking of share links
      **/
-    $('ul#social-share-nav li.facebook a').click(
+    $('ul#social-share-nav li.facebook a, #slideup-share-panel li.facebook a').click(
         function(event) {
             FB.ui({
               method: 'share',
