@@ -8,6 +8,11 @@ var gamifiedPaths = ['/training/faith-and-tech'];
  * @param String
  **/
 var gamifyShareText = 'Free Faith and Tech Training for Your Church! ';
+/**
+ * Is the slidepanel open
+ * @param Boolean
+ **/
+var slideUpPanelOpen = false;
 /*-----------------------------------------------------------------------------------*/
 /*	OWL CAROUSEL
 /*-----------------------------------------------------------------------------------*/
@@ -100,6 +105,25 @@ $(document).ready(function () {
             };
         });
     });
+    /**
+     * Handle the slideup share links
+     **/
+    var slideUpNavHeight = $('#slideup-share-panel').height();
+    var newBottomNum = -(slideUpNavHeight + 5);
+    $('#slideup-share-panel').css({'bottom': newBottomNum});
+    $('div.toggle-slideup-panel').click(function(event) {
+        if (slideUpPanelOpen === true) {
+            $(this).css({'bottom': 0});
+            $('#slideup-share-panel').css({'bottom': newBottomNum});
+            slideUpPanelOpen = false;
+        } else {
+            $(this).css({'bottom': slideUpNavHeight});
+            $('#slideup-share-panel').css({'bottom': 0});
+            slideUpPanelOpen = true;
+        };
+       return false; 
+    });
+    
 });
 /*-----------------------------------------------------------------------------------*/
 /*	FANCYBOX
