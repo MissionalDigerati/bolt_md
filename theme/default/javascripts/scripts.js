@@ -108,7 +108,7 @@ $(document).ready(function () {
     /**
      * Handle the slideup share links
      **/
-    var slideUpNavHeight = $('#slideup-share-panel').height();
+    var slideUpNavHeight = $('#slideup-share-panel').outerHeight();
     var newBottomNum = -(slideUpNavHeight + 5);
     $('#slideup-share-panel').css({'bottom': newBottomNum});
     $('div.toggle-slideup-panel').click(function(event) {

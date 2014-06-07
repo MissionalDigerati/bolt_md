@@ -4236,7 +4236,6 @@ ul#social-share-nav li.linkedin a:hover {
 
 @media only screen and (-Webkit-min-device-pixel-ratio: 1.5), only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min-device-pixel-ratio: 1.5) { 
     ul#social-share-nav li.twitter a {
-        background-color: #56a3d9;
         background-image: url(../images/social_share/twitter@2x.png);
         background-size: 84px 64px;
     }
@@ -4266,6 +4265,8 @@ ul#social-share-nav li.linkedin a:hover {
     bottom: -500px;
     width: 100%;
     margin: 0px;
+    padding-bottom: 20px;
+    z-index: 9999;
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
     -ms-transition: all 0.3s ease;
@@ -4282,8 +4283,59 @@ ul#social-share-nav li.linkedin a:hover {
     text-decoration: none;
     font-size: 16px;
 }
+#slideup-share-panel div.mobile-share-icon {
+    position: relative;
+    top: 8px;
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    margin-right: 5px;
+}
+#slideup-share-panel div.twitter-small-icon {
+    background-image: url(../images/social_share/twitter_sm.png);
+    background-size: 32px 32px;
+}
+#slideup-share-panel div.facebook-small-icon {
+    background-image: url(../images/social_share/facebook_sm.png);
+    background-size: 32px 32px;
+}
+#slideup-share-panel div.google-small-icon {
+    background-image: url(../images/social_share/googleplus_sm.png);
+    background-size: 32px 32px;
+}
+#slideup-share-panel div.pinterest-small-icon {
+    background-image: url(../images/social_share/pinterest_sm.png);
+    background-size: 32px 32px;
+}
+#slideup-share-panel div.linkedin-small-icon {
+    background-image: url(../images/social_share/linkedin_sm.png);
+    background-size: 32px 32px;
+}
+@media only screen and (-Webkit-min-device-pixel-ratio: 1.5), only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min-device-pixel-ratio: 1.5) { 
+    #slideup-share-panel div.twitter-small-icon {
+        background-image: url(../images/social_share/twitter_sm@2x.png);
+        background-size: 32px 32px;
+    }
+    #slideup-share-panel div.facebook-small-icon {
+        background-image: url(../images/social_share/facebook_sm@2x.png);
+        background-size: 32px 32px;
+    }
+    #slideup-share-panel div.google-small-icon {
+        background-image: url(../images/social_share/googleplus_sm@2x.png);
+        background-size: 32px 32px;
+    }
+    #slideup-share-panel div.pinterest-small-icon {
+        background-image: url(../images/social_share/pinterest_sm@2x.png);
+        background-size: 32px 32px;
+    }
+    #slideup-share-panel div.linkedin-small-icon {
+        background-image: url(../images/social_share/linkedin_sm@2x.png);
+        background-size: 32px 32px;
+    }
+}
 #trigger-sldeup-panel {
     position: fixed;
+    z-index: 9999;
     bottom: 0px;
     width: 100%;
     margin: 0px;
