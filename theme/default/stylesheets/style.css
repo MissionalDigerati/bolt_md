@@ -4259,45 +4259,11 @@ ul#social-share-nav li.linkedin-share-link a:hover {
 /*-----------------------------------------------------------------------------------*/
 /*  SLIDE UP SOCIAL SHARE NAV
 /*-----------------------------------------------------------------------------------*/
-/*#slideup-share-panel {
-    background-color: #ffffff;
-    position: fixed;
-    bottom: -500px;
-    width: 100%;
-    margin: 0px;
-    padding-bottom: 20px;
-    z-index: 9999;
-    -webkit-transition: all 0.3s ease;
-    -moz-transition: all 0.3s ease;
-    -ms-transition: all 0.3s ease;
-    -o-transition: all 0.3s ease;
-    transition: all 0.3s ease;
-}
-#trigger-sldeup-panel {
-    position: fixed;
-    z-index: 9999;
-    bottom: 0px;
-    width: 100%;
-    margin: 0px;
-    text-align: center;
-    font-size: 20px;
-    padding: 20px 0px;
-    margin: 0px;
-    background-color: #ffffff;
-    border-top: 2px solid #e3e3e3;
-    cursor: pointer;
-    -webkit-transition: all 0.3s ease;
-    -moz-transition: all 0.3s ease;
-    -ms-transition: all 0.3s ease;
-    -o-transition: all 0.3s ease;
-    transition: all 0.3s ease;
-}*/
 #share-bottom-panel {
     position: fixed;
     bottom:0;
     width: 100%;
-    /*padding-bottom:2%;*/
-    z-index: 999999;
+    z-index: 888888;
 }
 #slideup-share-panel {
     background-color: #ffffff;

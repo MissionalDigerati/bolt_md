@@ -1,3 +1,18 @@
+{% if share_description is defined and share_description is not empty %}
+    {% set share_description_text = share_description|url_encode %} 
+{% else %}
+    {% set share_description_text = 'Missional Digerati: App developers serving the missional community!'|url_encode %}
+{% endif %}
+{% if share_title is defined and share_title is not empty %}
+    {% set share_title_text = share_title|url_encode %} 
+{% else %}
+    {% set share_title_text = 'Missional Digerati'|url_encode %}
+{% endif %}
+{% if ogg_image is defined and ogg_image is not empty %}
+    {% set ogg_image_file = ogg_image %} 
+{% else %}
+    {% set ogg_image_file = "share_logo.png" %}
+{% endif %}
 <div class="yamm navbar basic default">
   <div class="navbar-header">
     <div class="container">
@@ -12,25 +27,10 @@
   <!--/.nav-collapse --> 
 </div>
 <!--/.navbar -->
-<ul id="social-share-nav" class="hidden-xs social-sharing-widget hidden-print">
-  {% if share_description is defined and share_description is not empty %}
-      {% set share_description_text = share_description|url_encode %} 
-  {% else %}
-      {% set share_description = 'Missional Digerati is a Christian mobile & web app dev team serving the missional community.'|url_encode %}
-  {% endif %}
-  {% if share_title is defined and share_title is not empty %}
-      {% set share_title_text = share_title|url_encode %} 
-  {% else %}
-      {% set share_title_text = 'Missional Digerati'|url_encode %}
-  {% endif %}
-  {% if ogg_image is defined and ogg_image is not empty %}
-      {% set ogg_image_file = ogg_image %} 
-  {% else %}
-      {% set ogg_image_file = "share_logo.png" %}
-  {% endif %}
-  <li class="twitter-trigger twitter-share-link"><a href="https://twitter.com/intent/tweet?url={{ app.request.uri|url_encode }}&{{share_description}}&via=M_Digerati"></a></li>
+<ul id="social-share-nav" class="hidden-xs hidden-sm hidden-md social-sharing-widget hidden-print">
+  <li class="twitter-trigger twitter-share-link"><a href="https://twitter.com/intent/tweet?url={{ app.request.uri|url_encode }}&text={{share_description_text}}&via=M_Digerati"></a></li>
   <li class="facebook-trigger facebook-share-link"><a href=""></a></li>
   <li class="social-share-trigger-new-window google-share-link"><a href="https://plus.google.com/share?url={{ app.request.uri|url_encode }}"></a></li>
-  <li class="social-share-trigger-new-window pinterest-share-link"><a href="http://pinterest.com/pin/create/button/?url={{ app.request.uri|url_encode }}&media=http%3A%2F%2F{{ app.request.host }}{{ paths.theme }}images%2F{{ogg_image_file}}&description={{share_description}}"></a></li>
-  <li class="social-share-trigger-new-window linkedin-share-link"><a href="http://www.linkedin.com/shareArticle?mini=true&url={{ app.request.uri|url_encode }}&title={{share_title_text}}&summary={{share_description}}&source={{'Missional Digerati'|url_encode}}"></a></li>
+  <li class="social-share-trigger-new-window pinterest-share-link"><a href="http://pinterest.com/pin/create/button/?url={{ app.request.uri|url_encode }}&media=http%3A%2F%2F{{ app.request.host }}{{ paths.theme }}images%2F{{ogg_image_file}}&description={{share_description_text}}"></a></li>
+  <li class="social-share-trigger-new-window linkedin-share-link"><a href="http://www.linkedin.com/shareArticle?mini=true&url={{ app.request.uri|url_encode }}&title={{share_title_text}}&summary={{share_description_text}}&source={{'Missional Digerati'|url_encode}}"></a></li>
 </ul>
