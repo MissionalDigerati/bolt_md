@@ -72,7 +72,7 @@ $(document).ready(function () {
     /**
      * Handle the clicking of share links
      **/
-    $('ul#social-share-nav li.facebook a, #slideup-share-panel li.facebook a').click(
+    $('.facebook-trigger a').click(
         function(event) {
             FB.ui({
               method: 'share',
@@ -85,7 +85,7 @@ $(document).ready(function () {
             return false;
         }
     );
-    $('ul.social-sharing-widget li.google a, ul.social-sharing-widget li.pinterest a, ul.social-sharing-widget li.linkedin a').click(
+    $('.social-share-trigger-new-window a').click(
         function(event) {
             window.open(
                 this.href,
@@ -98,7 +98,7 @@ $(document).ready(function () {
             return false;
         }
     );
-    $('#slideup-share-panel li.google a, #slideup-share-panel li.pinterest a, #slideup-share-panel li.linkedin a').click(
+    $('.social-share-trigger-same-window a').click(
         function(event) {
             if ($.inArray(location.pathname, gamifiedPaths)!== -1) {
                 gamifyIncreasePoints();
@@ -116,22 +116,18 @@ $(document).ready(function () {
     /**
      * Handle the slideup share links
      **/
-    var slideUpNavHeight = $('#slideup-share-panel').outerHeight();
-    var newBottomNum = -(slideUpNavHeight + 5);
-    $('#slideup-share-panel').css({'bottom': newBottomNum});
+    var triggerHeight = $('div#trigger-sldeup-panel').outerHeight();
+    $('div#slideup-share-panel').css({'padding-bottom': triggerHeight + 5});
     $('div.toggle-slideup-panel').click(function(event) {
-        if (slideUpPanelOpen === true) {
-            $(this).css({'bottom': 0});
-            $('#slideup-share-panel').css({'bottom': newBottomNum});
-            slideUpPanelOpen = false;
-        } else {
-            $(this).css({'bottom': slideUpNavHeight});
-            $('#slideup-share-panel').css({'bottom': 0});
-            slideUpPanelOpen = true;
-        };
-       return false; 
+        $('div#slideup-share-panel').slideToggle( "slow", function() {
+            if ($(this).is(':hidden')) {
+                $('div#trigger-sldeup-panel').html('<i class="icon-picons-like"></i> Share');
+            } else {
+                $('div#trigger-sldeup-panel').html('<i class="icon-picons-alert-error-2"></i> Close');
+            };
+        });
+        return false; 
     });
-    
 });
 /*-----------------------------------------------------------------------------------*/
 /*	FANCYBOX
@@ -752,9 +748,9 @@ function setBenefitingChurch(org, closeFancybox) {
     var twitterlink = 'https://twitter.com/intent/tweet?url=' + encodeURIComponent(shareURL) + '&text=' + encodeURIComponent(gamifyShareText) + '&via=M_Digerati';
     var pinterestLink = 'http://pinterest.com/pin/create/button/?url=' + encodeURIComponent(shareURL) + '&description=' + encodeURIComponent(gamifyShareText) + '&media=' + encodeURIComponent(ogImage);
     var linkedInLink = 'http://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(shareURL) + '&title=' + encodeURIComponent('Faith & Tech Training') + '&summary=' + encodeURIComponent(gamifyShareText) + '&source=' + encodeURIComponent('Missional Digerati');
-    $('li.twitter a').attr('href', twitterlink);
-    $('li.pinterest a').attr('href', pinterestLink);
-    $('li.linkedin a').attr('href', linkedInLink);
+    $('.twitter-share-link a').attr('href', twitterlink);
+    $('.pinterest-share-link a').attr('href', pinterestLink);
+    $('.linkedin-share-link a').attr('href', linkedInLink);
     $('p.needs_church').fadeOut('slow', function() {
         $('p.has_church a.church_link').text(org.name).attr('data-original-title', 'Everytime you share this web page with your friends, '+org.name+' will earn points towards new classes they can host at their church.  Start sharing today!');
         $('p.has_church span.total_points').html(org.game_points_earned+' <i class="icon-picons-winner"></i>');

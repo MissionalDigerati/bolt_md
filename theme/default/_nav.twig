@@ -28,9 +28,9 @@
   {% else %}
       {% set ogg_image_file = "share_logo.png" %}
   {% endif %}
-  <li class="twitter"><a href="https://twitter.com/intent/tweet?url={{ app.request.uri|url_encode }}&{{share_description}}&via=M_Digerati"></a></li>
-  <li class="facebook"><a href=""></a></li>
-  <li class="google"><a href="https://plus.google.com/share?url={{ app.request.uri|url_encode }}"></a></li>
-  <li class="pinterest"><a href="http://pinterest.com/pin/create/button/?url={{ app.request.uri|url_encode }}&media=http%3A%2F%2F{{ app.request.host }}{{ paths.theme }}images%2F{{ogg_image_file}}&description={{share_description}}"></a></li>
-  <li class="linkedin"><a href="http://www.linkedin.com/shareArticle?mini=true&url={{ app.request.uri|url_encode }}&title={{share_title_text}}&summary={{share_description}}&source={{'Missional Digerati'|url_encode}}"></a></li>
+  <li class="twitter-trigger twitter-share-link"><a href="https://twitter.com/intent/tweet?url={{ app.request.uri|url_encode }}&{{share_description}}&via=M_Digerati"></a></li>
+  <li class="facebook-trigger facebook-share-link"><a href=""></a></li>
+  <li class="social-share-trigger-new-window google-share-link"><a href="https://plus.google.com/share?url={{ app.request.uri|url_encode }}"></a></li>
+  <li class="social-share-trigger-new-window pinterest-share-link"><a href="http://pinterest.com/pin/create/button/?url={{ app.request.uri|url_encode }}&media=http%3A%2F%2F{{ app.request.host }}{{ paths.theme }}images%2F{{ogg_image_file}}&description={{share_description}}"></a></li>
+  <li class="social-share-trigger-new-window linkedin-share-link"><a href="http://www.linkedin.com/shareArticle?mini=true&url={{ app.request.uri|url_encode }}&title={{share_title_text}}&summary={{share_description}}&source={{'Missional Digerati'|url_encode}}"></a></li>
 </ul>

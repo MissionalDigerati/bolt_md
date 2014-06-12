@@ -65,33 +65,40 @@
   </div>
 </footer>
 <!-- /footer -->
-<div id="trigger-sldeup-panel" class="toggle-slideup-panel"><i class="icon-picons-like"></i> Share</div>
-<div id="slideup-share-panel">
-  <ul class="list-group">
-    <li class="list-group-item twitter">
-      <a href="https://twitter.com/intent/tweet?url={{ app.request.uri|url_encode }}&{{share_description}}&via=M_Digerati">
-        <div class="twitter-small-icon mobile-share-icon"></div> Twitter
-      </a>
-    </li>
-    <li class="list-group-item facebook">
-      <a href="">
-        <div class="facebook-small-icon mobile-share-icon"></div> Facebook
-      </a>
-    </li>
-    <li class="list-group-item google">
-      <a href="https://plus.google.com/share?url={{ app.request.uri|url_encode }}" target="_blank">
-        <div class="google-small-icon mobile-share-icon"></div> Google +
-      </a>
-    </li>
-    <li class="list-group-item pinterest">
-      <a href="http://pinterest.com/pin/create/button/?url={{ app.request.uri|url_encode }}&media=http%3A%2F%2F{{ app.request.host }}{{ paths.theme }}images%2F{{ogg_image_file}}&description={{share_description}}" target="_blank">
-        <div class="pinterest-small-icon mobile-share-icon"></div> Pinterest
-      </a>
-    </li>
-    <li class="list-group-item linkedin">
-      <a href="http://www.linkedin.com/shareArticle?mini=true&url={{ app.request.uri|url_encode }}&title={{share_title_text}}&summary={{share_description}}&source={{'Missional Digerati'|url_encode}}" target="_blank">
-        <div class="linkedin-small-icon mobile-share-icon"></div> LinkedIn
-      </a>
-    </li>
-  </ul>
-</div> 
+<div id="share-bottom-panel">
+  <div id="slideup-share-panel">
+    <div class="row">
+      <div class="col-xs-4 twitter-trigger twitter-share-link">
+        <a href="https://twitter.com/intent/tweet?url={{ app.request.uri|url_encode }}&{{share_description}}&via=M_Digerati">
+          <div class="twitter-small-icon mobile-share-icon"></div> Twitter
+        </a>
+      </div>
+      <div class="col-xs-4 social-share-trigger-same-window facebook-share-link">
+        <a href="">
+          <div class="facebook-small-icon mobile-share-icon"></div> Facebook
+        </a>
+      </div>
+      <div class="col-xs-4 social-share-trigger-same-window google-share-link">
+        <a href="https://plus.google.com/share?url={{ app.request.uri|url_encode }}" target="_blank">
+          <div class="google-small-icon mobile-share-icon"></div> Google +
+        </a>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div class="row">
+      <div class="col-xs-4 social-share-trigger-same-window pinterest-share-link">
+        <a href="http://pinterest.com/pin/create/button/?url={{ app.request.uri|url_encode }}&media=http%3A%2F%2F{{ app.request.host }}{{ paths.theme }}images%2F{{ogg_image_file}}&description={{share_description}}" target="_blank">
+          <div class="pinterest-small-icon mobile-share-icon"></div> Pinterest
+        </a>
+      </div>
+      <div class="col-xs-4 social-share-trigger-same-window linkedin-share-link">
+        <a href="http://www.linkedin.com/shareArticle?mini=true&url={{ app.request.uri|url_encode }}&title={{share_title_text}}&summary={{share_description}}&source={{'Missional Digerati'|url_encode}}" target="_blank">
+          <div class="linkedin-small-icon mobile-share-icon"></div> LinkedIn
+        </a>
+      </div>
+      <div class="col-xs-4">&nbsp;</div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+  <div id="trigger-sldeup-panel" class="toggle-slideup-panel"><i class="icon-picons-like"></i> Share</div>
+</div>
