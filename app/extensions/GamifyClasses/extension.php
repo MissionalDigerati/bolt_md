@@ -67,6 +67,9 @@ class Extension extends \Bolt\BaseExtension
         if (empty($this->config['points_per_share'])) {
             $this->config['points_per_share'] = 0;
         }
+        if (empty($this->config['benchmarks_trigger_notify'])) {
+            $this->config['benchmarks_trigger_notify'] = array();
+        }
         $this->addTwigFunction('organization_select_form', 'createOrgSelectForm');
         $this->addTwigFunction('get_csrf_token', 'getCSRFToken');
         $this->app->match($this->extensionPaths['org_selector_action'], array($this, 'processOrgSelectorForm'));
@@ -252,6 +255,7 @@ class Extension extends \Bolt\BaseExtension
                             'current_points'=>  $newPoints,
                             'message'       =>  __('The points have been added!')
                         );
+                        $this->notifyAdmin($orgData[0], $newPoints);
                     } else {
                         $failed = true;
                     }
@@ -288,5 +292,42 @@ class Extension extends \Bolt\BaseExtension
             $orgArray[$org['id']] = $org['name'] . " - " . strip_tags($org['address']);
         }
         return $orgArray;
+    }
+    /**
+     * Notify the admin if the points pass one or more of the benchmark levels
+     *
+     * @return void
+     * @access private
+     * @author Johnathan Pulos
+     **/
+    private function notifyAdmin($org, $currentPoints)
+    {
+        $benchmarkLevels = $this->config['benchmarks_trigger_notify'];
+        $adminEmail = $this->config['admin_email'];
+        $buffer = $this->config['points_per_share'];
+        $shouldNotify = false;
+        $levelsPassed = array();
+        foreach ($benchmarkLevels as $level) {
+            $min = $level - $buffer;
+            $max = $level + $buffer;
+            if (($min <= $currentPoints) && ($currentPoints <= $max)) {
+                array_push($levelsPassed, $level);
+                $shouldNotify = true;
+            }
+        }
+        if ($shouldNotify == true) {
+            $mailhtml = "Dear Admin,<br><br>" . $org['name'] . " has earned enough points to unlock a new Faith & Tech class.  " .
+            "You should email " . $org['contact_name'] . " as soon as possible at " . $org['email'] . ".  The point levels  " .
+            "they have accomplished are: " . implode(', ', $levelsPassed) . " pts.  Take care.<br><br>The Gamify Classes Extension";
+            $message = \Swift_Message::newInstance()
+                ->setSubject($org['name'] . " Has Opened a F&T Class")
+                ->setFrom(array($adminEmail => $adminEmail))
+                ->setTo(array($adminEmail => $adminEmail))
+                ->setBody(strip_tags($mailhtml))
+                ->addPart($mailhtml, 'text/html');
+            if ($this->app['mailer']->send($message)) {
+                $this->app['log']->add('[GamifyClasses] Sent email to '. $adminEmail . ' about ' . $org['name'] . ' unlocking a new class.', 3);
+            }
+        }
     }
 }
