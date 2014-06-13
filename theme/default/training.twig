@@ -134,7 +134,7 @@
   <script type="text/javascript">
     $(function() {
     {% if has_gamification %}
-        mdGamify();
+        mdGamify("{{ get_csrf_token() }}");
     {% endif %}
         $('.row .same-height').matchHeight(true);
     });
