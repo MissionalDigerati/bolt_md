@@ -1,8 +1,23 @@
+/**
+ * A group of pathes where people earn points for sharing
+ * @param Array
+ **/
+var gamifiedPaths = ['/training/faith-and-tech'];
+/**
+ * A string used for sharing during gamification
+ * @param String
+ **/
+var gamifyShareText = 'Free Faith and Tech Training for Your Church! ';
+/**
+ * Is the slidepanel open
+ * @param Boolean
+ **/
+var slideUpPanelOpen = false;
 /*-----------------------------------------------------------------------------------*/
 /*	OWL CAROUSEL
 /*-----------------------------------------------------------------------------------*/
 $(document).ready(function () {
-    
+
      $(".owlcarousel").owlCarousel({
         navigation: true,
         navigationText : ['<i class="icon-left-open"></i>','<i class="icon-right-open"></i>'],
@@ -46,10 +61,83 @@ $(document).ready(function () {
     })
     $(".slider-prev").click(function () {
         owl.trigger('owl.prev');
-    })
-    
-    
+    });
 
+    $('ul#social-share-nav li a').hover(function() {
+        $(this).css('margin-left', '0px');
+    }, function() {
+        $(this).css('margin-left', '-20px');
+    });
+
+    /**
+     * Handle the clicking of share links
+     **/
+    $('.facebook-trigger a').click(
+        function(event) {
+            FB.ui({
+              method: 'share',
+              href: document.URL,
+            }, function(response) {
+                if ($.inArray(location.pathname, gamifiedPaths)!== -1) {
+                    gamifyIncreasePoints();
+                };
+            });
+            return false;
+        }
+    );
+    $('.social-share-trigger-new-window a').click(
+        function(event) {
+            window.open(
+                this.href,
+                '',
+                'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=400,width=600'
+            );
+            if ($.inArray(location.pathname, gamifiedPaths)!== -1) {
+                gamifyIncreasePoints();
+            };
+            return false;
+        }
+    );
+    $('.social-share-trigger-same-window a').click(
+        function(event) {
+            if ($.inArray(location.pathname, gamifiedPaths)!== -1) {
+                gamifyIncreasePoints();
+            };
+            return true;
+        }
+    );
+    twttr.ready(function (twttr) {
+        twttr.events.bind('tweet', function (event) { 
+            if ($.inArray(location.pathname, gamifiedPaths)!== -1) {
+                gamifyIncreasePoints();
+            };
+        });
+    });
+    /**
+     * Handle the slideup share links
+     **/
+    var triggerHeight = $('div#trigger-sldeup-panel').outerHeight();
+    $('div#slideup-share-panel').css({'padding-bottom': triggerHeight + 5});
+    $(window).resize(function(){
+        /**
+         * Handle the slideup share links
+         **/
+        var triggerHeight = $('div#trigger-sldeup-panel').outerHeight();
+        $('div#slideup-share-panel').css({'padding-bottom': triggerHeight + 5});
+    });
+    $('div.toggle-slideup-panel').click(
+        function(e){
+            $('div#slideup-share-panel').slideToggle( "slow", function() {
+                    if ($(this).is(':hidden')) {
+                        $('div#trigger-sldeup-panel').html('<i class="icon-picons-like"></i> Share');
+                    } else {
+                        $('div#trigger-sldeup-panel').html('<i class="icon-picons-alert-error-2"></i> Close');
+                    };
+                }
+            );
+            return false;
+        }
+    );
 });
 /*-----------------------------------------------------------------------------------*/
 /*	FANCYBOX
@@ -584,7 +672,7 @@ function addAccessToClass(hashKey) {
  **/
  var currentOrganization = {};
 function mdGamify() {
-    addthis.addEventListener('addthis.menu.share', shareEventHandler);
+    // addthis.addEventListener('addthis.menu.share', shareEventHandler);
     $(".gamify_fancybox").fancybox();
     $("form#gamify_org_selector_form").append('<div id="authorize_loader" class="pull-right form-loading"></div>');
     $("form#gamify_org_selector_form").submit(function(event) {
@@ -665,12 +753,14 @@ function checkHasBenefitingChurch() {
 function setBenefitingChurch(org, closeFancybox) {
     $.cookie('supporting_church', JSON.stringify(org));
     currentOrganization = org;
-    shareURL = location.protocol + '//' + location.host + location.pathname + '?gamify_token=' + org.gamify_token;
-    addthis_share = { 
-        url: shareURL,
-        title: 'Free Faith and Tech Training for Your Church',
-        description: 'Faith and Tech is a training course consisting of guided instruction and hands-on activities to equip believers to use current technology as a crucial ministry tool.'
-    };
+    var ogImage = $('meta[property="og:image"]').attr('content');
+    var shareURL = location.protocol + '//' + location.host + location.pathname + '?gamify_token=' + org.gamify_token;
+    var twitterlink = 'https://twitter.com/intent/tweet?url=' + encodeURIComponent(shareURL) + '&text=' + encodeURIComponent(gamifyShareText) + '&via=M_Digerati';
+    var pinterestLink = 'http://pinterest.com/pin/create/button/?url=' + encodeURIComponent(shareURL) + '&description=' + encodeURIComponent(gamifyShareText) + '&media=' + encodeURIComponent(ogImage);
+    var linkedInLink = 'http://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(shareURL) + '&title=' + encodeURIComponent('Faith & Tech Training') + '&summary=' + encodeURIComponent(gamifyShareText) + '&source=' + encodeURIComponent('Missional Digerati');
+    $('.twitter-share-link a').attr('href', twitterlink);
+    $('.pinterest-share-link a').attr('href', pinterestLink);
+    $('.linkedin-share-link a').attr('href', linkedInLink);
     $('p.needs_church').fadeOut('slow', function() {
         $('p.has_church a.church_link').text(org.name).attr('data-original-title', 'Everytime you share this web page with your friends, '+org.name+' will earn points towards new classes they can host at their church.  Start sharing today!');
         $('p.has_church span.total_points').html(org.game_points_earned+' <i class="icon-picons-winner"></i>');
@@ -683,10 +773,15 @@ function setBenefitingChurch(org, closeFancybox) {
         });
     });
 };
-function shareEventHandler(evt) {
-    if (evt.type == 'addthis.menu.share') { 
-        var pointEarnedURL = '/gamify_classes/organization/' + currentOrganization.id + '/shared.json';
-        var supportingChurch = $.cookie('supporting_church');
+/**
+ * The org has earned points for sharing, so add it up
+ *
+ * @return void
+ **/
+function gamifyIncreasePoints() {
+    var pointEarnedURL = '/gamify_classes/organization/' + currentOrganization.id + '/shared.json';
+    var supportingChurch = $.cookie('supporting_church');
+    if (supportingChurch) {
         var org = $.parseJSON(supportingChurch);
         $.post(pointEarnedURL, {}, function(data, textStatus, xhr) {
             if (data.success === true) {
@@ -695,7 +790,7 @@ function shareEventHandler(evt) {
                 $('p.has_church span.total_points').html(org.game_points_earned+' <i class="icon-picons-winner"></i>');
             };
         });
-    }
+    };
 };
 /*-----------------------------------------------------------------------------------*/
 /*  Utilities

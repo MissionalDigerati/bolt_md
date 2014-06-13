@@ -2,16 +2,20 @@
   {% set has_gamification=false %}
   {% set training_type='Digerati 101' %}
   {% set ogg_image='share_digerati_101.png' %}
+  {% set share_description='Digerati 101 training in app development for Christian ministry workers!' %}
+  {% set share_title="Digerati 101 Training" %}
 {% else %}
   {% set has_gamification=true %}
   {% set training_type='Faith & Tech' %}
   {% set ogg_image='share_faith_tech.png' %}
+  {% set share_description='Free Faith and Tech Training for Your Church! ' %}
+  {% set share_title="Faith and Tech Training" %}
 {% endif %}
 {% include '_header.twig' with { "ogg_image": ogg_image } %}
 <body class="full-layout">
 <div class="body-wrapper">
 
-  {% include '_nav.twig' %}
+  {% include '_nav.twig' with {"share_title": share_title, "share_description": share_description, "ogg_image": ogg_image} %}
 
   <div class="offset"></div>
 
@@ -118,7 +122,7 @@
     </div>
   </div>
   
-{% include '_footer.twig' %}
+{% include '_footer.twig' with {"share_title": share_title, "share_description": share_description, "ogg_image": ogg_image}  %}
 
 </div>
 <div style="display:none;" id="org_selector_form_holder">
