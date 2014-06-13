@@ -665,14 +665,15 @@ function addAccessToClass(hashKey) {
 /*-----------------------------------------------------------------------------------*/
 /*  GAMIFY
 /*-----------------------------------------------------------------------------------*/
-/**
+ var currentOrganization = {};
+ var csrfToken = '';
+ /**
  * Sets up gamification feature
  *
  * @return void
  **/
- var currentOrganization = {};
-function mdGamify() {
-    // addthis.addEventListener('addthis.menu.share', shareEventHandler);
+function mdGamify(userCSRFToken) {
+    csrfToken = userCSRFToken;
     $(".gamify_fancybox").fancybox();
     $("form#gamify_org_selector_form").append('<div id="authorize_loader" class="pull-right form-loading"></div>');
     $("form#gamify_org_selector_form").submit(function(event) {
@@ -783,7 +784,7 @@ function gamifyIncreasePoints() {
     var supportingChurch = $.cookie('supporting_church');
     if (supportingChurch) {
         var org = $.parseJSON(supportingChurch);
-        $.post(pointEarnedURL, {}, function(data, textStatus, xhr) {
+        $.post(pointEarnedURL, {'csrf_token': csrfToken}, function(data, textStatus, xhr) {
             if (data.success === true) {
                 org.game_points_earned = data.current_points;
                 $.cookie('supporting_church', JSON.stringify(org));

@@ -68,8 +68,22 @@ class Extension extends \Bolt\BaseExtension
             $this->config['points_per_share'] = 0;
         }
         $this->addTwigFunction('organization_select_form', 'createOrgSelectForm');
+        $this->addTwigFunction('get_csrf_token', 'getCSRFToken');
         $this->app->match($this->extensionPaths['org_selector_action'], array($this, 'processOrgSelectorForm'));
         $this->app->match($this->extensionPaths['org_points_earned_action'], array($this, 'orgSharedClass'));
+    }
+    /**
+     * Get the user's CSRF token to validate the points are coming from our website
+     *
+     * @return string
+     * @access public
+     * @author Johnathan Pulos
+     **/
+    public function getCSRFToken()
+    {
+        $csrfToken = md5(uniqid(rand(), TRUE));
+        $this->app['session']->set('gamifyClass.csrfToken', $csrfToken);
+        return $csrfToken;
     }
     /**
      * Gets the form to select an organization that will receive the points
@@ -212,29 +226,38 @@ class Extension extends \Bolt\BaseExtension
         $pointsEarned = (int) $this->config['points_per_share'];
         $table = $this->tablePrefix . "organizations";
         if ($request->getMethod() == 'POST') {
-            $id = (int) $id;
-            if (isset($id)) {
-                $sql = "Select * FROM $table WHERE id = ?";
-                $orgData = $this->app['db']->fetchAll($sql, array($id));
-                if (!empty($orgData)) {
-                    $newPoints = $orgData[0]['game_points_earned'] + $pointsEarned;
-                    $sql = "UPDATE $table SET game_points_earned = ?, shares = shares + 1 WHERE  id = ?";
-                    $updateQuery = $this->app['db']->executeQuery(
-                        $sql,
-                        array($newPoints, $id),
-                        array(\PDO::PARAM_INT, \PDO::PARAM_INT)
-                    );
-                    $response = array(
-                        'success'       =>  true,
-                        'error'         =>  false,
-                        'current_points'=>  $newPoints,
-                        'message'       =>  __('The points have been added!')
-                    );
+            $currentCSRFToken = $this->app['session']->get('gamifyClass.csrfToken');
+            $passedCSRFToken =  $this->app['request']->get('csrf_token');
+            if ((empty($passedCSRFToken)) || ($currentCSRFToken != $passedCSRFToken)) {
+                /**
+                 * Someone is cheating
+                 */
+                $failed = true;
+            } else {
+                $id = (int) $id;
+                if (isset($id)) {
+                    $sql = "Select * FROM $table WHERE id = ?";
+                    $orgData = $this->app['db']->fetchAll($sql, array($id));
+                    if (!empty($orgData)) {
+                        $newPoints = $orgData[0]['game_points_earned'] + $pointsEarned;
+                        $sql = "UPDATE $table SET game_points_earned = ?, shares = shares + 1 WHERE  id = ?";
+                        $updateQuery = $this->app['db']->executeQuery(
+                            $sql,
+                            array($newPoints, $id),
+                            array(\PDO::PARAM_INT, \PDO::PARAM_INT)
+                        );
+                        $response = array(
+                            'success'       =>  true,
+                            'error'         =>  false,
+                            'current_points'=>  $newPoints,
+                            'message'       =>  __('The points have been added!')
+                        );
+                    } else {
+                        $failed = true;
+                    }
                 } else {
                     $failed = true;
                 }
-            } else {
-                $failed = true;
             }
         } else {
             $failed = true;
@@ -244,8 +267,8 @@ class Extension extends \Bolt\BaseExtension
             $response = array(
                 'success'       =>  false,
                 'error'         =>  true,
-                'current_points'=>  2,
-                'message'       =>  __('The points were no able to be added!')
+                'current_points'=>  null,
+                'message'       =>  __('The points were not able to be added!')
             );
         }
         return $this->app->json($response);
