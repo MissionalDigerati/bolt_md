@@ -104,9 +104,9 @@ class Extension extends \Bolt\BaseExtension
                 'organization',
                 'choice',
                 array(
-                    'label'         =>  'Organizaton',
+                    'label'         =>  'Church',
                     'choices'       =>  $orgs,
-                    'empty_value'   => 'Choose an Organization'
+                    'empty_value'   => 'Choose a Church'
                 )
             )
             ->getForm();
