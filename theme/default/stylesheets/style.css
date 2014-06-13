@@ -2362,7 +2362,7 @@ div.form-loading {
     background-image: url(../images/fancy-loading.gif) !important;
 }
 .fancybox-overlay {
-    background: rgba(27,27,27,0.94) !important
+    background: rgba(27,27,27,0.94);
 }
 .fancybox-opened .fancybox-skin {
     -webkit-box-shadow: 0 0 5px rgba(0,0,0,0.33);

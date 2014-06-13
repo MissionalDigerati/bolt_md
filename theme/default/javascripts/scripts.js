@@ -597,7 +597,10 @@ function UCLockOut(hashKey) {
             closeEffect:  'none',
             helpers: { 
                 overlay: {
-                    closeClick: false
+                    closeClick: false,
+                    css : {
+                        'background' : 'rgba(19, 19, 19, .99)'
+                    }
                 }
             }
         });
