@@ -4356,3 +4356,6 @@ ul#social-share-nav li.linkedin-share-link a:hover {
         background-size: 32px 32px;
     }
 }
+#fb_dialog_ipad_overlay {
+    width: 600px !important;
+}
