@@ -14,6 +14,14 @@ Options -Indexes
   </IfModule>
 </FilesMatch>
 
+# 301 redirects
+Redirect 301 /projects/open-bible-stories http://www.missionaldigerati.org/project/video-translation-platform
+Redirect 301 /projects/jp-mobile http://www.missionaldigerati.org/project/jp-mobile
+Redirect 301 /projects/seven-nine-online http://www.missionaldigerati.org/project/seven-nine-online
+Redirect 301 /submit-an-idea http://www.missionaldigerati.org/participate/submit-an-idea
+Redirect 301 /contribute http://www.missionaldigerati.org/participate/donate
+Redirect 301 /donate http://www.missionaldigerati.org/participate/donate
+
 <IfModule mod_rewrite.c>
   RewriteEngine on
 
