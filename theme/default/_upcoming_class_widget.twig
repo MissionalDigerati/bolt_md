@@ -5,7 +5,7 @@
     {% if classes is defined and classes is not empty %}
 
         {% for class in classes %}
-            {% set type_of_training = class.related() %}
+            {% set type_of_training = class.related('curriculum') %}
             <li>
                 <div class="text-center">
                     {% if type_of_training is defined and type_of_training is not empty %}
