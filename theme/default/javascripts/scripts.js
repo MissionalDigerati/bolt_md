@@ -772,6 +772,7 @@ function setBenefitingChurch(org, closeFancybox) {
     $('.twitter-share-link a').attr('href', twitterlink);
     $('.pinterest-share-link a').attr('href', pinterestLink);
     $('.linkedin-share-link a').attr('href', linkedInLink);
+    window.history.replaceState({}, 'Sharable Link', location.pathname + '?gamify_token=' + org.gamify_token);
     $('p.needs_church').fadeOut('slow', function() {
         $('p.has_church a.church_link').text(org.name).attr('data-original-title', 'Everytime you share this web page with your friends, '+org.name+' will earn points towards new classes they can host at their church.  Start sharing today!');
         $('p.has_church span.total_points').html(org.game_points_earned+' <i class="icon-picons-winner"></i>');
