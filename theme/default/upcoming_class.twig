@@ -104,7 +104,7 @@
 {% endif %}
 <!-- /.body-wrapper --> 
 {% if record.public == 0 %}
-  {% include '_scripts.twig' with { "hide_add_this": true } %}
+  {% include '_scripts.twig' %}
 {% else %}
   {% include '_scripts.twig' %}
 {% endif %}
@@ -113,6 +113,7 @@
     UCSetupFTRegistrationForm("{{ record.title }} - {{ record.date_of_class|date('M d, ’y @ g:i a') }}", {{record.id}});
     {% if record.public == 0 %}
       UCLockOut('{{ md5(record.slug) }}');
+      hideSharing();
     {% endif %}
   });
 </script>

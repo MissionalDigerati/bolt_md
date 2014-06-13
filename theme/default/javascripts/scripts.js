@@ -558,6 +558,13 @@ $(document).ready(function() {
     };
 });
 /**
+ * Hide all sharing options
+ * @retun void
+ */
+function hideSharing() {
+    $('ul#social-share-nav, ul#social-share-nav li, div#share-bottom-panel, div#slideup-share-panel, div#trigger-sldeup-panel').hide();
+};
+/**
  * Setup the registration form
  * @param String eventInputValue the value to set in the class field
  * @retun void
