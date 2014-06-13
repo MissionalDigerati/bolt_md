@@ -62,6 +62,7 @@ class Extension extends \Bolt\BaseExtension
     public function initialize()
     {
         $this->config = $this->getConfig();
+        $this->authorized = false;
         $this->extensionPaths['branding'] = $this->app['config']->get('general/branding/path');
 
         /**

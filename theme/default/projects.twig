@@ -15,11 +15,11 @@
 
   <div class="dark-wrapper">
     <div class="container inner">
-        {% setcontent current_projects = 'projects' where { status: 'published', featured: '1' } limit 1 %}
+        {% setcontent current_project = 'projects' where { status: 'published', featured: '1' } limit 1 %}
 
-        {% if current_projects is defined and current_projects is not empty %}
+        {% if current_project is defined and current_project is not empty %}
           {% set current_project_id = "" %}
-          {% for project in current_projects %}
+          {% for project in current_project %}
 
               {% set current_project_id = project.id %}
 
@@ -36,26 +36,27 @@
         <div class="row">
 
             {% if projects is defined and projects is not empty %}
-                {% set cnt = 1 %}
-                {% for project in projects %}
-                    {% if project.id != current_project_id %}
+              {% set other_projects = remove_record(projects, [current_project_id]) %}
+              {% for row in other_projects|batch(2) %}
 
-                      {% set cnt = cnt+1 %}
+                <div class="row">
 
-                      <div class="col-sm-6">
+                  {% for project in row %}
 
-                          {% include '_project.twig' with {'project': project} %}
+                    <div class="col-sm-6">
 
-                      </div>
+                        {% include '_project.twig' with {'project': project} %}
+                        
+                    </div>
 
-                      {% if cnt % 2 %}
+                  {% endfor %}
 
-                        <div class="clearfix"></div>
+                  <div class="clearfix"></div>
 
-                      {% endif %}
+                </div>
+                <div class="divide20"></div>
 
-                    {% endif %}
-                {% endfor %}
+              {% endfor %}
 
             {% endif %}
 
@@ -69,6 +70,11 @@
 <!-- /.body-wrapper --> 
 
 {% include '_scripts.twig' %}
+<script type="text/javascript">
+  $(function() {
+      $('.row .same-height').matchHeight(true);
+  });
+</script>
 
 </body>
 </html>

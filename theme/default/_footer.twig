@@ -63,5 +63,59 @@
       </ul>
     </div>
   </div>
+  <div class="visible-xs visible-sm visible-md footer-padding"></div>
 </footer>
-<!-- /footer --> 
+<!-- /footer -->
+{% if share_description is defined and share_description is not empty %}
+    {% set share_description_text = share_description|url_encode %} 
+{% else %}
+    {% set share_description_text = 'Missional Digerati is a Christian mobile & web app dev team serving the missional community.'|url_encode %}
+{% endif %}
+{% if share_title is defined and share_title is not empty %}
+    {% set share_title_text = share_title|url_encode %} 
+{% else %}
+    {% set share_title_text = 'Missional Digerati'|url_encode %}
+{% endif %}
+{% if ogg_image is defined and ogg_image is not empty %}
+    {% set ogg_image_file = ogg_image %} 
+{% else %}
+    {% set ogg_image_file = "share_logo.png" %}
+{% endif %}
+<div id="share-bottom-panel" class="visible-xs visible-sm visible-md">
+  <div id="slideup-share-panel">
+    <div class="row">
+      <div class="col-xs-4 twitter-trigger twitter-share-link">
+        <a href="https://twitter.com/intent/tweet?url={{ app.request.uri|url_encode }}&text={{share_description_text}}&via=M_Digerati">
+          <div class="twitter-small-icon mobile-share-icon"></div> Twitter
+        </a>
+      </div>
+      <div class="col-xs-4 social-share-trigger-same-window facebook-share-link">
+        <a href="">
+          <div class="facebook-small-icon mobile-share-icon"></div> Facebook
+        </a>
+      </div>
+      <div class="col-xs-4 social-share-trigger-same-window google-share-link">
+        <a href="https://plus.google.com/share?url={{ app.request.uri|url_encode }}" target="_blank">
+          <div class="google-small-icon mobile-share-icon"></div> Google +
+        </a>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div class="row">
+      <div class="col-xs-4 social-share-trigger-same-window pinterest-share-link">
+        <a href="http://pinterest.com/pin/create/button/?url={{ app.request.uri|url_encode }}&media=http%3A%2F%2F{{ app.request.host }}{{ paths.theme }}images%2F{{ogg_image_file}}&description={{share_description_text}}" target="_blank">
+          <div class="pinterest-small-icon mobile-share-icon"></div> Pinterest
+        </a>
+      </div>
+      <div class="col-xs-4 social-share-trigger-same-window linkedin-share-link">
+        <a href="http://www.linkedin.com/shareArticle?mini=true&url={{ app.request.uri|url_encode }}&title={{share_title_text}}&summary={{share_description_text}}&source={{'Missional Digerati'|url_encode}}" target="_blank">
+          <div class="linkedin-small-icon mobile-share-icon"></div> LinkedIn
+        </a>
+      </div>
+      <div class="col-xs-4">&nbsp;</div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+  <div id="trigger-sldeup-panel" class="toggle-slideup-panel"><i class="icon-picons-like"></i> Share</div>
+  <div class="clearfix"></div>
+</div>

@@ -246,6 +246,9 @@ h1.post-title {
     padding: 0;
     margin: 0;
 }
+.footer-padding {
+    height: 50px;
+}
 footer .post-list {
     list-style: none;
     margin: 0;
@@ -4149,4 +4152,205 @@ div.credit {
 div.cten_logos img {
     display: inline-block;
     max-height: 75px;
+}
+/*-----------------------------------------------------------------------------------*/
+/*  GAMIFICATION
+/*-----------------------------------------------------------------------------------*/
+#gamify_section {
+    text-align: center;
+}
+#gamify_section span.heading {
+    font-size: 11px;
+    font-style: italic;
+}
+#gamify_section a.change_church {
+    font-size: 11px;
+}
+#gamify_section .total_points {
+    font-size: 20px;
+}
+.page-title .inner.gamify {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+/*-----------------------------------------------------------------------------------*/
+/*  SOCIAL SHARE NAV
+/*-----------------------------------------------------------------------------------*/
+ul#social-share-nav {
+    position: fixed; 
+    top: 25%;
+    left: 0;
+    z-index: 9999;
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+ul#social-share-nav li {
+    position: relative;
+    width: 84px;
+    list-style: none;
+    cursor: pointer;
+    left: 0px;
+}
+ul#social-share-nav li a {
+    display: block;
+    background-repeat:no-repeat;
+    text-decoration: none;
+    width: 84px;
+    height: 64px;
+    margin-left: -20px;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+ul#social-share-nav li.twitter-share-link a {
+    background-image: url(../images/social_share/twitter.png);
+    background-size: 84px 64px;
+}
+ul#social-share-nav li.facebook-share-link a {
+    background-image: url(../images/social_share/facebook.png);
+    background-size: 84px 64px;
+}
+ul#social-share-nav li.google-share-link a {
+    background-image: url(../images/social_share/googleplus.png);
+    background-size: 84px 64px;
+}
+ul#social-share-nav li.pinterest-share-link a {
+    background-image: url(../images/social_share/pinterest.png);
+    background-size: 84px 64px;
+}
+ul#social-share-nav li.linkedin-share-link a {
+    background-image: url(../images/social_share/linkedin.png);
+    background-size: 84px 64px;
+}
+ul#social-share-nav li.twitter-share-link a:hover,
+ul#social-share-nav li.facebook-share-link a:hover,
+ul#social-share-nav li.google-share-link a:hover,
+ul#social-share-nav li.pinterest-share-link a:hover,
+ul#social-share-nav li.linkedin-share-link a:hover {
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+@media only screen and (-Webkit-min-device-pixel-ratio: 1.5), only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min-device-pixel-ratio: 1.5) { 
+    ul#social-share-nav li.twitter-share-link a {
+        background-image: url(../images/social_share/twitter@2x.png);
+        background-size: 84px 64px;
+    }
+    ul#social-share-nav li.facebook-share-link a {
+        background-image: url(../images/social_share/facebook@2x.png);
+        background-size: 84px 64px;
+    }
+    ul#social-share-nav li.google-share-link a {
+        background-image: url(../images/social_share/googleplus@2x.png);
+        background-size: 84px 64px;
+    }
+    ul#social-share-nav li.pinterest-share-link a {
+        background-image: url(../images/social_share/pinterest@2x.png);
+        background-size: 84px 64px;
+    }
+    ul#social-share-nav li.linkedin-share-link a {
+        background-image: url(../images/social_share/linkedin@2x.png);
+        background-size: 84px 64px;
+    }
+}
+/*-----------------------------------------------------------------------------------*/
+/*  SLIDE UP SOCIAL SHARE NAV
+/*-----------------------------------------------------------------------------------*/
+#share-bottom-panel {
+    position: fixed;
+    bottom:0;
+    width: 100%;
+    z-index: 888888;
+}
+#slideup-share-panel {
+    background-color: #ffffff;
+    width: 100%;
+    padding-left: 2%;
+    padding-right: 2%;
+    margin: 0px;
+    display: none;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+#trigger-sldeup-panel {
+    width: 100%;
+    margin: 0px;
+    text-align: center;
+    font-size: 20px;
+    padding: 20px 0px;
+    margin: 0px;
+    background-color: #ffffff;
+    border-top: 2px solid #e3e3e3;
+    cursor: pointer;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 999999;
+}
+#slideup-share-panel ul {
+    margin: 0px;
+}
+#slideup-share-panel ul li a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    font-size: 16px;
+}
+#slideup-share-panel div.mobile-share-icon {
+    position: relative;
+    top: 8px;
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    margin-right: 5px;
+}
+#slideup-share-panel div.twitter-small-icon {
+    background-image: url(../images/social_share/twitter_sm.png);
+    background-size: 32px 32px;
+}
+#slideup-share-panel div.facebook-small-icon {
+    background-image: url(../images/social_share/facebook_sm.png);
+    background-size: 32px 32px;
+}
+#slideup-share-panel div.google-small-icon {
+    background-image: url(../images/social_share/googleplus_sm.png);
+    background-size: 32px 32px;
+}
+#slideup-share-panel div.pinterest-small-icon {
+    background-image: url(../images/social_share/pinterest_sm.png);
+    background-size: 32px 32px;
+}
+#slideup-share-panel div.linkedin-small-icon {
+    background-image: url(../images/social_share/linkedin_sm.png);
+    background-size: 32px 32px;
+}
+@media only screen and (-Webkit-min-device-pixel-ratio: 1.5), only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min-device-pixel-ratio: 1.5) { 
+    #slideup-share-panel div.twitter-small-icon {
+        background-image: url(../images/social_share/twitter_sm@2x.png);
+        background-size: 32px 32px;
+    }
+    #slideup-share-panel div.facebook-small-icon {
+        background-image: url(../images/social_share/facebook_sm@2x.png);
+        background-size: 32px 32px;
+    }
+    #slideup-share-panel div.google-small-icon {
+        background-image: url(../images/social_share/googleplus_sm@2x.png);
+        background-size: 32px 32px;
+    }
+    #slideup-share-panel div.pinterest-small-icon {
+        background-image: url(../images/social_share/pinterest_sm@2x.png);
+        background-size: 32px 32px;
+    }
+    #slideup-share-panel div.linkedin-small-icon {
+        background-image: url(../images/social_share/linkedin_sm@2x.png);
+        background-size: 32px 32px;
+    }
 }

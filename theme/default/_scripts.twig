@@ -18,24 +18,32 @@
 <script src="{{ paths.theme }}javascripts/jquery.sticky.js"></script> 
 <script src="{{ paths.theme }}javascripts/google-code-prettify/prettify.js"></script> 
 <script src="{{ paths.theme }}javascripts/jquery.slickforms.js"></script> 
-<script src="{{ paths.theme }}javascripts/retina.js"></script> 
+<script src="{{ paths.theme }}javascripts/retina.js"></script>
+<script src="{{ paths.theme }}javascripts/jquery.match_height.min.js"></script>
+<script>
+/*load the Facebook Javascript Files Asynchronously*/
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId         : '1376795352606314',
+            xfbml         : true,
+            version       : 'v2.0'
+        });
+    };
+
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+/*load the Twitter Javascript Files Asynchronously*/
+    window.twttr = (function (d, s, id) {
+      var t, js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id; js.src= "https://platform.twitter.com/widgets.js";
+      fjs.parentNode.insertBefore(js, fjs);
+      return window.twttr || (t = { _e: [], ready: function (f) { t._e.push(f) } });
+    }(document, "script", "twitter-wjs"));
+</script>
 <script src="{{ paths.theme }}javascripts/scripts.js"></script>
-{% if hide_add_this is not defined %}
-    {% set hide_add_this = false %}
-{% endif %}
-{% if hide_add_this is defined %}
-    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4e8f96635c6b8081"></script>
-    {% if not hide_add_this %}
-        <script type="text/javascript">
-          addthis.layers({
-            'theme' : 'transparent',
-            'share' : {
-              'position' : 'left',
-              'numPreferredServices' : 5,
-              'services' : 'facebook,twitter,google_plusone_share,linkedin,more'
-            }   
-          });
-        </script>
-        <!-- AddThis Smart Layers END -->
-    {% endif %}
-{% endif %}
