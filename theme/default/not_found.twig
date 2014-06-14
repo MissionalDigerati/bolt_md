@@ -1,0 +1,65 @@
+{% include '_header.twig' %}
+
+<body class="full-layout">
+<div class="body-wrapper">
+
+  {% include '_nav.twig' %}
+
+  <div class="offset"></div>
+
+  <div class="light-wrapper page-title">
+    <div class="container inner">
+      <div class="pull-left">
+        <h1>{{ page.title }}</h1>
+        <h3>Are you lost?</h3>
+      </div>
+      <div class="pull-right">
+        <a href="http://youtu.be/KGlx11BxF24" class="btn btn-large btn-navy fancybox-media">Find Your Way</a>
+      </div>
+    </div>
+  </div> 
+
+  <div class="dark-wrapper">
+    <div class="container inner">
+      <div class="row">
+        <div class="col-md-8">
+          <figure>
+            <a href="http://youtu.be/KGlx11BxF24" class="fancybox-media">
+              <img src="{{ paths.theme }}images/main_images/jesus_walks_water.png" width="770" height="889" alt="Jesus walking on water" />
+            </a>
+          </figure>
+        </div>
+        <div class="col-md-4">
+          <blockquote>
+            <p>Jesus said to him, "I am the way, and the truth, and the life. No one comes to the Father except through me.  If you had known me, you would have known my Father also. From now on you do know him and have seen him." - John 14 v 6-7</p>
+          </blockquote>
+          {{ page.body_header }}
+          <div class="col-services">
+            <div class="row">
+              <div class="col-md-12">
+                  {% include '_page_snippet.twig' with {icon: 'home-2', url: '/', title: 'Home', desc: 'Where our website begins.'} %}
+                  {% include '_page_snippet.twig' with {icon: 'brain-2', url: '/about-us/our-ministry', title: 'Our Ministry', desc: 'Learn more about us, and what makes us tick.'} %}
+                  {% include '_page_snippet.twig' with {icon: 'configuration-2', url: '/projects', title: 'Our Projects', desc: 'See some of the stuff we have been working on.'} %}
+                  {% include '_page_snippet.twig' with {icon: 'drawing', url: '/training/digerati-101', title: 'Digerati 101', desc: 'Learn about our classes that teach ministry workers a variety of web and mobile programming languages.'} %}
+                  {% include '_page_snippet.twig' with {icon: 'iphone', url: '/training/faith-and-tech', title: 'Faith & Tech', desc: 'Check out these church classes consisting of guided instruction and hands-on activities designed to equip believers to use trending technologies.'} %}
+                  {% include '_page_snippet.twig' with {icon: 'gift', url: '/participate/donate', title: 'Donate', desc: 'Partner with us and help us serve even greater the missional community.'} %}
+              </div>
+            </div>
+          </div>
+          {% if page.body_footer != '' %}
+            {{ page.body_footer }}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+{% include '_footer.twig' %}
+
+</div>
+<!-- /.body-wrapper --> 
+
+{% include '_scripts.twig' %}
+
+</body>
+</html>
