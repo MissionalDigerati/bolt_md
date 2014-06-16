@@ -90,7 +90,7 @@ footer:
     class: submit-an-idea
   - label: Donate
     title: Give Back to Missions
-    link:  /donate
+    link:  /participate/donate
     class: donate
   - label: Join Us
     title: Get in Touch
