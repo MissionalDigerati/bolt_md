@@ -6,7 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'phpbrowscap' => array($vendorDir . '/garetjax/phpbrowscap/src'),
     'Whoops' => array($vendorDir . '/filp/whoops/src'),
     'URLify' => array($vendorDir . '/jbroadway/urlify'),
     'Twig_' => array($vendorDir . '/twig/twig/lib'),

@@ -142,6 +142,14 @@ hr {
     margin-top: 12px;
 }
 
+.loginform p.cookie-notice {
+    display: none;
+}
+
+html.no-cookies .loginform p.cookie-notice {
+    display: block;
+}
+
 .togglepass {
     color: #999;
     float: right;
@@ -1129,6 +1137,10 @@ fieldset.checkbox div {
 
 .cke_toolbar_separator {
     background-color: #BBB !important;
+}
+
+.cke_dialog_ui_input_text {
+    min-height: 24px; /* Because IE8 and IE9 are cray-cray. */
 }
 
 /* Overrides for CodeMirror */

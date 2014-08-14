@@ -1,7 +1,7 @@
 # This is the config file for the Simple Forms extension.
 
-stylesheet: stylesheets/simpleforms.css
-template: simpleforms/form.twig
+stylesheet: assets/simpleforms.css
+template: assets/simpleforms_form.twig
 mail_template: assets/simpleforms_mail.twig
 message_ok: Thanks! Your message has been sent.
 message_error: There was an error in the form. Please check the form, and try again.
@@ -22,6 +22,12 @@ recaptcha_theme: clean
 # you know what you're doing.
 csrf: true
 
+# Default fallback sender email
+# this is required because Swiftmailer will reject the message without one
+# please make this a sensible existing email address
+from_email: default@example.org
+from_name: Default
+
 # global cc email address
 # set this value to an email address that will receive a copy of every email from simpleforms
 # recipient_cc_email: info@example.com
@@ -36,310 +42,89 @@ csrf: true
 # all other recipient and cc addresses will be ignored
 # remove or set 'testmode' to false for a production site
 testmode : true
-testmode_recipient: johnathan@jpulos.com
+testmode_recipient: info@example.com
 
 # from_email and from_name can be set for picky SMTP servers
 
-# SimpleForms Form declaration
-#
-submit_an_idea:
-  recipient_email: johnathan@missionaldigerati.org
-  recipient_name: 'Missional Digerati'
-  mail_subject: "[MD] Submit an Idea"
-  insert_into_table: form_submit_idea
-  fields:
-    name:
-      label: 'Your Name'
-      placeholder: 'Your name is...'
-      type: text
-      required: true
-    email:
-      type: email
-      label: 'Your Email'
-      placeholder: 'Your email address is...'
-      required: true
-    phone:
-      type: text
-      label: 'Your Phone Number'
-      placeholder: 'Your phone number is...'
-    skype:
-      type: text
-      label: 'Your Skype Handle'
-      placeholder: 'Your Skype handle is...'
-    idea:
-      type: textarea
-      label: 'Your Idea'
-      placeholder: 'Your idea is...'
-      required: true
-  button_text: Submit Your Idea
-
 # A simple contact form. Use as {{ simpleform('contact') }} in your templates.
-contact_us:
-  recipient_email: johnathan@missionaldigerati.org
-  recipient_name: 'Missional Digerati'
-  mail_subject: "[MD] Contact Us"
-  insert_into_table: form_contact_us
+contact:
+  recipient_email: info@example.org
+  recipient_name: Info
   fields:
     name:
-      label: 'Your Name'
-      placeholder: 'Your name is...'
       type: text
       required: true
+      placeholder: Your name ..
     email:
       type: email
-      label: 'Your Email'
-      placeholder: 'Your email address is...'
+      label: Email address
       required: true
-    phone:
-      type: text
-      label: 'Your Phone Number'
-      placeholder: 'Your phone number is...'
-    skype:
-      type: text
-      label: 'Your Skype Handle'
-      placeholder: 'Your Skype handle is...'
+      placeholder: Your email address ..
     message:
       type: textarea
-      label: 'Your Message'
-      placeholder: 'Your message is...'
       required: true
-  button_text: Submit
+      placeholder: Your message ..
 
-join_volunteer:
-  recipient_email: johnathan@missionaldigerati.org
-  recipient_name: 'Missional Digerati'
-  mail_subject: "[MD] Join/Volunteer"
-  insert_into_table: form_join_us
+# A demo form to showcase various options for fields. Use as
+# {{ simpleform('demo') }} in your templates.
+demo:
+  mail_subject: "Fancy Mail Subject"
+  from_email: demoform@example.org
+  from_name: demoform sender
+  # you can override the default sender email-address in a form
+  recipient_email: info@example.org
+  recipient_name: Info
+  recipient_cc_email: another@example.com
+  recipient_cc_name: Another Email Address
+  # if you want to save form content to a database make a table with the exact column names and types of your fields
+  insert_into_table: bolt_your_table_name
+  # uploaded files will be saved here if you have a file field
+  storage_location: demo_uploads
+  # uploaded files attached to the email if true
+  attach_files: true
   fields:
-    type_of_service:
-      type: choice
-      label: 'How Would You Like To Help?'
-      empty_value: Please Select One
-      choices: [ 'Micro-Volunteering Digerati', 'Full-Time Digerati', 'Not Sure?!?' ]
-      required: true
+    subject:
+      type: text
+      class: wide
+      required: false
+      label: Subject of your message
+      placeholder: Just a quick message ..
+      maxlength: 30
     name:
-      label: 'Your Name'
-      placeholder: 'Your name is...'
       type: text
       required: true
+      placeholder: Your name ..
     email:
       type: email
-      label: 'Your Email'
-      placeholder: 'Your email address is...'
+      label: Email address
       required: true
-    phone:
-      type: text
-      label: 'Your Phone Number'
-      placeholder: 'Your phone number is...'
-    skype:
-      type: text
-      label: 'Your Skype Handle'
-      placeholder: 'Your Skype handle is...'
-    bio:
-      type: textarea
-      label: 'Tell Us More About You!'
-      placeholder: 'You are...'
-    skills:
-      type: textarea
-      label: 'Tell Us How God Has Gifted You!'
-      placeholder: 'Your gifts are...'
+      placeholder: Your email ..
+      use_as: from_email
+      use_with: name
     message:
       type: textarea
-      label: 'If You Would Like To Tell us More.'
-      placeholder: 'Your message is...'
-  button_text: Submit
-
-host_a_class:
-  recipient_email: johnathan@missionaldigerati.org
-  recipient_name: 'Missional Digerati'
-  mail_subject: "[MD] Host a Class"
-  insert_into_table: form_host_class
-  fields:
-    curriculum:
-      type: text
-      label: 'Curriculum'
-    name:
-      label: 'Your Name'
-      placeholder: 'Your name is...'
-      type: text
       required: true
-    organization_name:
-      label: 'Your Organization/Church'
-      placeholder: 'Your organization or church name is...'
-      type: text
-      required: true
-    email:
-      type: email
-      label: 'Your Email'
-      placeholder: 'Your email address is...'
-      required: true
-    phone:
-      type: text
-      label: 'Your Phone Number'
-      placeholder: 'Your phone number is...'
-    skype:
-      type: text
-      label: 'Your Skype Handle'
-      placeholder: 'Your Skype handle is...'
-    address:
-      type: textarea
-      label: 'Your Address'
-      placeholder: 'Your address is...'
-    preferences:
-      type: textarea
-      label: 'When Would You Prefer to Have the Class?'
-      placeholder: 'You prefer to hold the class on...'
-    message:
-      type: textarea
-      label: 'Do You Want to Tell us Anything Else?'
-      placeholder: 'Tell us more...'
-    adequate_space:
+      placeholder: Well, the other day I was thinking that maybe you ought to improve your website by adding ..
+    favorite:
       type: choice
-      label: 'Do you have adequate space to host the class?'
-      empty_value: Please Select One
-      choices: [ 'Yes', 'No' ]
+      label: My favorite animals are
+      empty_value: My favorite animals are
+      choices: [ Kittens, Puppies, Penguins, Koala bears, "I don't like animals" ]
       required: true
-    wifi_access:
-      type: choice
-      label: 'Do you have accessible WiFi for all the students?'
-      empty_value: Please Select One
-      choices: [ 'Yes', 'No' ]
+    file:
+      type: file
+      label: Upload a file
       required: true
-    share_ministry:
-      type: choice
-      label: 'Can we share the vision of our ministry during the last 15 minutes of class?'
-      empty_value: Please Select One
-      choices: [ 'Yes', 'No' ]
-      required: true
-    subsidize_trip:
-      type: choice
-      label: 'Are you willing to subsidize transportation and housing costs for 2 adults?'
-      empty_value: Please Select One
-      choices: [ 'Yes', 'No' ]
-      required: true
-      postfix: '<em>Cost only needs to be subsidized outside of Southern California.</em>'
-    private:
-      type: choice
-      label: 'Are you OK with others outside your oganization to join this class?'
-      empty_value: Please Select One
-      choices: [ 'Yes', 'No' ]
-      required: true
-    statement_of_faith:
+      filetype: [jpg, gif, tiff, png, pdf]
+      #mimetypes are optional, used by Symfony Forms Validator
+      mimetype: ["application/pdf", "application/x-pdf", "image/tiff", "image/x-tiff", "image/png", "image/jpeg", "image/pjpeg", "image/gif"]
+    option1:
       type: checkbox
-      label: 'Do you agree with our Statement of Faith?'
-      postfix: '<a href="/about-us/statement-of-faith" target="_blank">Read Our Statement of Faith</a>'
+      label: Newsletter
+      placeholder: Yes, I <em>love</em> receiving <del>spam</del>, eh, newsletters.
+    option2:
+      type: checkbox
+      label: Agree to this!
+      placeholder: Yes, I will gladly agree to something or other.
       required: true
-
-register_for_faith_and_tech:
-  recipient_email: johnathan@missionaldigerati.org
-  recipient_name: 'Missional Digerati'
-  mail_subject: "[MD] Register for Faith & Tech Class"
-  message_ok: "Thank You!  You have been registered for the class."
-  insert_into_table: form_register_faith_tech
-  fields:
-    class:
-      type: text
-      label: 'Class'
-    class_id:
-      type: hidden
-    name:
-      label: 'Your Name'
-      placeholder: 'Your name is...'
-      type: text
-      required: true
-    email:
-      type: email
-      label: 'Your Email'
-      placeholder: 'Your email address is...'
-      required: true
-    phone:
-      type: text
-      label: 'Your Phone Number'
-      placeholder: 'Your phone number is...'
-    spouse:
-      type: choice
-      label: 'Will a spouse be joining you?'
-      empty_value: Please Select One
-      choices: [ 'Yes', 'No' ]
-      required: true
-    spouse_name:
-      label: "Your Spouse's Name"
-      placeholder: "Your spouse's name is..."
-      type: text
-    experience_computers:
-      type: choice
-      label: 'How would you rate your experience with computers?'
-      empty_value: Please Select One
-      choices: [ 'Novice', 'Low Experience', 'Moderate Experience', 'Experienced' ]
-      required: true
-    experience_smart_phones:
-      type: choice
-      label: 'How would you rate your experience with smart phones?'
-      empty_value: Please Select One
-      choices: [ 'Novice', 'Low Experience', 'Moderate Experience', 'Experienced' ]
-      required: true
-    spouse_experience_computers:
-      type: choice
-      label: "How would you rate your spouse's experience with computers?"
-      empty_value: Please Select One
-      choices: [ 'Novice', 'Low Experience', 'Moderate Experience', 'Experienced' ]
-    spouse_experience_smart_phones:
-      type: choice
-      label: "How would you rate your spouse's experience with smart phones?"
-      empty_value: Please Select One
-      choices: [ 'Novice', 'Low Experience', 'Moderate Experience', 'Experienced' ]
-    reason:
-      type: textarea
-      label: 'Why are you taking this class?'
-      placeholder: 'Your reason here...'
-  button_text: Register
-
-register_for_digerati_101:
-  recipient_email: johnathan@missionaldigerati.org
-  recipient_name: 'Missional Digerati'
-  mail_subject: "[MD] Register for Digerati 101 Class"
-  message_ok: "Thank You!  You have been registered for the class."
-  insert_into_table: form_register_digerati_101
-  fields:
-    class:
-      type: text
-      label: 'Class'
-    class_id:
-      type: hidden
-    name:
-      label: 'Your Name'
-      placeholder: 'Your name is...'
-      type: text
-      required: true
-    ministry:
-      label: 'Your Ministry'
-      placeholder: 'Your ministry is...'
-      type: text
-      required: true
-      postfix: '<em>In order to take this class, you must be currently serving in a qualified nonprofit Evangelical Protestant mission agency.</em>'
-    email:
-      type: email
-      label: 'Your Email'
-      placeholder: 'Your email address is...'
-      required: true
-    phone:
-      type: text
-      label: 'Your Phone Number'
-      placeholder: 'Your phone number is...'
-    experience_programming:
-      type: choice
-      label: 'How would you rate your experience with programming?'
-      empty_value: Please Select One
-      choices: [ 'Novice', 'Low Experience', 'Moderate Experience', 'Experienced' ]
-      required: true
-    programming_languages:
-      type: textarea
-      label: 'Programming Languages You Know?'
-      placeholder: 'PHP, CSS, HTML ...'
-    reason:
-      type: textarea
-      label: 'Why are you taking this class?'
-      placeholder: 'Your reason here...'
-  button_text: Register
-
-
+  button_text: Send the Demo form!
