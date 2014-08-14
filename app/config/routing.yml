@@ -9,6 +9,10 @@ our_ministry:
   path: /about-us/our-ministry
   defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'our-ministry' }
 
+our_services:
+  path: /about-us/our-services
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'our-services' }
+
 about_us:
   path: /about-us
   defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'our-ministry' }

@@ -268,6 +268,9 @@ services:
             postfix: "<div id='picon_choice'></div>"
         details:
             type: html
+    sort: title
+    show_on_dashboard: false
+    default_status: publish
 
 social_links:
     name: Social Links
