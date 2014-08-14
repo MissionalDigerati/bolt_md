@@ -7,7 +7,7 @@ jQuery(document).ready(function($) {
         var picon = $(this).attr('data-picon');
         selectPicon(picon);
     });
-    $('#icon > option, #tagline_icon').change(function(event) {
+    $('#icon, #tagline_icon').change(function(event) {
         picon = $(this).find('option:selected').text();
         selectPicon(picon);
     });
@@ -15,7 +15,7 @@ jQuery(document).ready(function($) {
 function selectPicon(picon) {
     $('div.picon_select_holder').removeClass('selected');
     $('div.picon_select_holder[data-picon="' + picon + '"]').addClass('selected');
-    $('#icon > option, #tagline_icon option').filter(function() {
+    $('#icon option, #tagline_icon option').filter(function() {
         return $.trim($(this).text()) == picon; 
     }).prop('selected', true);
 };
