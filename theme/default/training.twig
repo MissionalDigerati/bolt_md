@@ -1,11 +1,9 @@
 {% if page.slug == "digerati-101" %}
-  {% set has_gamification=false %}
   {% set training_type='Digerati 101' %}
   {% set ogg_image='share_digerati_101.png' %}
   {% set share_description='Digerati 101 training in app development for Christian ministry workers!' %}
   {% set share_title="Digerati 101 Training" %}
 {% else %}
-  {% set has_gamification=true %}
   {% set training_type='Faith & Tech' %}
   {% set ogg_image='share_faith_tech.png' %}
   {% set share_description='Free Faith and Tech Training for Your Church! ' %}
@@ -20,7 +18,7 @@
   <div class="offset"></div>
 
   <div class="light-wrapper page-title">
-      <div class="container inner gamify">
+      <div class="container inner">
         <h1>{{ page.title }}</h1>
       </div>
   </div> 
@@ -37,54 +35,7 @@
         <h2>{{ page.tagline }}</h2>
         <span class="icon"><i class="icon-picons-{{ page.tagline_icon }}"></i></span>
       </div>
-      {% if has_gamification %}
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-8">
-              {{ page.body_header }}
-            </div>
-            <div class="col-sm-4">
-              <div class="panel-group" id="accordion">
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <h4 class="panel-title">
-                      <a data-toggle="collapse" class="panel-toggle active" data-parent="#accordion" href="#collapseOne">Your Sharing Supports</a>
-                    </h4>
-                  </div>
-                  <div id="collapseOne" class="panel-collapse collapse in">
-                    <div class="panel-body" id="gamify_section">
-                      <p class="has_church" style="display: none;">
-                        <a href="#" class="church_link" data-rel="tooltip" data-placement="left" rel="tooltip" data-original-title="">Church</a><br>
-                        <span data-rel="tooltip" data-placement="left" rel="tooltip" data-original-title="The total points earned by this church." class="total_points"></span><br>
-                        <a href="#org_selector_form_holder" class="change_church trigger_church_change gamify_fancybox">Change Church</a>
-                      </p>
-                      <p class="needs_church">
-                        <span class="heading">Make Your Sharing Count</span><br>
-                        <a href="#org_selector_form_holder" class="church_link trigger_church_change gamify_fancybox" data-rel="tooltip" data-placement="left" rel="tooltip" data-original-title="Make your sharing count.  Everytime you share this page you can earn points for your favorite church.  These points open up new free classes they can host.">Choose a Church to Support</a>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <h4 class="panel-title">
-                      <a data-toggle="collapse" class="panel-toggle" data-parent="#accordion" href="#collapseTwo">How Does the Game Work?</a>
-                    </h4>
-                  </div>
-                  <div id="collapseTwo" class="panel-collapse collapse">
-                    <div class="panel-body">
-                      <p>First you need to select a church by clicking the <em>Choose a Church to Support</em> link in the <em>Your Sharing Supports</em> tab above.  Then you choose the church you want to support from the selector that is displayed.  Finally, click the <strong>Select</strong> button to select your church.</p>
-
-                      <p>Now you are ready to help that church unlock new Faith &amp; Tech classes.  Each time you share this web page using the links on the left side of this page,  the church will earn 5 points towards opening future classes.  Once a church unlocks a class, they will be notified that they can host a new class.  That's it!</p>
-                    </div>
-                  </div>
-                </div>
-            </div>
-          </div>
-        </div>
-      {% else %}
-        {{ page.body_header }}
-      {% endif %}
+      {{ page.body_header }}
       <div class="divide30"></div>
       <h2>Current Curriculum</h2>
       {% setcontent curriculum = 'curriculum' where { training_types: training_type } orderby 'points' %}
@@ -125,18 +76,12 @@
 {% include '_footer.twig' with {"share_title": share_title, "share_description": share_description, "ogg_image": ogg_image}  %}
 
 </div>
-<div style="display:none;" id="org_selector_form_holder">
-  {{ organization_select_form() }}
-</div>
 <!-- /.body-wrapper --> 
 
 {% include '_scripts.twig' %}
   <script type="text/javascript">
     $(function() {
-    {% if has_gamification %}
-        mdGamify("{{ get_csrf_token() }}");
-    {% endif %}
-        $('.row .same-height').matchHeight(true);
+      $('.row .same-height').matchHeight(true);
     });
   </script>
 </body>
