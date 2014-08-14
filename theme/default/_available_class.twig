@@ -13,16 +13,9 @@
     {% if class.suggested_donation_text != '' %}
       <li><span class="row_title">Suggested Donation:</span> {{ class.suggested_donation_text }}</li>
     {% endif %}
-    {% if class.points != 0 %}
-      <li><span class="row_title">Points Needed to Unlock:</span> {{ class.points }}</li>
-    {% endif %}
   </ul>
   <div class="divide10"></div>
   <div class="text-center sticky-bottom">
-    {% if class.points != 0 %}
-      <a href="#" class="btn btn-red btn-large" data-rel="tooltip" data-placement="top" rel="tooltip" data-original-title="When a church receives {{ class.points }} points from sharing this page, they will be notified that this class has been unlocked.  They will then have an opportunity to host this class.">Locked</a>
-    {% else %}
-      <a href="/host-a-class?curriculum={{ class.slug }}" class="btn btn-blue btn-large">Host This Class</a>
-    {% endif %}
+    <a href="/host-a-class?curriculum={{ class.slug }}" class="btn btn-blue btn-large">Host This Class</a>
   </div>
 </div>

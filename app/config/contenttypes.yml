@@ -46,9 +46,6 @@ curriculum:
             type: text
             class: wide
             label: 'Suggested Donation Text'
-        points:
-            type: integer
-            label: 'Points to Unlock'
     sort: title
     taxonomy: training_types
 
