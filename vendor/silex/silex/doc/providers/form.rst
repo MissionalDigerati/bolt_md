@@ -58,7 +58,7 @@ Registering
         }
 
     If you are going to use the validation extension with forms, you must also
-    add a dependency to the ``symfony/config`` and ```symfony/translation``
+    add a dependency to the ``symfony/config`` and ``symfony/translation``
     components:
 
     .. code-block:: json
@@ -132,8 +132,7 @@ example::
         return $app['twig']->render('index.twig', array('form' => $form->createView()));
     });
 
-And here is the ``index.twig`` form template (requires ``symfony/twig-
-bridge``):
+And here is the ``index.twig`` form template (requires ``symfony/twig-bridge``):
 
 .. code-block:: jinja
 
