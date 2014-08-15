@@ -55,6 +55,25 @@
       {% endif %}
     </div>
   </div>
+  {% setcontent projects = 'projects' where { status: 'published' } orderby '-id' %}
+  {% if projects is defined and projects is not empty %}
+    <div class="black-wrapper">
+      <div class="container inner">
+        <div class="section-title text-center">
+          <h2>Our Recent Projects</h2>
+          <span class="icon"><i class="icon-picons-configuration-2"></i></span> </div>
+        <div class="owl-portfolio owlcarousel carousel-th">
+          {% for project in projects %}
+
+            {% include '_recent_project.twig' with {'project': project} %}
+
+          {% endfor %}
+        </div>
+        <div class="divide50"></div>
+        <div class="text-center"> <a class="btn btn-border-light" href="/projects">See All Our Work</a> </div>
+      </div>
+    </div>
+  {% endif %}
 
   <div class="color-wrapper">
   <div class="container inner text-center">
@@ -70,6 +89,11 @@
 <!-- /.body-wrapper --> 
 
 {% include '_scripts.twig' %}
+<script type="text/javascript">
+  $(function() {
+    $('.same-height').matchHeight(true);
+  });
+</script>
 
 </body>
 </html>
