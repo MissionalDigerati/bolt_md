@@ -1,0 +1,67 @@
+{% include '_header.twig' %}
+
+<body class="full-layout">
+<div class="body-wrapper">
+
+  {% include '_nav.twig' %}
+
+  <div class="offset"></div>
+
+  <div class="light-wrapper page-title">
+    <div class="container inner">
+      <h1>{{ page.title }}</h1>
+    </div>
+  </div> 
+
+  <div class="dark-wrapper">
+    <div class="container inner">
+      {% include "_main_image.twig" %}
+      <div class="section-title text-center">
+        <h2>{{ page.tagline }}</h2>
+        <span class="icon"><i class="icon-picons-{{ page.tagline_icon }}"></i></span>
+      </div>
+      {{ page.body_header }}
+      <div class="divide30"></div>
+      {% setcontent services = 'services' where { status: 'published' } orderby 'title' %}
+      
+      {% if services is defined and services is not empty %}
+        <div class="col-services">
+          {% for row in services|batch(3) %}
+
+            <div class="row">
+
+              {% for service in row %}
+
+                <div class="col-sm-4" id="service-{{ service.id }}">
+
+                    {% include '_service.twig' with {'service': service} %}
+                    
+                </div>
+
+              {% endfor %}
+
+              <div class="clearfix"></div>
+
+            </div>
+            <div class="divide30"></div>
+
+          {% endfor %}
+        </div>
+
+      {% endif %}
+
+      {% if page.body_footer != '' %}
+        {{ page.body_footer }}
+      {% endif %}
+    </div>
+  </div>
+  
+{% include '_footer.twig' %}
+
+</div>
+<!-- /.body-wrapper --> 
+
+{% include '_scripts.twig' %}
+
+</body>
+</html>
