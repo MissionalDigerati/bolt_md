@@ -15,6 +15,10 @@ main:
         title: Learn More About Us
         path:  /about-us/our-ministry
         class: about-us-our-ministry
+      - label: Our Services
+        title: Learn More About What We Do
+        path:  /about-us/our-services
+        class: about-us-our-services
       - label: Our Coding Practices
         title: Learn More About How We Code
         path:  /about-us/our-coding-practices
