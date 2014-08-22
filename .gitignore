@@ -5,6 +5,7 @@ composer.lock
 .rvmrc
 app/cache/*
 app/config/config.yml
+app/config/config.live.yml
 app/database/*
 files/*
 logs/*
