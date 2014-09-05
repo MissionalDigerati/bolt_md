@@ -38,7 +38,7 @@
       {{ page.body_header }}
       <div class="divide30"></div>
       <h2>Current Curriculum</h2>
-      {% setcontent curriculum = 'curriculum' where { training_types: training_type } orderby 'points' %}
+      {% setcontent curriculum = 'curriculum' where { training_types: training_type } orderby 'title' %}
       {% if curriculum is defined and curriculum is not empty %}
         <div class="container">
           {% for row in curriculum|batch(2) %}

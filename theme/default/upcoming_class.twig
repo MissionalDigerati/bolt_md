@@ -42,8 +42,8 @@
                 <li>
                   <span class="row_title">Class Length:</span> {{ type_of_training[0].duration }}
                 </li>
-                {% if type_of_training[0].suggested_donation_text != '' %}
-                    <li><span class="row_title">Suggested Donation:</span> {{ type_of_training[0].suggested_donation_text }}</li>
+                {% if type_of_training[0].cost_text != '' %}
+                    <li><span class="row_title">Cost:</span> {{ type_of_training[0].cost_text }}</li>
                 {% endif %}
                 {% if type_of_training[0].taxonomy.training_types is defined and type_of_training[0].taxonomy.training_types is not empty %}
                     <li>

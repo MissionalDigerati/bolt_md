@@ -39,13 +39,13 @@ curriculum:
             type: text
             class: wide
             label: 'Duration of Class'
-        suggested_donation:
+        cost:
             type: float
-            label: 'Suggested Donation'
-        suggested_donation_text:
+            label: 'Cost of Class'
+        cost_text:
             type: text
             class: wide
-            label: 'Suggested Donation Text'
+            label: 'Cost of Class Text'
     sort: title
     taxonomy: training_types
 
