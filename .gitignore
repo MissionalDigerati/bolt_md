@@ -9,4 +9,5 @@ app/config/config.live.yml
 app/database/*
 files/*
 logs/*
+app/extensions/GoogleAnalytics/config.yml
 TODO
