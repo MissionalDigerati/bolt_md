@@ -19,6 +19,10 @@
                             {% endif %}
 
                             <h6><a href="/upcoming-class/{{ class.slug }}">{{ class.title }} ({{ training.title }})</a></h6>
+                            
+                            {% if training.cost_text != '' %}
+                                <p><em>Cost:</span> {{ training.cost_text }}</em></p>
+                            {% endif %}
 
                         {% endfor %}
 
@@ -29,7 +33,7 @@
 
                     {% endif %}
                     <p class="colored">{{ class.date_of_class|date("M d, ’y @ g:i a") }}</p>
-                    <a href="/upcoming-class/{{ class.slug }}#register" class="btn btn-blue">Register</a>
+                    <p><a href="/upcoming-class/{{ class.slug }}#register" class="btn btn-blue">Register</a></p>
                 </div>
             </li>
 
