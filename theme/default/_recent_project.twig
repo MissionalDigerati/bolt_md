@@ -8,7 +8,7 @@
   <div class="item">
     <figure class="icon-overlay medium icn-link">
       <a href="/project/{{ project.slug }}">
-        <img src="{{ project.thumb_image|thumbnail(370, 142) }}" title="{{ project.title }}">
+        <img src="{{ project.thumb_image|thumbnail(370, 142) }}" title="{{ project.title }}" data-at2x="{{ project.thumb_image|thumbnail(740, 284) }}">
       </a>
     </figure>
     <div class="image-caption same-height">
