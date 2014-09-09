@@ -50,8 +50,8 @@
     {% set ogg_image_file = "share_logo.png" %}
 {% endif %}
 
-<meta property="og:image" content="http://{{ app.request.host }}{{ paths.theme }}images/{{ ogg_image_file }}" />
-<meta property="og:url" content="{{ app.request.uri }}"/>
+<meta property="og:image" content="http://missionaldigerati.org{{ paths.theme }}images/{{ ogg_image_file }}" />
+<meta property="og:url" content="http://missionaldigerati.org{{ app.request.pathinfo }}"/>
 <link rel="shortcut icon" href="{{ paths.theme }}images/favicon.ico">
 <!-- Bootstrap core CSS -->
 <link href="{{ paths.theme }}stylesheets/bootstrap.css" rel="stylesheet">
