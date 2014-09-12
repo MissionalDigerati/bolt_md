@@ -378,7 +378,7 @@ $(document).ready(function () {
     jQuery(document).ready(function () {
 
         revapi = jQuery('.fullwidthbanner').revolution({
-            delay: 9000,
+            delay: 11500,
             startwidth: 1170,
             startheight: 600,
             hideThumbs: 200,
