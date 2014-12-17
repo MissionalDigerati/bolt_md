@@ -2,6 +2,8 @@
 ._.DS_Store
 *.sublime-*
 composer.lock
+.ruby-gemset
+.ruby-version
 .rvmrc
 app/cache/*
 app/config/config.yml
