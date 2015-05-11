@@ -28,6 +28,7 @@
         "post-package-update": "Bolt\\Composer\\ExtensionInstaller::handle"
     },
     "require": {
+        "bolt/googleanalytics": "^1.0",
         "bolt/simpleforms": "^1.3"
     }
 }

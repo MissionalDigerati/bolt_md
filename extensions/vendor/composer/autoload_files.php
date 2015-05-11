@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     $vendorDir . '/bolt/simpleforms/init.php',
+    $vendorDir . '/bolt/googleanalytics/init.php',
 );
