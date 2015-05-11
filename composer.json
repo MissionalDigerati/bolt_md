@@ -1,0 +1,14 @@
+{
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/MissionalDigerati/RelatedSort.git"
+    }
+  ],
+  "require": {
+    "MissionalDigerati/RelatedSort": ">=2.0.0"
+  },
+  "config": {
+    "vendor-dir": "extensions/local"
+  }
+}

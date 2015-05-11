@@ -1,0 +1,49 @@
+[
+    {
+        "name": "missionaldigerati/relatedsort",
+        "version": "v2.0.0",
+        "version_normalized": "2.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/MissionalDigerati/RelatedSort.git",
+            "reference": "292a4b7393ee404a096e909d1e7a84e01608e579"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/MissionalDigerati/RelatedSort/zipball/292a4b7393ee404a096e909d1e7a84e01608e579",
+            "reference": "292a4b7393ee404a096e909d1e7a84e01608e579",
+            "shasum": ""
+        },
+        "time": "2015-05-11 19:10:13",
+        "type": "bolt-extension",
+        "installation-source": "source",
+        "autoload": {
+            "files": [
+                "init.php"
+            ],
+            "psr-4": {
+                "Bolt\\Extension\\MissionalDigerati\\RelatedSort\\": ""
+            }
+        },
+        "license": [
+            "GPL-3.0+"
+        ],
+        "authors": [
+            {
+                "name": "Missional Digerati",
+                "email": "johnathan@missionaldigerati.org",
+                "homepage": "http://missionaldigerati.org"
+            }
+        ],
+        "description": "a small Twig extension built for the Bolt CMS to sort through the given relation.",
+        "keywords": [
+            "related",
+            "sorting",
+            "twig"
+        ],
+        "support": {
+            "source": "https://github.com/MissionalDigerati/RelatedSort/tree/master",
+            "issues": "https://github.com/MissionalDigerati/RelatedSort/issues"
+        }
+    }
+]
