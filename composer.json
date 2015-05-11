@@ -7,11 +7,16 @@
     {
       "type": "vcs",
       "url": "https://github.com/MissionalDigerati/BoltRelatedSort.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/MissionalDigerati/BoltPrivateContent.git"
     }
   ],
   "require": {
     "MissionalDigerati/BoltUtilityBox": ">=2.0.0",
-    "MissionalDigerati/BoltRelatedSort": ">=3.0.2"
+    "MissionalDigerati/BoltRelatedSort": ">=3.0.2",
+    "MissionalDigerati/BoltPrivateContent": ">=2.0.0"
   },
   "config": {
     "vendor-dir": "extensions/local"
