@@ -7,4 +7,5 @@ $baseDir = dirname(dirname($vendorDir));
 
 return array(
     $vendorDir . '/missionaldigerati/relatedsort/init.php',
+    $vendorDir . '/missionaldigerati/boltutilitybox/init.php',
 );

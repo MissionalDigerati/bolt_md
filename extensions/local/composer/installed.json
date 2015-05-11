@@ -45,5 +45,52 @@
             "source": "https://github.com/MissionalDigerati/RelatedSort/tree/master",
             "issues": "https://github.com/MissionalDigerati/RelatedSort/issues"
         }
+    },
+    {
+        "name": "missionaldigerati/boltutilitybox",
+        "version": "v2.0.0",
+        "version_normalized": "2.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/MissionalDigerati/BoltUtilityBox.git",
+            "reference": "b9c1ef1d18642166f2191d0192daf7ce06ff152e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/MissionalDigerati/BoltUtilityBox/zipball/b9c1ef1d18642166f2191d0192daf7ce06ff152e",
+            "reference": "b9c1ef1d18642166f2191d0192daf7ce06ff152e",
+            "shasum": ""
+        },
+        "time": "2015-05-11 19:48:11",
+        "type": "bolt-extension",
+        "installation-source": "source",
+        "autoload": {
+            "files": [
+                "init.php"
+            ],
+            "psr-4": {
+                "Bolt\\Extension\\MissionalDigerati\\RelatedSort\\": ""
+            }
+        },
+        "license": [
+            "GPL-3.0+"
+        ],
+        "authors": [
+            {
+                "name": "Missional Digerati",
+                "email": "johnathan@missionaldigerati.org",
+                "homepage": "http://missionaldigerati.org"
+            }
+        ],
+        "description": "Bolt Utility Box contains various utility methods for Bolt CMS.",
+        "keywords": [
+            "methods",
+            "twig",
+            "utility"
+        ],
+        "support": {
+            "source": "https://github.com/MissionalDigerati/BoltUtilityBox/tree/v2.0.0",
+            "issues": "https://github.com/MissionalDigerati/BoltUtilityBox/issues"
+        }
     }
 ]
