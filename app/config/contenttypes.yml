@@ -85,7 +85,7 @@ digeratis:
             label: 'Select Social Media Links'
             order: social_media
             format: "{{ item.social_media|escape }}, {{ item.url|escape }}"
-    sort: [last_name,first_name]
+    sort: last_name
     recordsperpage: 100
     taxonomy: languages
 

@@ -1,4 +1,0 @@
-# user roles that are allowed to use the menu-editor
-# this list implicitly grants access to users with role "root"
-# available roles (by default): root, admin, developer, chief-editor, editor, guest, everyone
-permissions: [ root, admin, developer ]
