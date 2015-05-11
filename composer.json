@@ -2,16 +2,16 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/MissionalDigerati/RelatedSort.git"
+      "url": "https://github.com/MissionalDigerati/BoltUtilityBox.git"
     },
     {
       "type": "vcs",
-      "url": "https://github.com/MissionalDigerati/BoltUtilityBox.git"
+      "url": "https://github.com/MissionalDigerati/BoltRelatedSort.git"
     }
   ],
   "require": {
-    "MissionalDigerati/RelatedSort": ">=2.0.0",
-    "MissionalDigerati/BoltUtilityBox": ">=2.0.0"
+    "MissionalDigerati/BoltUtilityBox": ">=2.0.0",
+    "MissionalDigerati/BoltRelatedSort": ">=3.0.2"
   },
   "config": {
     "vendor-dir": "extensions/local"

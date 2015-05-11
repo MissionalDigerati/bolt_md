@@ -6,5 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname(dirname($vendorDir));
 
 return array(
-    'Bolt\\Extension\\MissionalDigerati\\RelatedSort\\' => array($vendorDir . '/missionaldigerati/relatedsort', $vendorDir . '/missionaldigerati/boltutilitybox'),
+    'Bolt\\Extension\\MissionalDigerati\\RelatedSort\\' => array($vendorDir . '/missionaldigerati/boltutilitybox'),
+    'Bolt\\Extension\\MissionalDigerati\\BoltRelatedSort\\' => array($vendorDir . '/missionaldigerati/boltrelatedsort'),
 );
