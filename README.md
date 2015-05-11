@@ -1,68 +1,19 @@
-Bolt
-====
+Missional Digerati Main Website
+===============================
 
-Sophisticated, lightweight & simple CMS. Homepage: [Bolt.cm](http://bolt.cm)
-
-Bolt is a tool for Content Management, which strives to be as simple and straightforward 
-as possible. It is quick to set up, easy to configure, uses elegant templates, and above 
-all: It's a joy to use. Bolt is created using modern open source libraries, and is best 
-suited to build sites in HTML5 with modern markup. 
-
-From a technical perspective: Bolt is written in PHP, and uses either SQLite, MySQL or 
-PostgreSQL as a database. It's built upon the [Silex framework](http://silex.sensiolabs.org) 
-together with a number of [Symfony](http://symfony.com/) [components](http://symfony.com/components) 
-and [other libraries](http://docs.bolt.cm/credits). Bolt is released under the open source 
-[MIT-license](http://opensource.org/licenses/mit-license.php).
-
-
-Build status, code quality and other badges
--------------------------------------------
-
-[![Build Status](https://secure.travis-ci.org/bolt/bolt.png?branch=master)](http://travis-ci.org/bolt/bolt)
-[![Scrutinizer Continuous Inspections](https://scrutinizer-ci.com/g/bolt/bolt/badges/general.png?s=74400dd068f81fe3ba434e5952b961bb83bbea62)](https://scrutinizer-ci.com/g/bolt/bolt/)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/4d1713e3-be44-4c2e-ad92-35f65eee6bd5/mini.png)](https://insight.sensiolabs.com/projects/4d1713e3-be44-4c2e-ad92-35f65eee6bd5)
-
-For continuously inspecting our code, we use Scrutinizer CI. You can find all runs
-on our code base [here](https://scrutinizer-ci.com/g/bolt/bolt/inspections).
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/bolt/bolt/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/bolt/bolt?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-
-Installation
+Bolt Version
 ------------
 
-Detailed instructions can be found in the [Installation section in the documentation](http://docs.bolt.cm/installation).
+This is the repository for the [Missional Digerati](http://www.missionaldigerati.org) main website code using PHP's [Bolt CMS](http://bolt.cm/).  The original site can be found [here](https://github.com/MissionalDigerati/main_website).
 
-Try bolt in [Ubuntu](https://manageacloud.com/cookbook/tijit2bpp3129rdctb81f1cflk/deploy#test_deployment), [CentOS](https://manageacloud.com/cookbook/nt1pf9254cg8mm1t4k0nv96jv5/deploy#test_deployment), [Debian](https://manageacloud.com/cookbook/oj5dbkcehg9h7497fjq2lagk66/deploy#test_deployment) or [Amazon Linux](https://manageacloud.com/cookbook/a382qtma5gq1928ofrsrncr70c/deploy#test_deployment).
-
-Deployable configuration examples for [Ubuntu](https://manageacloud.com/cookbook/bolt_cms_ubuntu_utopic_unicorn_1410), [CentOS](https://manageacloud.com/cookbook/bolt_cms_centos_7), [Debian](https://manageacloud.com/cookbook/bolt_cms) and  [Amazon Linux](https://manageacloud.com/cookbook/bolt_cms_amazon_2014032)
-
-Reporting issues
+Production Notes
 ----------------
-When you run into an issue, be sure to provide some details on the issue.
-Please include with your report:
-- the (example) input;
-- the output you expected;
-- the output actually produced.
 
-This way we can reproduce your issue, turn it into a test and prevent the issue from occurring in future versions.
+All YML files in the app/config directory should not have read permissions for the world.
 
-Unit tests
-----------
-For running unit tests you need [phpunit](http://www.phpunit.de/).
+Development Notes
+-----------------
 
-After installing, you can run the unit test suite by running:
+This repository is following the branching technique described in [this blog post](http://nvie.com/posts/a-successful-git-branching-model/), and the semantic version set out on the [Semantic Versioning Website](http://semver.org/).  We also follow [FIG Standard](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md) for writing code.
 
-    $ phpunit
-
-This can now also be done by using app/nut:
-
-    $ php app/nut tests:run
-
-Extensions
-----------
-Since Bolt 2.0, you can install extensions directly from Bolt's interface. To browse the available extensions, visit: http://extensions.bolt.cm. 
-
-
--------
+Questions or problems? Please post them on the [issue tracker](https://github.com/MissionalDigerati/bolt_md/issues). You can contribute changes by forking the project and submitting a pull request.
