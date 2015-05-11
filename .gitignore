@@ -13,3 +13,4 @@ files/*
 logs/*
 app/extensions/GoogleAnalytics/config.yml
 TODO
+apache.error.log
