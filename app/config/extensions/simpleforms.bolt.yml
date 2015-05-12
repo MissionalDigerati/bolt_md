@@ -120,7 +120,10 @@ join_volunteer:
       type: choice
       label: 'How Would You Like To Help?'
       empty_value: Please Select One
-      choices: [ 'Micro-Volunteering Digerati', 'Full-Time Digerati', 'Not Sure?!?' ]
+      choices:
+        micro_volunteer: 'Micro-Volunteering Digerati'
+        fulltime: 'Full-Time Digerati'
+        not_sure: 'Not Sure?!?'
       required: true
     name:
       label: 'Your Name'
@@ -202,32 +205,42 @@ host_a_class:
       type: choice
       label: 'Do you have adequate space to host the class?'
       empty_value: Please Select One
-      choices: [ 'Yes', 'No' ]
+      choices: 
+        yes: Yes
+        no: No
       required: true
     wifi_access:
       type: choice
       label: 'Do you have accessible WiFi for all the students?'
       empty_value: Please Select One
-      choices: [ 'Yes', 'No' ]
+      choices: 
+        yes: Yes
+        no: No
       required: true
     share_ministry:
       type: choice
       label: 'Can we share the vision of our ministry during the last 15 minutes of class?'
       empty_value: Please Select One
-      choices: [ 'Yes', 'No' ]
+      choices: 
+        yes: Yes
+        no: No
       required: true
     subsidize_trip:
       type: choice
       label: 'Are you willing to subsidize transportation and housing costs for 2 adults?'
       empty_value: Please Select One
-      choices: [ 'Yes', 'No' ]
+      choices: 
+        yes: Yes
+        no: No
       required: true
       postfix: '<em>Cost only needs to be subsidized outside of Southern California.</em>'
     private:
       type: choice
       label: 'Are you OK with others outside your oganization to join this class?'
       empty_value: Please Select One
-      choices: [ 'Yes', 'No' ]
+      choices: 
+        yes: Yes
+        no: No
       required: true
     statement_of_faith:
       type: checkbox
@@ -265,7 +278,9 @@ register_for_faith_and_tech:
       type: choice
       label: 'Will a spouse be joining you?'
       empty_value: Please Select One
-      choices: [ 'Yes', 'No' ]
+      choices:
+        yes: Yes
+        no: No
       required: true
     spouse_name:
       label: "Your Spouse's Name"
@@ -275,24 +290,40 @@ register_for_faith_and_tech:
       type: choice
       label: 'How would you rate your experience with computers?'
       empty_value: Please Select One
-      choices: [ 'Novice', 'Low Experience', 'Moderate Experience', 'Experienced' ]
+      choices:
+        novice: 'Novice'
+        low: 'Low Experience'
+        moderate: 'Moderate Experience'
+        experienced: 'Experienced'
       required: true
     experience_smart_phones:
       type: choice
       label: 'How would you rate your experience with smart phones?'
       empty_value: Please Select One
-      choices: [ 'Novice', 'Low Experience', 'Moderate Experience', 'Experienced' ]
+      choices: 
+        novice: 'Novice'
+        low: 'Low Experience'
+        moderate: 'Moderate Experience'
+        experienced: 'Experienced'
       required: true
     spouse_experience_computers:
       type: choice
       label: "How would you rate your spouse's experience with computers?"
       empty_value: Please Select One
-      choices: [ 'Novice', 'Low Experience', 'Moderate Experience', 'Experienced' ]
+      choices: 
+        novice: 'Novice'
+        low: 'Low Experience'
+        moderate: 'Moderate Experience'
+        experienced: 'Experienced'
     spouse_experience_smart_phones:
       type: choice
       label: "How would you rate your spouse's experience with smart phones?"
       empty_value: Please Select One
-      choices: [ 'Novice', 'Low Experience', 'Moderate Experience', 'Experienced' ]
+      choices:
+        novice: 'Novice'
+        low: 'Low Experience'
+        moderate: 'Moderate Experience'
+        experienced: 'Experienced'
     reason:
       type: textarea
       label: 'Why are you taking this class?'
@@ -335,7 +366,11 @@ register_for_digerati_101:
       type: choice
       label: 'How would you rate your experience with programming?'
       empty_value: Please Select One
-      choices: [ 'Novice', 'Low Experience', 'Moderate Experience', 'Experienced' ]
+      choices:
+        novice: 'Novice'
+        low: 'Low Experience'
+        moderate: 'Moderate Experience'
+        experienced: 'Experienced'
       required: true
     programming_languages:
       type: textarea
