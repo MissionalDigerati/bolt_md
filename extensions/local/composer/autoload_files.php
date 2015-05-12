@@ -9,4 +9,5 @@ return array(
     $vendorDir . '/missionaldigerati/boltutilitybox/init.php',
     $vendorDir . '/missionaldigerati/boltrelatedsort/init.php',
     $vendorDir . '/missionaldigerati/boltprivatecontent/init.php',
+    $vendorDir . '/missionaldigerati/boltclassmanager/init.php',
 );

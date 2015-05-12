@@ -11,12 +11,17 @@
     {
       "type": "vcs",
       "url": "https://github.com/MissionalDigerati/BoltPrivateContent.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/MissionalDigerati/BoltClassManager.git"
     }
   ],
   "require": {
     "MissionalDigerati/BoltUtilityBox": ">=2.0.0",
     "MissionalDigerati/BoltRelatedSort": ">=3.0.2",
-    "MissionalDigerati/BoltPrivateContent": ">=2.0.0"
+    "MissionalDigerati/BoltPrivateContent": ">=2.0.0",
+    "MissionalDigerati/BoltClassManager": ">=2.0.0"
   },
   "config": {
     "vendor-dir": "extensions/local"

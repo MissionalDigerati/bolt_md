@@ -140,5 +140,52 @@
             "source": "https://github.com/MissionalDigerati/BoltPrivateContent/tree/v2.0.0",
             "issues": "https://github.com/MissionalDigerati/BoltPrivateContent/issues"
         }
+    },
+    {
+        "name": "missionaldigerati/boltclassmanager",
+        "version": "v2.0.0",
+        "version_normalized": "2.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/MissionalDigerati/BoltClassManager.git",
+            "reference": "8d94d17dc0f6540061f956cb195c6d6acb04739a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/MissionalDigerati/BoltClassManager/zipball/8d94d17dc0f6540061f956cb195c6d6acb04739a",
+            "reference": "8d94d17dc0f6540061f956cb195c6d6acb04739a",
+            "shasum": ""
+        },
+        "time": "2015-05-12 17:48:08",
+        "type": "bolt-extension",
+        "installation-source": "source",
+        "autoload": {
+            "files": [
+                "init.php"
+            ],
+            "psr-4": {
+                "Bolt\\Extension\\MissionalDigerati\\BoltClassManager\\": ""
+            }
+        },
+        "license": [
+            "GPL-3.0+"
+        ],
+        "authors": [
+            {
+                "name": "Missional Digerati",
+                "email": "johnathan@missionaldigerati.org",
+                "homepage": "http://missionaldigerati.org"
+            }
+        ],
+        "description": "An extension for the Bolt CMS that is designed uniquely for our website. It manages the people who sign up for our classes. It reads SimpleForms stored in the database to list visitors to our class.",
+        "keywords": [
+            "SimpleForm data manager",
+            "custom",
+            "management"
+        ],
+        "support": {
+            "source": "https://github.com/MissionalDigerati/BoltClassManager/tree/v2.0.0",
+            "issues": "https://github.com/MissionalDigerati/BoltClassManager/issues"
+        }
     }
 ]
