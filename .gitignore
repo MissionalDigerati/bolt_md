@@ -8,9 +8,10 @@ composer.lock
 app/cache/*
 app/config/config.yml
 app/config/config.live.yml
+app/config/extensions/googleanalytics.bolt.yml
 app/database/*
 files/*
 logs/*
-app/extensions/GoogleAnalytics/config.yml
 TODO
 apache.error.log
+php.error.log

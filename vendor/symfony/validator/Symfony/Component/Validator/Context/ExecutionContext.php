@@ -13,6 +13,7 @@ namespace Symfony\Component\Validator\Context;
 
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\ClassBasedInterface;
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Exception\BadMethodCallException;
@@ -88,7 +89,7 @@ class ExecutionContext implements ExecutionContextInterface
     /**
      * The current validation metadata.
      *
-     * @var MetadataInterface
+     * @var MetadataInterface|null
      */
     private $metadata;
 
@@ -98,6 +99,13 @@ class ExecutionContext implements ExecutionContextInterface
      * @var string|null
      */
     private $group;
+
+    /**
+     * The currently validated constraint.
+     *
+     * @var Constraint|null
+     */
+    private $constraint;
 
     /**
      * Stores which objects have been validated in which group.
@@ -114,15 +122,22 @@ class ExecutionContext implements ExecutionContextInterface
     private $validatedConstraints = array();
 
     /**
+     * Stores which objects have been initialized.
+     *
+     * @var array
+     */
+    private $initializedObjects;
+
+    /**
      * Creates a new execution context.
      *
-     * @param ValidatorInterface    $validator         The validator
-     * @param mixed                 $root              The root value of the
-     *                                                 validated object graph
-     * @param TranslatorInterface   $translator        The translator
-     * @param string|null           $translationDomain The translation domain to
-     *                                                 use for translating
-     *                                                 violation messages
+     * @param ValidatorInterface  $validator         The validator
+     * @param mixed               $root              The root value of the
+     *                                               validated object graph
+     * @param TranslatorInterface $translator        The translator
+     * @param string|null         $translationDomain The translation domain to
+     *                                               use for translating
+     *                                               violation messages
      *
      * @internal Called by {@link ExecutionContextFactory}. Should not be used
      *           in user code.
@@ -139,7 +154,7 @@ class ExecutionContext implements ExecutionContextInterface
     /**
      * {@inheritdoc}
      */
-    public function setNode($value, $object, MetadataInterface $metadata, $propertyPath)
+    public function setNode($value, $object, MetadataInterface $metadata = null, $propertyPath)
     {
         $this->value = $value;
         $this->object = $object;
@@ -153,6 +168,14 @@ class ExecutionContext implements ExecutionContextInterface
     public function setGroup($group)
     {
         $this->group = $group;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setConstraint(Constraint $constraint)
+    {
+        $this->constraint = $constraint;
     }
 
     /**
@@ -176,10 +199,11 @@ class ExecutionContext implements ExecutionContextInterface
             $message,
             $parameters,
             $this->root,
-            $this->getPropertyPath(),
-            $this->getValue(),
+            $this->propertyPath,
+            $this->value,
             null,
-            null
+            null,
+            $this->constraint
         ));
     }
 
@@ -190,11 +214,12 @@ class ExecutionContext implements ExecutionContextInterface
     {
         return new ConstraintViolationBuilder(
             $this->violations,
+            $this->constraint,
             $message,
             $parameters,
             $this->root,
-            $this->getPropertyPath(),
-            $this->getValue(),
+            $this->propertyPath,
+            $this->value,
             $this->translator,
             $this->translationDomain
         );
@@ -359,5 +384,21 @@ class ExecutionContext implements ExecutionContextInterface
     public function isConstraintValidated($cacheKey, $constraintHash)
     {
         return isset($this->validatedConstraints[$cacheKey.':'.$constraintHash]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function markObjectAsInitialized($cacheKey)
+    {
+        $this->initializedObjects[$cacheKey] = true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isObjectInitialized($cacheKey)
+    {
+        return isset($this->initializedObjects[$cacheKey]);
     }
 }

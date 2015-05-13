@@ -575,7 +575,7 @@ function UCSetupFTRegistrationForm(eventInputValue, classId) {
     $('#register_for_faith_and_tech_spouse_name, #register_for_faith_and_tech_spouse_experience_computers, #register_for_faith_and_tech_spouse_experience_smart_phones').parent('div').hide();
     $('#register_for_faith_and_tech_spouse').change(function(event) {
       var val = $(this).find(':selected').val();
-      if (val == 'Yes') {
+      if (val == 'yes') {
         $('#register_for_faith_and_tech_spouse_name, #register_for_faith_and_tech_spouse_experience_computers, #register_for_faith_and_tech_spouse_experience_smart_phones').parent('div').show();
       } else {
         $('#register_for_faith_and_tech_spouse_name, #register_for_faith_and_tech_spouse_experience_computers, #register_for_faith_and_tech_spouse_experience_smart_phones').parent('div').hide();

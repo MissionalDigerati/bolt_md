@@ -71,6 +71,9 @@ social:
   - label: Twitter
     link:  https://twitter.com/M_Digerati
     class: icon-s-twitter
+  - label: Youtube
+    link: https://www.youtube.com/channel/UCGg2yFHmlkkL17FhcPuANmg
+    class: icon-s-youtube
 footer:
   - label: Home
     title: Visit the Home Page
