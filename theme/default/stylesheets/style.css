@@ -4239,6 +4239,24 @@ ul#social-share-nav li.linkedin-share-link a:hover {
     transition: all 0.3s ease;
 }
 
+@media only screen and (max-width: 1300px) {
+    ul#social-share-nav {
+        display: none !important;
+    }
+    div#share-bottom-panel {
+        display: block !important;
+    }
+}
+
+@media only screen and (min-width: 1300px) {
+    ul#social-share-nav {
+        display: block !important;
+    }
+    div#share-bottom-panel {
+        display: none !important;
+    }
+}
+
 @media only screen and (-Webkit-min-device-pixel-ratio: 1.5), only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min-device-pixel-ratio: 1.5) { 
     ul#social-share-nav li.twitter-share-link a {
         background-image: url(../images/social_share/twitter@2x.png);
