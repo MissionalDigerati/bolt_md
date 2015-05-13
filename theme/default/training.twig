@@ -1,0 +1,88 @@
+{% if page.slug == "digerati-101" %}
+  {% set training_type='Digerati 101' %}
+  {% set ogg_image='share_digerati_101.png' %}
+  {% set share_description='Digerati 101 training in app development for Christian ministry workers!' %}
+  {% set share_title="Digerati 101 Training" %}
+{% else %}
+  {% set training_type='Faith & Tech' %}
+  {% set ogg_image='share_faith_tech.png' %}
+  {% set share_description='Free Faith and Tech Training for Your Church! ' %}
+  {% set share_title="Faith and Tech Training" %}
+{% endif %}
+{% include '_header.twig' with { "ogg_image": ogg_image } %}
+<body class="full-layout">
+<div class="body-wrapper">
+
+  {% include '_nav.twig' with {"share_title": share_title, "share_description": share_description, "ogg_image": ogg_image} %}
+
+  <div class="offset"></div>
+
+  <div class="light-wrapper page-title">
+      <div class="container inner">
+        <h1>{{ page.title }}</h1>
+      </div>
+  </div> 
+
+  <div class="dark-wrapper">
+    <div class="container inner">
+      {% if page.slug == "digerati-101" %}
+        <figure class="player">
+          <iframe width="1170" height="658" src="//www.youtube.com/embed/nKIu9yen5nc" frameborder="0" allowfullscreen webkitAllowFullScreen mozallowfullscreen></iframe>
+        </figure>
+        <div class="divide30"></div>
+      {% endif %}
+      <div class="section-title text-center">
+        <h2>{{ page.tagline }}</h2>
+        <span class="icon"><i class="icon-picons-{{ page.tagline_icon }}"></i></span>
+      </div>
+      {{ page.body_header }}
+      <div class="divide30"></div>
+      <h2>Current Curriculum</h2>
+      {% setcontent curriculum = 'curriculum' where { training_types: training_type } orderby 'title' %}
+      {% if curriculum is defined and curriculum is not empty %}
+        <div class="container">
+          {% for row in curriculum|batch(2) %}
+
+            <div class="row">
+
+              {% for class in row %}
+
+                <div class="col-sm-6">
+
+                    {% include '_available_class.twig' with {'class': class} %}
+                    
+                </div>
+
+              {% endfor %}
+
+              <div class="clearfix"></div>
+
+            </div>
+            <div class="divide20"></div>
+
+          {% endfor %}
+          <div class="divide30"></div>
+        </div>
+      {% else %}
+        <p>Sorry, no classes available.  Please check back soon.</p>
+        <div class="divide30"></div>
+      {% endif %}
+      {% if page.body_footer != '' %}
+        {{ page.body_footer }}
+      {% endif %}
+    </div>
+  </div>
+  
+{% include '_footer.twig' with {"share_title": share_title, "share_description": share_description, "ogg_image": ogg_image}  %}
+
+</div>
+<!-- /.body-wrapper --> 
+
+{% include '_scripts.twig' %}
+  <script type="text/javascript">
+    $(function() {
+      $('.row .same-height').matchHeight(true);
+    });
+  </script>
+</body>
+</html>

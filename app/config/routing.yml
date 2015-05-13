@@ -1,0 +1,112 @@
+# This file defines user-definable routes for the frontend of your Bolt website.
+# Check below for examples, or read the documentation at 
+# http://docs.bolt.cm/templates-routes#routing
+
+# ------------------------------------------------------------------------------
+# Place your own routes here, that have a HIGHER priority than the default routes.
+
+our_ministry:
+  path: /about-us/our-ministry
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'our-ministry' }
+
+our_services:
+  path: /about-us/our-services
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'our-services' }
+
+about_us:
+  path: /about-us
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'our-ministry' }
+
+our_coding_practices:
+  path: /about-us/our-coding-practices
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'our-coding-practices' }
+
+digeratis:
+  path: /about-us/our-digeratis
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug':  'page', 'slug': 'our-digeratis' }
+
+statement_of_faith:
+  path: /about-us/statement-of-faith
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug':  'page', 'slug': 'statement-of-faith' }
+
+about_us:
+  path: /about-us
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'our-ministry' }
+
+projects:
+  path: /projects
+  defaults: { _controller: 'Bolt\Controllers\Frontend::listing', 'contenttypeslug': 'project' }
+
+digerati_101:
+  path: /training/digerati-101
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'digerati-101' }
+
+faith_and_tech:
+  path: /training/faith-and-tech
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'faith-and-tech' }
+
+submit_an_idea:
+  path: /participate/submit-an-idea
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'submit-an-idea' }
+
+join_volunteer:
+  path: /participate/join-volunteer
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'join-volunteer' }
+
+donate:
+  path: /participate/donate
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'donate' }
+
+root:
+  path:     /
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page', 'slug': 'welcome' }
+
+pagebinding:
+  path: /{slug}
+  defaults: { _controller: 'Bolt\Controllers\Frontend::record', 'contenttypeslug': 'page' }
+  contenttype: pages
+    
+
+# ------------------------------------------------------------------------------
+# These are the routes defining the default behaviour of Bolt's frontend. 
+# Changing these might give unexpected results or even break your website. If 
+# possible, only add NEW routes above or below these.
+
+homepage:
+  path:               /
+  defaults:           { _controller: 'Bolt\Controllers\Frontend::homepage' }
+
+search:
+  path:               /search
+  defaults:           { _controller: 'Bolt\Controllers\Frontend::search' }
+
+preview:
+  path:               /preview/{contenttypeslug}
+  defaults:           { _controller: 'Bolt\Controllers\Frontend::preview' }
+  requirements:
+    contenttypeslug:  'Bolt\Controllers\Routing::getAnyContentTypeRequirement'
+
+contentlink:
+  path:               /{contenttypeslug}/{slug}
+  defaults:           { _controller: 'Bolt\Controllers\Frontend::record' }
+  requirements:
+    contenttypeslug:  'Bolt\Controllers\Routing::getAnyContentTypeRequirement'
+
+taxonomylink:
+  path:               /{taxonomytype}/{slug}
+  defaults:           { _controller: 'Bolt\Controllers\Frontend::taxonomy' }
+  requirements:
+    taxonomytype:     'Bolt\Controllers\Routing::getAnyTaxonomyTypeRequirement'
+
+contentlisting:
+  path:               /{contenttypeslug}
+  defaults:           { _controller: 'Bolt\Controllers\Frontend::listing' }
+  requirements:
+    contenttypeslug:  'Bolt\Controllers\Routing::getPluralContentTypeRequirement'
+
+# ------------------------------------------------------------------------------
+# Place your own routes here, that have a LOWER priority than the default routes.
+
+
+
+# ------------------------------------------------------------------------------

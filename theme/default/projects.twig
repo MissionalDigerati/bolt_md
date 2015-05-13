@@ -1,0 +1,80 @@
+{% include '_header.twig' with { 'title': 'Projects' } %}
+
+<body class="full-layout">
+<div class="body-wrapper">
+
+  {% include '_nav.twig' %}
+
+  <div class="offset"></div>
+
+  <div class="light-wrapper page-title">
+    <div class="container inner">
+      <h1>Projects</h1>
+    </div>
+  </div> 
+
+  <div class="dark-wrapper">
+    <div class="container inner">
+        {% setcontent current_project = 'projects' where { status: 'published', featured: '1' } limit 1 %}
+
+        {% if current_project is defined and current_project is not empty %}
+          {% set current_project_id = "" %}
+          {% for project in current_project %}
+
+              {% set current_project_id = project.id %}
+
+              {% include '_project.twig' with {'project': project} %}
+
+          {% endfor %}
+
+        {% endif %}
+        <div class="section-title text-center">
+            <h2>Technology Crafted Solutions</h2>
+            <span class="icon"><i class="icon-picons-configuration-2"></i></span>
+        </div>
+
+        <div class="row">
+
+            {% if projects is defined and projects is not empty %}
+              {% set other_projects = remove_record(projects, [current_project_id]) %}
+              {% for row in other_projects|batch(2) %}
+
+                <div class="row">
+
+                  {% for project in row %}
+
+                    <div class="col-sm-6">
+
+                        {% include '_project.twig' with {'project': project} %}
+                        
+                    </div>
+
+                  {% endfor %}
+
+                  <div class="clearfix"></div>
+
+                </div>
+                <div class="divide20"></div>
+
+              {% endfor %}
+
+            {% endif %}
+
+        </div>
+    </div>
+  </div>
+  
+{% include '_footer.twig' %}
+
+</div>
+<!-- /.body-wrapper --> 
+
+{% include '_scripts.twig' %}
+<script type="text/javascript">
+  $(function() {
+      $('.row .same-height').matchHeight(true);
+  });
+</script>
+
+</body>
+</html>

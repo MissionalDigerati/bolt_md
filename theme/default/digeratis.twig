@@ -1,0 +1,61 @@
+{% include '_header.twig' %}
+
+<body class="full-layout">
+<div class="body-wrapper">
+
+  {% include '_nav.twig' %}
+
+  <div class="offset"></div>
+
+  <div class="light-wrapper page-title">
+    <div class="container inner">
+      <h1>{{ page.title }}</h1>
+    </div>
+  </div> 
+
+  <div class="dark-wrapper">
+    <div class="container inner">
+      <div class="section-title text-center">
+        <h2>{{ page.tagline }}</h2>
+        <span class="icon"><i class="icon-picons-{{ page.tagline_icon }}"></i></span>
+      </div>
+        {{ page.body_header }}
+
+        {% setcontent digeratis = 'digeratis' where { status: 'published' } orderby 'last_name' %}
+
+        {% if digeratis is defined and digeratis is not empty %}
+          <div class="row">
+
+            {% for digerati in digeratis %}
+
+              {% include '_digerati.twig' with {'digerati': digerati} %}
+            
+            {% endfor %}
+
+          </div>
+
+        {% endif %}
+
+        {% if page.body_footer != '' %}
+          {{ page.body_footer }}
+        {% endif %}
+    </div>
+  </div>
+
+  <div class="color-wrapper">
+    <div class="container inner text-center">
+      <div class="thin">
+        <p class="lead">Do you want to use your skills for kingdom work?</p>
+        <a href="/participate/join-volunteer" class="btn bm0">Join Us</a> </div>
+    </div>
+  </div>
+  
+{% include '_footer.twig' %}
+
+</div>
+<!-- /.body-wrapper --> 
+
+{% include '_scripts.twig' %}
+
+</body>
+</html>

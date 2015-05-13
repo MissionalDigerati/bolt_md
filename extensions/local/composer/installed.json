@@ -1,0 +1,239 @@
+[
+    {
+        "name": "missionaldigerati/boltutilitybox",
+        "version": "v2.0.0",
+        "version_normalized": "2.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/MissionalDigerati/BoltUtilityBox.git",
+            "reference": "b9c1ef1d18642166f2191d0192daf7ce06ff152e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/MissionalDigerati/BoltUtilityBox/zipball/b9c1ef1d18642166f2191d0192daf7ce06ff152e",
+            "reference": "b9c1ef1d18642166f2191d0192daf7ce06ff152e",
+            "shasum": ""
+        },
+        "time": "2015-05-11 19:48:11",
+        "type": "bolt-extension",
+        "installation-source": "source",
+        "autoload": {
+            "files": [
+                "init.php"
+            ],
+            "psr-4": {
+                "Bolt\\Extension\\MissionalDigerati\\RelatedSort\\": ""
+            }
+        },
+        "license": [
+            "GPL-3.0+"
+        ],
+        "authors": [
+            {
+                "name": "Missional Digerati",
+                "email": "johnathan@missionaldigerati.org",
+                "homepage": "http://missionaldigerati.org"
+            }
+        ],
+        "description": "Bolt Utility Box contains various utility methods for Bolt CMS.",
+        "keywords": [
+            "methods",
+            "twig",
+            "utility"
+        ],
+        "support": {
+            "source": "https://github.com/MissionalDigerati/BoltUtilityBox/tree/v2.0.0",
+            "issues": "https://github.com/MissionalDigerati/BoltUtilityBox/issues"
+        }
+    },
+    {
+        "name": "missionaldigerati/boltrelatedsort",
+        "version": "3.0.2",
+        "version_normalized": "3.0.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/MissionalDigerati/BoltRelatedSort.git",
+            "reference": "177dfa49f313af9fa8c6cf1a980991907770585c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/MissionalDigerati/BoltRelatedSort/zipball/177dfa49f313af9fa8c6cf1a980991907770585c",
+            "reference": "177dfa49f313af9fa8c6cf1a980991907770585c",
+            "shasum": ""
+        },
+        "time": "2015-05-11 20:28:19",
+        "type": "bolt-extension",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "init.php"
+            ],
+            "psr-4": {
+                "Bolt\\Extension\\MissionalDigerati\\BoltRelatedSort\\": ""
+            }
+        },
+        "license": [
+            "GPL-3.0+"
+        ],
+        "authors": [
+            {
+                "name": "Missional Digerati",
+                "email": "johnathan@missionaldigerati.org",
+                "homepage": "http://missionaldigerati.org"
+            }
+        ],
+        "description": "a small Twig extension built for the Bolt CMS to sort through the given relation.",
+        "keywords": [
+            "related",
+            "sorting",
+            "twig"
+        ],
+        "support": {
+            "source": "https://github.com/MissionalDigerati/BoltRelatedSort/tree/v3.0.2",
+            "issues": "https://github.com/MissionalDigerati/BoltRelatedSort/issues"
+        }
+    },
+    {
+        "name": "missionaldigerati/boltprivatecontent",
+        "version": "v2.0.0",
+        "version_normalized": "2.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/MissionalDigerati/BoltPrivateContent.git",
+            "reference": "5a5f7007643e0d8b89333ce95dbc7f788b666e38"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/MissionalDigerati/BoltPrivateContent/zipball/5a5f7007643e0d8b89333ce95dbc7f788b666e38",
+            "reference": "5a5f7007643e0d8b89333ce95dbc7f788b666e38",
+            "shasum": ""
+        },
+        "time": "2015-05-11 22:14:54",
+        "type": "bolt-extension",
+        "installation-source": "source",
+        "autoload": {
+            "files": [
+                "init.php"
+            ],
+            "psr-4": {
+                "Bolt\\Extension\\MissionalDigerati\\BoltPrivateContent\\": ""
+            }
+        },
+        "license": [
+            "GPL-3.0+"
+        ],
+        "authors": [
+            {
+                "name": "Missional Digerati",
+                "email": "johnathan@missionaldigerati.org",
+                "homepage": "http://missionaldigerati.org"
+            }
+        ],
+        "description": "A small Twig extension built for the Bolt CMS to lock content down, and require a password to view it.",
+        "keywords": [
+            "private content",
+            "protected content",
+            "restrict access",
+            "twig"
+        ],
+        "support": {
+            "source": "https://github.com/MissionalDigerati/BoltPrivateContent/tree/v2.0.0",
+            "issues": "https://github.com/MissionalDigerati/BoltPrivateContent/issues"
+        }
+    },
+    {
+        "name": "missionaldigerati/boltclassmanager",
+        "version": "v2.0.0",
+        "version_normalized": "2.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/MissionalDigerati/BoltClassManager.git",
+            "reference": "8d94d17dc0f6540061f956cb195c6d6acb04739a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/MissionalDigerati/BoltClassManager/zipball/8d94d17dc0f6540061f956cb195c6d6acb04739a",
+            "reference": "8d94d17dc0f6540061f956cb195c6d6acb04739a",
+            "shasum": ""
+        },
+        "time": "2015-05-12 17:48:08",
+        "type": "bolt-extension",
+        "installation-source": "source",
+        "autoload": {
+            "files": [
+                "init.php"
+            ],
+            "psr-4": {
+                "Bolt\\Extension\\MissionalDigerati\\BoltClassManager\\": ""
+            }
+        },
+        "license": [
+            "GPL-3.0+"
+        ],
+        "authors": [
+            {
+                "name": "Missional Digerati",
+                "email": "johnathan@missionaldigerati.org",
+                "homepage": "http://missionaldigerati.org"
+            }
+        ],
+        "description": "An extension for the Bolt CMS that is designed uniquely for our website. It manages the people who sign up for our classes. It reads SimpleForms stored in the database to list visitors to our class.",
+        "keywords": [
+            "SimpleForm data manager",
+            "custom",
+            "management"
+        ],
+        "support": {
+            "source": "https://github.com/MissionalDigerati/BoltClassManager/tree/v2.0.0",
+            "issues": "https://github.com/MissionalDigerati/BoltClassManager/issues"
+        }
+    },
+    {
+        "name": "missionaldigerati/boltpiconselector",
+        "version": "v1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/MissionalDigerati/BoltPiconSelector.git",
+            "reference": "a6be2d26c67f320ad069847e57393471c926e64d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/MissionalDigerati/BoltPiconSelector/zipball/a6be2d26c67f320ad069847e57393471c926e64d",
+            "reference": "a6be2d26c67f320ad069847e57393471c926e64d",
+            "shasum": ""
+        },
+        "time": "2015-05-13 00:34:42",
+        "type": "bolt-extension",
+        "installation-source": "source",
+        "autoload": {
+            "files": [
+                "init.php"
+            ],
+            "psr-4": {
+                "Bolt\\Extension\\MissionalDigerati\\BoltPiconSelector\\": ""
+            }
+        },
+        "license": [
+            "GPL-3.0+"
+        ],
+        "authors": [
+            {
+                "name": "Missional Digerati",
+                "email": "johnathan@missionaldigerati.org",
+                "homepage": "http://missionaldigerati.org"
+            }
+        ],
+        "description": "An extension for the Bolt CMS that creates a custom field for selecting a Picons icon.",
+        "keywords": [
+            "custom",
+            "field",
+            "picon",
+            "selector"
+        ],
+        "support": {
+            "source": "https://github.com/MissionalDigerati/BoltPiconSelector/tree/v1.0.0",
+            "issues": "https://github.com/MissionalDigerati/BoltPiconSelector/issues"
+        }
+    }
+]

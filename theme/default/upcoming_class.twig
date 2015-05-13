@@ -1,0 +1,122 @@
+{% include '_header.twig' with { "title": record.title } %}
+{% set type_of_training = record.related('curriculum') %}
+
+<body class="full-layout">
+<div class="body-wrapper">
+
+  {% include '_nav.twig' %}
+
+  <div class="offset"></div>
+  {% if type_of_training is defined and type_of_training is not empty %}
+    <div class="light-wrapper page-title">
+      <div class="container inner">
+        <h1>{{ type_of_training[0].title }} Class</h1>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="dark-wrapper">
+    <div class="container inner">
+        <div class="section-title text-center">
+          <h2>{{ record.title }}</h2>
+          <span class="icon"><i class="icon-picons-education"></i></span>
+        </div>
+        <div class="row">
+          <div class="col-sm-7">
+            {% if record.location is defined and record.location is not empty %}
+                <figure>
+                  <img src="http://maps.googleapis.com/maps/api/staticmap?center={{ record.location.latitude }},{{ record.location.longitude }}&zoom=18&size=640x400&sensor=false&markers={{ record.location.latitude }},{{ record.location.longitude }}" width="640" height="400" alt="Map to Class" />
+                </figure>
+            {% endif %}
+          </div>
+          <!-- /.col-sm-8 -->
+          <div class="col-sm-5 lp30">
+            <h3>Class Details</h3>
+            {{ record.notes }}
+            <div class="divide15"></div>
+            <ul class="item-details">
+              <li>
+                <span class="row_title">Date of Class:</span> {{ record.date_of_class|date("M d, ’y @ g:i a") }}
+              </li>
+              {% if type_of_training is defined and type_of_training is not empty %}
+                <li>
+                  <span class="row_title">Class Length:</span> {{ type_of_training[0].duration }}
+                </li>
+                {% if type_of_training[0].cost_text != '' %}
+                    <li><span class="row_title">Cost:</span> {{ type_of_training[0].cost_text }}</li>
+                {% endif %}
+                {% if type_of_training[0].taxonomy.training_types is defined and type_of_training[0].taxonomy.training_types is not empty %}
+                    <li>
+                      <span class="row_title">Training:</span>
+                        {% set current_training_type = 'Digerati 101' %}
+                        {% for training_type in type_of_training[0].taxonomy.training_types %}
+
+                          {{training_type}}       
+                          {% set current_training_type = training_type %}
+                        {% endfor %}
+                      </li>
+                {% endif %}
+                <li>
+                  <span class="row_title">Curriculum:</span> {{ type_of_training[0].title }}
+                </li>
+                <li>
+                  <span class="row_title">Curriculum Description:</span><br>
+                  {{ type_of_training[0].tagline }}
+                </li>
+              {% endif %}
+            </ul>
+            {% set orgs = record.related('organizations') %}
+            {% if orgs is defined and orgs is not empty %}
+              <div class="divide15"></div>
+              <h4>Hosted By</h4>
+              {% for org in orgs %}
+                <div class="divide10"></div>
+                <h5>{{ org.name }}</h5>
+                {{ org.address }}
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+    </div>
+  </div>
+  <div class="light-wrapper">
+    <div class="container inner">
+      <div class="section-title text-center">
+        <h2><a name="register"></a>Register for the Class</h2>
+        <span class="icon"><i class="icon-picons-new"></i></span>
+      </div>
+      
+      {% if current_training_type == 'Digerati 101' %}
+        {{ simpleform('register_for_digerati_101') }}
+      {% else %}
+        {{ simpleform('register_for_faith_and_tech') }}
+      {% endif %}
+    </div>
+  </div>
+  
+{% include '_footer.twig' %}
+
+</div>
+{% if record.public == 0 %}
+  <div style="display:none;" id="access_key_required">
+    {{ private_content_form('upcoming_classes', record.slug, 'access_key') }}
+  </div>
+{% endif %}
+<!-- /.body-wrapper --> 
+{% if record.public == 0 %}
+  {% include '_scripts.twig' %}
+{% else %}
+  {% include '_scripts.twig' %}
+{% endif %}
+<script type="text/javascript">
+  $(function() {
+    UCSetupFTRegistrationForm("{{ record.title }} - {{ record.date_of_class|date('M d, ’y @ g:i a') }}", {{record.id}});
+    {% if record.public == 0 %}
+      UCLockOut('{{ md5(record.slug) }}');
+      hideSharing();
+    {% endif %}
+  });
+</script>
+
+</body>
+</html>

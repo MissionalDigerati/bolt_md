@@ -1,2 +1,17 @@
 .DS_Store
+._.DS_Store
+*.sublime-*
+composer.lock
+.ruby-gemset
+.ruby-version
 .rvmrc
+app/cache/*
+app/config/config.yml
+app/config/config.live.yml
+app/config/extensions/googleanalytics.bolt.yml
+app/database/*
+files/*
+logs/*
+TODO
+apache.error.log
+php.error.log

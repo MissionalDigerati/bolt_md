@@ -1,0 +1,33 @@
+{# Macro - http://twig.sensiolabs.org/doc/tags/macro.html #}
+{% macro display_menu_item(item, loop) %}
+    {% set current = '' %}
+    {% if item.submenu is defined %}
+        {% for submenu in item.submenu %}
+            {% if submenu|current %}
+                {% set current = ' current' %}
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        {% if item|current %}
+            {% set current = ' current' %}
+        {% endif %}
+    {% endif %}
+    <li class="index-{{ loop.index }}{% if loop.first %} first{% endif %}{% if loop.last %} last{% endif %}{% if item.submenu is defined %} dropdown{% endif %}{{current}}">
+        <a href="{{ item.link }}" title="{{ item.title }}" class="{% if item.submenu is defined %}dropdown-toggle js-activated{% endif %}">
+            {{item.label}}
+        </a>
+        {% if item.submenu is defined %}
+            <ul class="dropdown-menu">
+            {% for submenu in item.submenu %}
+                {{ _self.display_menu_item(submenu, loop) }}       
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
+{% endmacro %}
+
+{% for item in menu %}
+    {% if item.label is defined %}
+        {{ _self.display_menu_item(item, loop) }}
+    {% endif %}
+{% endfor %}

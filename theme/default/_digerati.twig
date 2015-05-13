@@ -1,0 +1,40 @@
+<div class="col-sm-4">
+  {% if digerati.thumb_image is defined and digerati.thumb_image is not empty %}
+      <figure class="icon-overlay medium icn-more">
+        <a href="{{ digerati.thumb_image|image }}" class="fancybox-media" data-rel="digeratis" rel="digeratis">
+          <span class="icn-more"></span>
+          <img src="{{ digerati.thumb_image|image }}" alt="{{ digerati.first_name }} {{ digerati.last_name }}">
+        </a>
+      </figure>
+  {% endif %}
+  <div class="image-caption">
+    <h3>{{ digerati.prefix }} {{ digerati.first_name }} {{ digerati.last_name }}</h3>
+    <span class="meta">{{ digerati.title }}</span>
+    {{ digerati.biography }}
+    <span class="languages meta tags">
+      {% if digerati.taxonomy.languages is defined and digerati.taxonomy.languages is not empty %}
+
+          {% for language in digerati.taxonomy.languages %}
+
+            <span class="language-tag">{{ language }}</span>         
+          
+          {% endfor %}
+
+      {% endif %}
+    </span>
+    {% set social_links = related_sort(digerati.related('social_links'), 'social_media') %}
+
+    {% if social_links is defined and social_links is not empty %}
+      <ul class="social">
+
+        {% for social_link in social_links %}
+
+          <li><a href="{{ social_link.url }}" target="_blank"><i class="icon-s-{{ social_link.social_media|lower }}"></i></a></li>
+        
+        {% endfor %}
+
+      </ul>
+
+    {% endif %}
+  </div>
+</div>

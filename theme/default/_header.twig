@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-control" content="public">
+{% if page is defined and page is not empty %}
+
+    <title>Missional Digerati:: {{ page.title }}</title>
+    <meta property="og:title" content="Missional Digerati:: {{ page.title }}"/>
+    <meta property="og:site_name" content="Missional Digerati"/>
+
+    {% if page.seo_description is not empty %}
+
+        <meta name="description" content="{{ page.seo_description }}">
+        <meta property="og:description" content="{{ page.seo_description }}"/>
+
+    {% else %}
+
+        <meta name="description" content="Missional Digerati is a Christian non-profit mobile and web app development team dedicated to leveraging technology for the purpose of delivering the Gospel to every nation.">
+        <meta property="og:description" content="Missional Digerati is a Christian non-profit mobile and web app development team dedicated to leveraging technology for the purpose of delivering the Gospel to every nation."/>
+
+    {% endif %}
+    {% if page.taxonomy.keywords is defined and page.taxonomy.keywords is not empty %}
+
+        <meta name="keywords" content="{% for keyword in record.taxonomy.keywords %}{{ keyword }}{% if not loop.last %}, {% endif %}{% endfor %}">
+
+    {% else %}
+
+        <meta name="keywords" content="Missional Digerati, Missional, Digerati, Technology, Website Development, Mobile App Development, Christian, Missions, Mission, Protestant">
+        
+    {% endif %}
+
+{% else %}
+
+    <meta name="description" content="Missional Digerati is a Christian non-profit mobile and web app development team dedicated to leveraging technology for the purpose of delivering the Gospel to every nation.">
+    <meta name="keywords" content="Missional Digerati, Missional, Digerati, Technology, Website Development, Mobile App Development, Christian, Missions, Mission, Protestant">
+    <title>Missional Digerati:: {{ title }}</title>
+    <meta property="og:title" content="Missional Digerati:: {{ title }}"/>
+    <meta property="og:site_name" content="Missional Digerati"/>
+    <meta property="og:description" content="Missional Digerati is a Christian non-profit mobile and web app development team dedicated to leveraging technology for the purpose of delivering the Gospel to every nation."/>
+
+{% endif %}
+<meta name="author" content="Missional Digerati">
+<meta property="og:type" content="website"/>
+
+{% if ogg_image is defined and ogg_image is not empty %}
+    {% set ogg_image_file = ogg_image %} 
+{% else %}
+    {% set ogg_image_file = "share_logo.png" %}
+{% endif %}
+
+<meta property="og:image" content="http://missionaldigerati.org{{ paths.theme }}images/{{ ogg_image_file }}" />
+<meta property="og:url" content="http://missionaldigerati.org{{ app.request.pathinfo }}"/>
+<link rel="shortcut icon" href="{{ paths.theme }}images/favicon.ico">
+<!-- Bootstrap core CSS -->
+<link href="{{ paths.theme }}stylesheets/bootstrap.css" rel="stylesheet">
+<link href="{{ paths.theme }}stylesheets/settings.css" rel="stylesheet">
+<link href="{{ paths.theme }}stylesheets/owl.carousel.css" rel="stylesheet">
+<link href="{{ paths.theme }}javascripts/google-code-prettify/prettify.css" rel="stylesheet">
+<link href="{{ paths.theme }}javascripts/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" media="all" />
+<link href="{{ paths.theme }}javascripts/fancybox/helpers/jquery.fancybox-thumbs.css?v=1.0.2" rel="stylesheet" type="text/css" />
+<link href="{{ paths.theme }}stylesheets/style.css" rel="stylesheet">
+<link href="{{ paths.theme }}stylesheets/blue.css" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,500,600,700,800,900' rel='stylesheet' type='text/css'>
+<link href="{{ paths.theme }}type/fontello.css" rel="stylesheet">
+<link href="{{ paths.theme }}type/picons.css" rel="stylesheet">
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="{{ paths.theme }}javascripts/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+      <![endif]-->
+</head>

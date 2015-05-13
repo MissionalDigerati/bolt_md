@@ -1,0 +1,37 @@
+# This file defines the different types of taxonomies in Bolt. See the 
+# documentation for details: http://docs.bolt.cm/taxonomies#taxonomies
+keywords:
+    name: Keywords
+    slug: keywords
+    singular_slug: keyword
+    behaves_like: tags
+
+languages:
+    name: Languages
+    slug: languages
+    singular_slug: language
+    behaves_like: tags
+
+libraries:
+    name: Libraries
+    slug: libraries
+    singular_slug: library
+    behaves_like: tags
+
+statuses:
+    name: Statuses
+    slug: statuses
+    singular_name: Status
+    singular_slug: status
+    behaves_like: categories
+    multiple: false
+    options: [ 'Archived', 'Completed', 'Current', 'Planning', 'Under Development' ]
+
+training_types:
+    name: Training
+    slug: training_types
+    singular_name: Training
+    singular_slug: training_type
+    behaves_like: categories
+    multiple: false
+    options: [ 'Digerati 101', 'Faith & Tech' ]

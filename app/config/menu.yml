@@ -1,0 +1,105 @@
+# This file defines the menus on the website. See the documentation for
+# details: http://docs.bolt.cm/menus
+
+main:
+  - label: Home
+    title: Visit the Home Page
+    path:  /
+    class: home
+  - label: About Us
+    title: Learn More About Us
+    path:  /about-us
+    class: about
+    submenu:
+      - label: Our Ministry
+        title: Learn More About Us
+        path:  /about-us/our-ministry
+        class: about-us-our-ministry
+      - label: Our Services
+        title: Learn More About What We Do
+        path:  /about-us/our-services
+        class: about-us-our-services
+      - label: Our Coding Practices
+        title: Learn More About How We Code
+        path:  /about-us/our-coding-practices
+        class: about-us-our-coding-practices
+      - label: Our Digeratis
+        title: Learn More About Our Team
+        path:  /about-us/our-digeratis
+        class: about-us-our-digeratis
+      - label: Statement of Faith
+        title: Learn More About What We Believe
+        path:  /about-us/statement-of-faith
+        class: about-us-statement-of-faith
+  - label: Projects
+    title: Discover Some of Our Projects
+    path:  /projects
+    class: projects
+  - label: Training
+    title: Check Out Our Classes
+    path:  /training
+    class: training
+  - label: Participate
+    title: Learn How You Can Help
+    path:  /donate
+    class: participate
+    submenu:
+      - label: Donate
+        title: Join Our Financial Partners
+        path:  /participate/donate
+        class: donate
+      - label: Join/Volunteer
+        title: Become a Part of Our Team
+        path:  /participate/join-volunteer
+        class: join-or-volunteer
+      - label: Submit an Idea
+        title: Got a Great Idea
+        path:  /participate/submit-an-idea
+        class: submit-an-idea
+  - label: Code
+    title: Checkout Our Code
+    link:  https://github.com/MissionalDigerati
+    class: code-repo
+  - label: Contact Us
+    title: Get in Touch
+    path:  /contact-us
+    class: contact-us
+social:
+  - label: Github
+    link:  https://github.com/MissionalDigerati
+    class: icon-s-github
+  - label: Twitter
+    link:  https://twitter.com/M_Digerati
+    class: icon-s-twitter
+  - label: Youtube
+    link: https://www.youtube.com/channel/UCGg2yFHmlkkL17FhcPuANmg
+    class: icon-s-youtube
+footer:
+  - label: Home
+    title: Visit the Home Page
+    path:  /
+    class: home
+  - label: About Our Ministry
+    title: Learn More About Us
+    path:  /about-us/our-ministry
+    class: about
+  - label: Projects
+    title: Discover Some of Our Projects
+    path:  /projects
+    class: projects
+  - label: Training
+    title: Check Out Our Classes
+    path:  /training
+    class: training
+  - label: Submit an Idea
+    title: Got a Great Idea
+    path:  /participate/submit-an-idea
+    class: submit-an-idea
+  - label: Donate
+    title: Give Back to Missions
+    link:  /participate/donate
+    class: donate
+  - label: Join Us
+    title: Get in Touch
+    path:  /participate/join-volunteer
+    class: join-us

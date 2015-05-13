@@ -1,0 +1,14 @@
+{% if project.thumb_image is defined and project.thumb_image is not empty %}
+    <figure class="icon-overlay medium icn-link">
+        <a href="/project/{{ project.slug }}">
+            <span class="icn-more"></span>
+            <img src="{{ project.thumb_image|image }}" title="{{ project.title }}" class="current-project">
+        </a>
+    </figure>
+    <div class="image-caption same-height">
+        <h3>{{ project.title }}</h3>
+        <span class="meta">{{ project.tagline }}</span>
+        <div class="text-right"><a href="/project/{{ project.slug }}" class="btn btn-blue">Learn More</a></div>
+    </div>
+    <div class="divide30"></div>
+{% endif %}

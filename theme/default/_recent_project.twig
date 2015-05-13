@@ -1,0 +1,21 @@
+{% if project.thumb_image is defined and project.thumb_image is not empty %}
+  {% if project.taxonomy.languages is defined and project.taxonomy.languages is not empty %}
+    {% set tags = project.taxonomy.languages %}
+  {% endif %}
+  {% if project.taxonomy.libraries is defined and project.taxonomy.libraries is not empty %}
+    {% set tags = tags|merge(project.taxonomy.libraries) %}
+  {% endif %}
+  <div class="item">
+    <figure class="icon-overlay medium icn-link">
+      <a href="/project/{{ project.slug }}">
+        <img src="{{ project.thumb_image|thumbnail(370, 142) }}" title="{{ project.title }}" data-at2x="{{ project.thumb_image|thumbnail(740, 284) }}">
+      </a>
+    </figure>
+    <div class="image-caption same-height">
+      <h3><a href="/project/{{ project.slug }}">{{ project.title }}</a></h3>
+      <span class="meta">
+        {{ tags|join(', ') }}
+      </span>
+    </div>
+  </div>
+{% endif %}

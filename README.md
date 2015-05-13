@@ -6,6 +6,11 @@ Bolt Version
 
 This is the repository for the [Missional Digerati](http://www.missionaldigerati.org) main website code using PHP's [Bolt CMS](http://bolt.cm/).  The original site can be found [here](https://github.com/MissionalDigerati/main_website).
 
+Production Notes
+----------------
+
+All YML files in the app/config directory should not have read permissions for the world.
+
 Development Notes
 -----------------
 
