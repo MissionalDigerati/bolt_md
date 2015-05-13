@@ -15,3 +15,4 @@ logs/*
 TODO
 apache.error.log
 php.error.log
+extensions/local/
