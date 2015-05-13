@@ -9,5 +9,6 @@ return array(
     'Bolt\\Extension\\MissionalDigerati\\RelatedSort\\' => array($vendorDir . '/missionaldigerati/boltutilitybox'),
     'Bolt\\Extension\\MissionalDigerati\\BoltRelatedSort\\' => array($vendorDir . '/missionaldigerati/boltrelatedsort'),
     'Bolt\\Extension\\MissionalDigerati\\BoltPrivateContent\\' => array($vendorDir . '/missionaldigerati/boltprivatecontent'),
+    'Bolt\\Extension\\MissionalDigerati\\BoltPiconSelector\\' => array($vendorDir . '/missionaldigerati/boltpiconselector'),
     'Bolt\\Extension\\MissionalDigerati\\BoltClassManager\\' => array($vendorDir . '/missionaldigerati/boltclassmanager'),
 );

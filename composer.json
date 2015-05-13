@@ -15,13 +15,18 @@
     {
       "type": "vcs",
       "url": "https://github.com/MissionalDigerati/BoltClassManager.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/MissionalDigerati/BoltPiconSelector.git"
     }
   ],
   "require": {
     "MissionalDigerati/BoltUtilityBox": ">=2.0.0",
     "MissionalDigerati/BoltRelatedSort": ">=3.0.2",
     "MissionalDigerati/BoltPrivateContent": ">=2.0.0",
-    "MissionalDigerati/BoltClassManager": ">=2.0.0"
+    "MissionalDigerati/BoltClassManager": ">=2.0.0",
+    "MissionalDigerati/BoltPiconSelector": ">=1.0.0"
   },
   "config": {
     "vendor-dir": "extensions/local"
