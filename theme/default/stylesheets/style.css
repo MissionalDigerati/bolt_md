@@ -2994,6 +2994,9 @@ textarea,
 .uneditable-input {
     width: 100%
 }
+input[type="checkbox"] {
+    width: auto;
+}
 select,
 textarea,
 input[type="text"],
@@ -3157,6 +3160,17 @@ input:focus:-ms-input-placeholder {
     box-shadow: none;
     -webkit-border-radius: 0 3px 3px 0;
     border-radius: 0 3px 3px 0;
+}
+.simpleform-checkbox label {
+    font-weight: bold;
+}
+form.simpleform a.learn_more {
+    color: #2c2c2c;
+    font-size: 12px;
+    font-style: italic;
+}
+form.simpleform a.learn_more:hover {
+    text-decoration: underline;
 }
 /*-----------------------------------------------------------------------------------*/
 /*	PARALAX
@@ -4383,3 +4397,17 @@ ul#social-share-nav li.linkedin-share-link a:hover {
 body.landing-page .navbar-brand {
     padding: 10px 0px 10px;
 }
+body.landing-page h4 {
+    padding: 20px 0px;
+}
+.parallax.digital-quiet-time-landing {
+    background-image: url(../images/landing_pages/dq_landing_parallax.jpg);
+    color: #2c2c2c;
+    font-size: 16px;
+}
+.parallax.digital-quiet-time-landing .section-title h2 {
+    color: #2c2c2c;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+

@@ -381,3 +381,35 @@ register_for_digerati_101:
       label: 'Why are you taking this class?'
       placeholder: 'Your reason here...'
   button_text: Register
+# Landing Page Forms
+#
+digital_quiet_time_landing:
+  recipient_email: forms@missionaldigerati.info
+  recipient_name: 'Missional Digerati'
+  mail_subject: "[MD] Host a Digital Quiet Time"
+  # insert_into_table: form_dq_landing
+  fields:
+    name:
+      label: 'Your Name'
+      placeholder: 'Your name is...'
+      type: text
+      required: true
+    organization_name:
+      label: 'Your Organization/Church'
+      placeholder: 'Your organization or church name is...'
+      type: text
+      required: true
+    email:
+      type: email
+      label: 'Your Email'
+      placeholder: 'Your email address is...'
+      required: true
+    requirements:
+      type: checkbox
+      required: true
+      label: 'Yes, I meet the requirements to host this class?<br><a href="#requirements" class="learn_more">What Requirements?</a>'
+    statement_of_faith:
+      type: checkbox
+      label: 'Yes, I agree with your Statement of Faith?<br><a href="http://missionaldigerati.org/about-us/statement-of-faith" target="_blank" class="learn_more">Read Our Statement of Faith</a>'
+      required: true
+  button_text: I Want to Host a Class!
