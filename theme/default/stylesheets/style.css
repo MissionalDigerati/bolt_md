@@ -4410,4 +4410,46 @@ body.landing-page h4 {
     font-weight: bold;
     text-transform: capitalize;
 }
+.form-container.parallax-form {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px; 
+    -moz-border-radius: 5px; 
+    -webkit-border-radius: 5px;
+    -webkit-box-shadow: 3px 3px 3px 0px rgba(44,44,44,1);
+    -moz-box-shadow: 3px 3px 3px 0px rgba(44,44,44,1);
+    box-shadow: 3px 3px 3px 0px rgba(44,44,44,1);
+}
+.form-container.parallax-form h3 {
+    color: #2c2c2c;
+    text-align: center;
+    text-transform: uppercase;
+}
+.form-container.parallax-form .simpleform-submit {
+    margin-top: 20px;
+    text-align: center;
+}
+.form-container.parallax-form .simpleform-row ul {
+    list-style-type: none;
+    padding: 0px;
+}
+.form-container.parallax-form .simpleform-row ul li {
+    color: red;
+    font-style: italic;
+    font-size: 14px;
+
+}
+.parallax h3.question {
+    color: #2c2c2c;
+    font-weight: 700;
+    font-style: italic;
+    margin-bottom: 20px;
+}
+.parallax .pitch-text ul {
+    padding-left: 15px;
+    list-style-position: inside;
+}
+.parallax .pitch-text li {
+    line-height: 40px;
+}
 

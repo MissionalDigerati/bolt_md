@@ -4,7 +4,7 @@ stylesheet: stylesheets/simpleforms.css
 template: simpleforms/form.twig
 mail_template: assets/simpleforms_mail.twig
 message_ok: Thanks! Your message has been sent.
-message_error: There was an error in the form. Please check the form, and try again.
+message_error: There was a problem with your submission!
 message_technical: There were some technical difficulties, so your message was not sent. We apologize for the inconvenience.
 button_text: Send
 # Optional. Used only, when you have a file field.
@@ -407,9 +407,9 @@ digital_quiet_time_landing:
     requirements:
       type: checkbox
       required: true
-      label: 'Yes, I meet the requirements to host this class?<br><a href="#requirements" class="learn_more">What Requirements?</a>'
+      label: 'Yes, my church meets the requirements?<br><a href="#requirements" class="learn_more">What Requirements?</a>'
     statement_of_faith:
       type: checkbox
-      label: 'Yes, I agree with your Statement of Faith?<br><a href="http://missionaldigerati.org/about-us/statement-of-faith" target="_blank" class="learn_more">Read Our Statement of Faith</a>'
+      label: 'Yes, my church agrees with the Statement of Faith?<br><a href="http://missionaldigerati.org/about-us/statement-of-faith" target="_blank" class="learn_more">Read Our Statement of Faith</a>'
       required: true
-  button_text: I Want to Host a Class!
+  button_text: Sign Me Up!
