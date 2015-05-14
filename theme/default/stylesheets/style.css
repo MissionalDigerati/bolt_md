@@ -4377,3 +4377,9 @@ ul#social-share-nav li.linkedin-share-link a:hover {
 #fb_dialog_ipad_overlay {
     width: 600px !important;
 }
+/*-----------------------------------------------------------------------------------*/
+/*  LANDING PAGES
+/*-----------------------------------------------------------------------------------*/
+body.landing-page .navbar-brand {
+    padding: 10px 0px 10px;
+}
