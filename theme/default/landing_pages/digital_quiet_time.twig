@@ -1,4 +1,10 @@
+{% set ogg_image='landing_pages/dqt_share.jpg' %}
+
 {% include '_header.twig' %}
+
+{% set share_title_text = 'Enrich Your Time with God'|url_encode %}
+{% set share_description_text = 'Learn how to enrich your time with God using your smart phone.  Host a FREE class today!'|url_encode %}
+{% set ogg_image_file = 'landing_pages/dqt_share.jpg' %}
 
 <body class="landing-page full-layout">
     <div class="body-wrapper">
@@ -13,8 +19,28 @@
                 </div>
             </div>
           </div>
+          <!--/.navbar -->
           <!--/.nav-collapse --> 
         </div>
+        {% spaceless %}
+            <ul id="social-share-nav" class="social-sharing-widget hidden-print">
+                <li class="twitter-trigger twitter-share-link">
+                    <a href="https://twitter.com/intent/tweet?url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&text={{share_description_text}}&via=M_Digerati"></a>
+                </li>
+                <li class="facebook-trigger facebook-share-link">
+                    <a href=""></a>
+                </li>
+                <li class="social-share-trigger-new-window google-share-link">
+                    <a href="https://plus.google.com/share?url={{ 'http://missionaldigerati.org'|url_encode|url_encode ~ app.request.pathinfo|url_encode }}"></a>
+                </li>
+                <li class="social-share-trigger-new-window pinterest-share-link">
+                    <a href="http://pinterest.com/pin/create/button/?url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&media=http%3A%2F%2Fmissionaldigerati.org{{ paths.theme|url_encode }}images%2F{{ogg_image_file}}&description={{share_description_text}}"></a>
+                </li>
+                <li class="social-share-trigger-new-window linkedin-share-link">
+                    <a href="http://www.linkedin.com/shareArticle?mini=true&url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&title={{share_title_text}}&summary={{share_description_text}}&source={{'Missional Digerati'|url_encode}}"></a>
+                </li>
+            </ul>
+        {% endspaceless %}
         <!--/.navbar -->
         <div class="offset"></div>
 
@@ -28,7 +54,7 @@
                     <div class="row">
                         <div class="col-sm-6 pitch-text">
                             <h3 class="question">Can Your Phone Enrich Your Quiet Time?</h3>
-                            <p><strong>Definitely!</strong>  We would like to show you how.  In our 4 hour FREE class you will learn to use your smart phone to:</p>
+                            <p><strong>Definitely!</strong>  We would like to show you how.  In our 4 hour FREE* class you will learn to use your smart phone to:</p>
                             <ul>
                                 <li>Read Your Bible</li>
                                 <li>Journal Your Thoughts</li>
