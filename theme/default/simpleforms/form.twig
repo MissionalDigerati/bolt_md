@@ -1,10 +1,10 @@
-{% form_theme form 'assets/simpleforms_fields.twig' %}
+{% form_theme form 'simpleforms/fields/form_fields.twig' %}
 
 {% if error %}
-    <p class="simpleform-error">{{ error }}</p>
+    <p class="alert alert-danger">{{ error }}</p>
 {% endif %}
 {% if message %}
-    <p class="simpleform-message">{{ message }}</p>
+    <p class="alert alert-success">{{ message }}</p>
 {% endif %}
 {% if not sent %}
 {% if recaptcha_theme %}
@@ -23,6 +23,8 @@
         {{ recaptcha_html|raw }}
     </div>
     {% endif %}
-    <input type="submit" name="submit" value="{{ button_text }}" class="btn-submit btn" />
+    <div class="simpleform-submit">
+        <input type="submit" name="submit" value="{{ button_text }}" class="btn-submit btn" />
+    </div>
 </form>
 {% endif %}

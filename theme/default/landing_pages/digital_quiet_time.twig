@@ -1,0 +1,141 @@
+{% set ogg_image='landing_pages/dqt_share.jpg' %}
+
+{% include '_header.twig' %}
+
+{% set share_title_text = 'Enrich Your Time with God'|url_encode %}
+{% set share_description_text = 'Learn how to enrich your time with God using your smart phone.  Host a FREE class today!'|url_encode %}
+{% set ogg_image_file = 'landing_pages/dqt_share.jpg' %}
+
+<body class="landing-page full-layout">
+    <div class="body-wrapper">
+        <div class="navbar basic default">
+          <div class="navbar-header">
+            <div class="container">
+                <div class="basic-wrapper">
+                    <a class="navbar-brand" href="http://missionaldigerati.org">
+                        <img src="{{ paths.theme }}images/logo.png" data-at2x="{{ paths.theme }}images/logo@2x.png" alt="" />
+                    </a>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+          </div>
+          <!--/.navbar -->
+          <!--/.nav-collapse --> 
+        </div>
+        {% spaceless %}
+            <ul id="social-share-nav" class="social-sharing-widget hidden-print">
+                <li class="twitter-trigger twitter-share-link">
+                    <a href="https://twitter.com/intent/tweet?url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&text={{share_description_text}}&via=M_Digerati"></a>
+                </li>
+                <li class="facebook-trigger facebook-share-link">
+                    <a href=""></a>
+                </li>
+                <li class="social-share-trigger-new-window google-share-link">
+                    <a href="https://plus.google.com/share?url={{ 'http://missionaldigerati.org'|url_encode|url_encode ~ app.request.pathinfo|url_encode }}"></a>
+                </li>
+                <li class="social-share-trigger-new-window pinterest-share-link">
+                    <a href="http://pinterest.com/pin/create/button/?url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&media=http%3A%2F%2Fmissionaldigerati.org{{ paths.theme|url_encode }}images%2F{{ogg_image_file}}&description={{share_description_text}}"></a>
+                </li>
+                <li class="social-share-trigger-new-window linkedin-share-link">
+                    <a href="http://www.linkedin.com/shareArticle?mini=true&url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&title={{share_title_text}}&summary={{share_description_text}}&source={{'Missional Digerati'|url_encode}}"></a>
+                </li>
+            </ul>
+        {% endspaceless %}
+        <!--/.navbar -->
+        <div class="offset"></div>
+
+        <div class="parallax digital-quiet-time-landing">
+            <div class="container inner">
+                <div class="thin">
+                    <div class="section-title text-center">
+                        <h2><a name="#host_a_class"></a>Faith & Tech: Digital Quiet Time</h2>
+                        <span class="icon"><i class="icon-picons-{{ page.tagline_icon }}"></i></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 pitch-text">
+                            <h3 class="question">Can Your Phone Enrich Your Quiet Time?</h3>
+                            <p><strong>Definitely!</strong>  We would like to show you how.  In our 4 hour FREE* class you will learn to use your smart phone to:</p>
+                            <ul>
+                                <li>Read Your Bible</li>
+                                <li>Journal Your Thoughts</li>
+                                <li>Share & Receive Prayer Requests</li>
+                                <li>Memorize Bible Verses</li>
+                                <li>Share the Gospel</li>
+                            </ul>
+                            <p>So if you are ready to use your phone for more than playing video games, <strong>host a class today!</strong></p>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-container parallax-form">
+                                <h3>Host a Class</h3>
+                                {{ simpleform("digital_quiet_time_landing") }}
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <!-- /.thin -->
+            </div>
+            <!-- /.container.inner -->
+        </div>
+        <!-- /.paralax -->
+        <div class="dark-wrapper">
+            <div class="container inner">
+                {{ page.body_header }}
+                {% if page.body_footer != '' %}
+                    {{ page.body_footer }}
+                {% endif %}
+            </div>
+        </div>
+
+    {% include '_footer.twig' %}
+
+    </div>
+    <!-- /.body-wrapper --> 
+
+    {% include '_scripts.twig' %}
+    <div class="modal fade" id="requirements-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h2>Requirements</h2>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        <li>You must be an Evangelical Protestant church and agree with our <a href="#statement-faith-modal" data-toggle="modal" class="requirements-modal-link">Statement of Faith</a>.</li>
+                        <li>You must have adequate classroom space and WiFi able to support the size of the class.</li>
+                        <li>If your church is outside Southern California, we would need you to:
+                        <ul>
+                            <li>Subsidize transportation cost for 2 adults and a child</li>
+                            <li>Provide housing for 2 adults and a child</li>
+                        </ul>
+                        </li>
+                    </ul>
+
+                    <p>We also ask that you would allow us to share our ministry, Missional Digerati, with the class during the last 15 minutes. A preview of the content is available upon request.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-submit" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% setcontent statement_of_faith = 'page/statement-of-faith' %}
+    <div class="modal fade" id="statement-faith-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2>Statement of Faith</h2>
+            </div>
+              <div class="modal-body">
+                  {{ statement_of_faith.body_header }}
+              </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-submit" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+</body>
