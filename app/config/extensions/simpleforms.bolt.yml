@@ -407,9 +407,9 @@ digital_quiet_time_landing:
     requirements:
       type: checkbox
       required: true
-      label: 'Yes, my church meets the requirements?<br><a href="#requirements" class="learn_more">What Requirements?</a>'
+      label: 'Yes, my church meets the requirements?<br><a href="#requirements-modal" data-toggle="modal" class="learn_more requirements-modal-link">What Requirements?</a>'
     statement_of_faith:
       type: checkbox
-      label: 'Yes, my church agrees with the Statement of Faith?<br><a href="http://missionaldigerati.org/about-us/statement-of-faith" target="_blank" class="learn_more">Read Our Statement of Faith</a>'
+      label: 'Yes, my church agrees with the Statement of Faith?<br><a href="#statement-faith-modal" data-toggle="modal" class="learn_more requirements-modal-link">Read Our Statement of Faith</a>'
       required: true
   button_text: Sign Me Up!

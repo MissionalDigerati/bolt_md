@@ -4452,4 +4452,6 @@ body.landing-page h4 {
 .parallax .pitch-text li {
     line-height: 40px;
 }
-
+.modal {
+    z-index: 8400 !important;
+}
