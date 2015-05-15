@@ -46,6 +46,10 @@ curriculum:
             type: text
             class: wide
             label: 'Cost of Class Text'
+        host_class_link:
+            type: text
+            class: wide
+            label: 'Link to Host Class'
     sort: title
     taxonomy: training_types
 
