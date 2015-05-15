@@ -387,7 +387,7 @@ digital_quiet_time_landing:
   recipient_email: forms@missionaldigerati.info
   recipient_name: 'Missional Digerati'
   mail_subject: "[MD] Host a Digital Quiet Time"
-  # insert_into_table: form_dq_landing
+  insert_into_table: form_host_dqt
   fields:
     name:
       label: 'Your Name'
