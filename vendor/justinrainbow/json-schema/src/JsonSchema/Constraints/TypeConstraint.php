@@ -63,7 +63,9 @@ class TypeConstraint extends Constraint
             }
 
             if (!$validatedOneType) {
-                return $this->addErrors($errors);
+                $this->addErrors($errors);
+
+                return;
             }
         } elseif (is_object($type)) {
             $this->checkUndefined($value, $type, $path);
@@ -80,7 +82,7 @@ class TypeConstraint extends Constraint
                         implode(', ', array_filter(self::$wording)))
                 );
             }
-            $this->addError($path, gettype($value) . " value found, but " . self::$wording[$type] . " is required");
+            $this->addError($path, ucwords(gettype($value)) . " value found, but " . self::$wording[$type] . " is required", 'type');
         }
     }
 
@@ -123,6 +125,10 @@ class TypeConstraint extends Constraint
         }
 
         if ('string' === $type) {
+            return is_string($value);
+        }
+        
+        if ('email' === $type) {
             return is_string($value);
         }
 

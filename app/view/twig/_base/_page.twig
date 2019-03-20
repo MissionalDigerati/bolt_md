@@ -96,6 +96,7 @@
         async: paths.async,
         app:   paths.app,
         root:  paths.root,
+        origin: paths.rooturl
     },
     uploadConfig: {
         maxSize: app['filepermissions'].getMaxUploadSize(),
@@ -103,6 +104,7 @@
     },
     ckeditor: {
         images:      0 + config.get('general/wysiwyg/images'),
+        styles:      0 + config.get('general/wysiwyg/styles'),
         tables:      0 + config.get('general/wysiwyg/tables'),
         anchor:      0 + config.get('general/wysiwyg/anchor'),
         fontcolor:   0 + config.get('general/wysiwyg/fontcolor'),
@@ -110,6 +112,7 @@
         subsuper:    0 + config.get('general/wysiwyg/subsuper'),
         embed:       0 + config.get('general/wysiwyg/embed'),
         blockquote:  0 + config.get('general/wysiwyg/blockquote'),
+        ruler:       0 + config.get('general/wysiwyg/ruler'),
         strike:      0 + config.get('general/wysiwyg/strike'),
         underline:   0 + config.get('general/wysiwyg/underline'),
         codesnippet: 0 + config.get('general/wysiwyg/codesnippet'),

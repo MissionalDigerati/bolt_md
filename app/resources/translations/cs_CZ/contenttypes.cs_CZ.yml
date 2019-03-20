@@ -1,20 +1,27 @@
-# app/resources/translations/cs_CZ/contenttypes.cs_CZ.yml – generated on 2015-01-05 08:54:06 UTC
+# app/resources/translations/cs_CZ/contenttypes.cs_CZ.yml – generated on 2016-03-31 10:52:59 UTC
 
 # Warning: Translations are in the process of being moved to a new keyword-based translation
-#          at the moment. This is an ongoing process. Translations currently in the
-#          repository are automatically mapped to the new scheme. Be aware that there
-#          can be a race condition between that process and your PR so that it's
-#          eventually necessary to remap your translations. If you're planning on
+#          at the moment. This is an ongoing process. Translations currently in the 
+#          repository are automatically mapped to the new scheme. Be aware that there 
+#          can be a race condition between that process and your PR so that it's 
+#          eventually necessary to remap your translations. If you're planning on 
 #          updating your translations, it's best to ask on IRC to time your contribution
 #          in order to prevent merge conflicts.
 
 #  no unused messages
 #  no untranslated messages
-#  no untranslated keyword based messages
+#   4 untranslated keyword based messages
 #  no translations
-# 103 keyword based translations
+# 100 keyword based translations
 
-#--- 103 keyword based translations -------------------------------------------
+#--- 4 untranslated keyword based messages ------------------------------------
+
+"contenttypes.entries.text.recent-changes-one": # "Recent changes to this Entry"
+"contenttypes.pages.text.recent-changes-one": # "Recent changes to this Page"
+"contenttypes.showcases.group.meta": # "Meta"
+"contenttypes.showcases.text.recent-changes-one": # "Recent changes to this Showcase"
+
+#--- 100 keyword based translations -------------------------------------------
 
 contenttypes:
     entries:
@@ -33,7 +40,6 @@ contenttypes:
             duplicate: "Duplikovat "
             duplicated-finalize: "Obsah byl zduplikován. Klikněte na 'Uložit Novinku' pro dokončení."
             edit: "Upravit"
-            error-saving: "Při ukládání  nastala chyba."
             invalid-field: "Nelze nastavit pole %field% v Novince: Neplatné pole."
             last-modified: "Naposled upravované novinky"
             new: "Novinka"
@@ -70,7 +76,6 @@ contenttypes:
             duplicate: "Duplikovat"
             duplicated-finalize: "Strana byla zduplikována. Klikněte na 'Uložit stranu' pro dokončení."
             edit: "Upravit"
-            error-saving: "Při ukládání strany nastala chyba."
             invalid-field: "U strany nelze nastavit pole %field%: Neplatné pole."
             last-modified: "Naposledy upravené strany"
             new: "Stranu"
@@ -110,7 +115,6 @@ contenttypes:
             duplicate: "Duplikovat "
             duplicated-finalize: "Ukázka byla zduplikována. Klikněte na 'Uložit Ukázku' pro dokončení."
             edit: "Upravit"
-            error-saving: "Při ukládání ukázky nastala chyba."
             invalid-field: "U Ukázky nelze pole %field%: Neplatné pole."
             last-modified: "Naposledy upravné Ukázky"
             new: "Ukázka"

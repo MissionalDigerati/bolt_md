@@ -13,14 +13,19 @@
         "preferred-install": "dist"
     },
     "provide": {
-        "bolt/bolt": "2.1.8"
+        "bolt/bolt": "2.2.24"
     },
     "extra": {
         "bolt-web-path": ".././"
     },
     "autoload": {
         "psr-4": {
-            "Bolt\\Composer\\": ""
+            "Bolt\\Composer\\": "",
+            "Bolt\\Extension\\MissionalDigerati\\RelatedSort\\": "local/missionaldigerati/boltutilitybox/",
+            "Bolt\\Extension\\MissionalDigerati\\BoltRelatedSort\\": "local/missionaldigerati/boltrelatedsort/",
+            "Bolt\\Extension\\MissionalDigerati\\BoltClassManager\\": "local/missionaldigerati/boltclassmanager/",
+            "Bolt\\Extension\\MissionalDigerati\\BoltPiconSelector\\": "local/missionaldigerati/boltpiconselector/",
+            "Bolt\\Extension\\MissionalDigerati\\BoltPrivateContent\\": "local/missionaldigerati/boltprivatecontent/"
         }
     },
     "scripts": {

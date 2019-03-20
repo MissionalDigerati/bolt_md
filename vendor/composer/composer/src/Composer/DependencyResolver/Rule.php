@@ -12,11 +12,16 @@
 
 namespace Composer\DependencyResolver;
 
+use Composer\Package\CompletePackage;
+use Composer\Package\PackageInterface;
+use Composer\Package\Link;
+
 /**
  * @author Nils Adermann <naderman@naderman.de>
  */
 class Rule
 {
+    // reason constants
     const RULE_INTERNAL_ALLOW_UPDATE = 1;
     const RULE_JOB_INSTALL = 2;
     const RULE_JOB_REMOVE = 3;
@@ -29,63 +34,58 @@ class Rule
     const RULE_LEARNED = 12;
     const RULE_PACKAGE_ALIAS = 13;
 
+    // bitfield defs
+    const BITFIELD_TYPE = 0;
+    const BITFIELD_REASON = 8;
+    const BITFIELD_DISABLED = 16;
+
     /**
      * READ-ONLY: The literals this rule consists of.
      * @var array
      */
     public $literals;
 
-    protected $disabled;
-    protected $type;
-    protected $id;
-    protected $reason;
+    protected $bitfield;
     protected $reasonData;
 
-    protected $job;
-
-    protected $ruleHash;
-
+    /**
+     * @param array                 $literals
+     * @param int                   $reason     A RULE_* constant describing the reason for generating this rule
+     * @param Link|PackageInterface $reasonData
+     * @param array                 $job        The job this rule was created from
+     */
     public function __construct(array $literals, $reason, $reasonData, $job = null)
     {
         // sort all packages ascending by id
         sort($literals);
 
         $this->literals = $literals;
-        $this->reason = $reason;
         $this->reasonData = $reasonData;
 
-        $this->disabled = false;
+        if ($job) {
+            $this->job = $job;
+        }
 
-        $this->job = $job;
-
-        $this->type = -1;
-
-        $this->ruleHash = substr(md5(implode(',', $this->literals)), 0, 5);
+        $this->bitfield = (0 << self::BITFIELD_DISABLED) |
+            ($reason << self::BITFIELD_REASON) |
+            (255 << self::BITFIELD_TYPE);
     }
 
     public function getHash()
     {
-        return $this->ruleHash;
-    }
+        $data = unpack('ihash', md5(implode(',', $this->literals), true));
 
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    public function getId()
-    {
-        return $this->id;
+        return $data['hash'];
     }
 
     public function getJob()
     {
-        return $this->job;
+        return isset($this->job) ? $this->job : null;
     }
 
     public function getReason()
     {
-        return $this->reason;
+        return ($this->bitfield & (255 << self::BITFIELD_REASON)) >> self::BITFIELD_REASON;
     }
 
     public function getReasonData()
@@ -95,11 +95,11 @@ class Rule
 
     public function getRequiredPackage()
     {
-        if ($this->reason === self::RULE_JOB_INSTALL) {
+        if ($this->getReason() === self::RULE_JOB_INSTALL) {
             return $this->reasonData;
         }
 
-        if ($this->reason === self::RULE_PACKAGE_REQUIRES) {
+        if ($this->getReason() === self::RULE_PACKAGE_REQUIRES) {
             return $this->reasonData->getTarget();
         }
     }
@@ -114,10 +114,6 @@ class Rule
      */
     public function equals(Rule $rule)
     {
-        if ($this->ruleHash !== $rule->ruleHash) {
-            return false;
-        }
-
         if (count($this->literals) != count($rule->literals)) {
             return false;
         }
@@ -133,40 +129,32 @@ class Rule
 
     public function setType($type)
     {
-        $this->type = $type;
+        $this->bitfield = ($this->bitfield & ~(255 << self::BITFIELD_TYPE)) | ((255 & $type) << self::BITFIELD_TYPE);
     }
 
     public function getType()
     {
-        return $this->type;
+        return ($this->bitfield & (255 << self::BITFIELD_TYPE)) >> self::BITFIELD_TYPE;
     }
 
     public function disable()
     {
-        $this->disabled = true;
+        $this->bitfield = ($this->bitfield & ~(255 << self::BITFIELD_DISABLED)) | (1 << self::BITFIELD_DISABLED);
     }
 
     public function enable()
     {
-        $this->disabled = false;
+        $this->bitfield = $this->bitfield & ~(255 << self::BITFIELD_DISABLED);
     }
 
     public function isDisabled()
     {
-        return $this->disabled;
+        return (bool) (($this->bitfield & (255 << self::BITFIELD_DISABLED)) >> self::BITFIELD_DISABLED);
     }
 
     public function isEnabled()
     {
-        return !$this->disabled;
-    }
-
-    /**
-     * @deprecated Use public literals member
-     */
-    public function getLiterals()
-    {
-        return $this->literals;
+        return !(($this->bitfield & (255 << self::BITFIELD_DISABLED)) >> self::BITFIELD_DISABLED);
     }
 
     public function isAssertion()
@@ -184,7 +172,7 @@ class Rule
             $ruleText .= $pool->literalToPrettyString($literal, $installedMap);
         }
 
-        switch ($this->reason) {
+        switch ($this->getReason()) {
             case self::RULE_INTERNAL_ALLOW_UPDATE:
                 return $ruleText;
 
@@ -216,28 +204,54 @@ class Rule
                 } else {
                     $targetName = $this->reasonData->getTarget();
 
-                    // handle php extensions
                     if ($targetName === 'php' || $targetName === 'php-64bit' || $targetName === 'hhvm') {
+                        // handle php/hhvm
                         if (defined('HHVM_VERSION')) {
-                            $text .= ' -> your HHVM version does not satisfy that requirement.';
-                        } elseif ($targetName === 'hhvm') {
-                            $text .= ' -> you are running this with PHP and not HHVM.';
-                        } else {
-                            $text .= ' -> your PHP version ('.  phpversion().') does not satisfy that requirement.';
+                            return $text . ' -> your HHVM version does not satisfy that requirement.';
                         }
-                    } elseif (0 === strpos($targetName, 'ext-')) {
+
+                        if ($targetName === 'hhvm') {
+                            return $text . ' -> you are running this with PHP and not HHVM.';
+                        }
+
+                        $packages = $pool->whatProvides($targetName);
+                        $package = count($packages) ? current($packages) : phpversion();
+
+                        if (!($package instanceof CompletePackage)) {
+                            return $text . ' -> your PHP version ('.phpversion().') does not satisfy that requirement.';
+                        }
+
+                        $extra = $package->getExtra();
+
+                        if (!empty($extra['config.platform'])) {
+                            $text .= ' -> your PHP version ('.phpversion().') overridden by "config.platform.php" version ('.$package->getPrettyVersion().') does not satisfy that requirement.';
+                        } else {
+                            $text .= ' -> your PHP version ('.$package->getPrettyVersion().') does not satisfy that requirement.';
+                        }
+
+                        return $text;
+                    }
+
+                    if (0 === strpos($targetName, 'ext-')) {
+                        // handle php extensions
                         $ext = substr($targetName, 4);
                         $error = extension_loaded($ext) ? 'has the wrong version ('.(phpversion($ext) ?: '0').') installed' : 'is missing from your system';
 
-                        $text .= ' -> the requested PHP extension '.$ext.' '.$error.'.';
-                    } elseif (0 === strpos($targetName, 'lib-')) {
+                        return $text . ' -> the requested PHP extension '.$ext.' '.$error.'.';
+                    }
+
+                    if (0 === strpos($targetName, 'lib-')) {
                         // handle linked libs
                         $lib = substr($targetName, 4);
 
-                        $text .= ' -> the requested linked library '.$lib.' has the wrong version installed or is missing from your system, make sure to have the extension providing it.';
-                    } else {
-                        $text .= ' -> no matching package found.';
+                        return $text . ' -> the requested linked library '.$lib.' has the wrong version installed or is missing from your system, make sure to have the extension providing it.';
                     }
+
+                    if ($providers = $pool->whatProvides($targetName, $this->reasonData->getConstraint(), true, true)) {
+                        return $text . ' -> satisfiable by ' . $this->formatPackagesUnique($pool, $providers) .' but these conflict with your requirements or minimum-stability.';
+                    }
+
+                    return $text . ' -> no matching package found.';
                 }
 
                 return $text;

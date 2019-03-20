@@ -1,6 +1,6 @@
 # JSON Schema for PHP
 
-[![Build Status](https://secure.travis-ci.org/justinrainbow/json-schema.png)](http://travis-ci.org/justinrainbow/json-schema)
+[![Build Status](https://travis-ci.org/justinrainbow/json-schema.svg?branch=master)](https://travis-ci.org/justinrainbow/json-schema)
 [![Latest Stable Version](https://poser.pugx.org/justinrainbow/json-schema/v/stable.png)](https://packagist.org/packages/justinrainbow/json-schema)
 [![Total Downloads](https://poser.pugx.org/justinrainbow/json-schema/downloads.png)](https://packagist.org/packages/justinrainbow/json-schema)
 
@@ -19,7 +19,7 @@ See [json-schema](http://json-schema.org/) for more details.
 #### [`Composer`](https://github.com/composer/composer) (*will use the Composer ClassLoader*)
 
     $ wget http://getcomposer.org/composer.phar
-    $ php composer.phar require justinrainbow/json-schema:~1.3
+    $ php composer.phar require justinrainbow/json-schema:~2.0
 
 ## Usage
 
@@ -27,14 +27,12 @@ See [json-schema](http://json-schema.org/) for more details.
 <?php
 
 // Get the schema and data as objects
-$retriever = new JsonSchema\Uri\UriRetriever;
-$schema = $retriever->retrieve('file://' . realpath('schema.json'));
-$data = json_decode(file_get_contents('data.json'));
-
 // If you use $ref or if you are unsure, resolve those references here
 // This modifies the $schema object
-$refResolver = new JsonSchema\RefResolver($retriever);
-$refResolver->resolve($schema, 'file://' . __DIR__);
+$refResolver = new JsonSchema\RefResolver(new JsonSchema\Uri\UriRetriever(), new JsonSchema\Uri\UriResolver());
+$schema = $refResolver->resolve('file://' . realpath('schema.json'));
+
+$data = json_decode(file_get_contents('data.json'));
 
 // Validate
 $validator = new JsonSchema\Validator();
@@ -52,4 +50,4 @@ if ($validator->isValid()) {
 
 ## Running the tests
 
-    $ phpunit
+    $ vendor/bin/phpunit

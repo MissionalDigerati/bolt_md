@@ -2,13 +2,15 @@
 
 namespace Bolt\Controllers;
 
+use Bolt\Content;
 use Bolt\Helpers\Input;
 use Bolt\Library as Lib;
 use Bolt\Permissions;
 use Bolt\Translation\TranslationFile;
 use Bolt\Translation\Translator as Trans;
 use Cocur\Slugify\Slugify;
-use Guzzle\Http\Exception\RequestException;
+use Guzzle\Http\Exception\RequestException as V3RequestException;
+use GuzzleHttp\Exception\RequestException;
 use Silex;
 use Silex\Application;
 use Silex\ControllerProviderInterface;
@@ -20,9 +22,11 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Yaml;
 use Symfony\Component\Yaml\Exception\ParseException;
+use League\Flysystem\FileNotFoundException;
 
 /**
  * Backend controller grouping.
@@ -128,12 +132,18 @@ class Backend implements ControllerProviderInterface
             ->assert('file', '.+')
             ->assert('namespace', '[^/]+')
             ->value('namespace', 'files')
-            ->bind('fileedit');
+            ->bind('fileedit')
+            // Middleware to disable browser XSS protection whilst we throw code around
+            ->after(function(Request $request, Response $response) {
+                if ($request->getMethod() == "POST") {
+                    $response->headers->set('X-XSS-Protection', '0');
+                }
+            });
 
         $ctl->match('/tr/{domain}/{tr_locale}', array($this, 'translation'))
             ->assert('domain', 'messages|contenttypes|infos')
             ->value('domain', 'messages')
-            ->value('tr_locale', $app['config']->get('general/locale'))
+            ->value('tr_locale', $app['locale'])
             ->bind('translation');
 
         $ctl->get('/omnisearch', array($this, 'omnisearch'))
@@ -155,10 +165,14 @@ class Backend implements ControllerProviderInterface
 
         $total = 0;
         $latest = array();
-        // get the 'latest' from each of the content types.
+        $user = $app['users']->getCurrentUser();
+        $permissions = array();
+
+        // Get the 'latest' from each of the content types.
         foreach ($app['config']->get('contenttypes') as $key => $contenttype) {
-            if ($app['users']->isAllowed('contenttype:' . $key) && $contenttype['show_on_dashboard'] === true) {
+            if ($app['users']->isAllowed('contenttype:' . $key) && $contenttype['show_on_dashboard'] === true && $user !== null) {
                 $latest[$key] = $app['storage']->getContent($key, array('limit' => $limit, 'order' => 'datechanged DESC', 'hydrate' => false));
+                $permissions[$key] = $this->getContentTypeUserPermissions($app, $contenttype, $user);
                 if (!empty($latest[$key])) {
                     $total += count($latest[$key]);
                 }
@@ -167,6 +181,7 @@ class Backend implements ControllerProviderInterface
 
         $context = array(
             'latest'          => $latest,
+            'permissions'     => $permissions,
             'suggestloripsum' => ($total == 0), // Nothing in the DB, then suggest to create some dummy content.
         );
 
@@ -182,7 +197,7 @@ class Backend implements ControllerProviderInterface
      */
     public function dbCheck(Application $app)
     {
-        list($messages, $hints) = $app['integritychecker']->checkTablesIntegrity(true);
+        list($messages, $hints) = $app['integritychecker']->checkTablesIntegrity(true, $app['logger']);
 
         $context = array(
             'modifications_made'     => null,
@@ -198,7 +213,7 @@ class Backend implements ControllerProviderInterface
      *
      * @param Application $app The application/container
      *
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function dbUpdate(Application $app)
     {
@@ -227,7 +242,7 @@ class Backend implements ControllerProviderInterface
      * @param Application $app     The application/container
      * @param Request     $request The Symfony Request
      *
-     * @return mixed
+     * @return \Twig_Markup
      */
     public function dbUpdateResult(Application $app, Request $request)
     {
@@ -244,7 +259,7 @@ class Backend implements ControllerProviderInterface
      *
      * @param Application $app The application/container
      *
-     * @return mixed
+     * @return \Twig_Markup
      */
     public function clearCache(Application $app)
     {
@@ -267,7 +282,7 @@ class Backend implements ControllerProviderInterface
      *
      * @param \Silex\Application $app The application/container
      *
-     * @return string
+     * @return \Twig_Markup|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function systemLog(Application $app)
     {
@@ -298,7 +313,7 @@ class Backend implements ControllerProviderInterface
      *
      * @param Application $app The application/container
      *
-     * @return string
+     * @return \Twig_Markup|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function changeLog(Application $app)
     {
@@ -329,7 +344,7 @@ class Backend implements ControllerProviderInterface
      * @param \Silex\Application $app         The application/container
      * @param Request            $request     The Symfony Request
      *
-     * @return mixed
+     * @return \Twig_Markup
      */
     public function changelogRecordAll($contenttype, $contentid, Application $app, Request $request)
     {
@@ -436,16 +451,15 @@ class Backend implements ControllerProviderInterface
      * @param integer            $contentid   The content ID
      * @param integer            $id          The changelog entry ID
      * @param \Silex\Application $app         The application/container
-     * @param Request            $request     The Symfony Request
      *
-     * @return mixed
+     * @return \Twig_Markup|null
      */
-    public function changelogRecordSingle($contenttype, $contentid, $id, Application $app, Request $request)
+    public function changelogRecordSingle($contenttype, $contentid, $id, Application $app)
     {
         $entry = $app['logger.manager.change']->getChangelogEntry($contenttype, $contentid, $id);
         if (empty($entry)) {
             $error = Trans::__("The requested changelog entry doesn't exist.");
-            $app->abort(404, $error);
+            return $app->abort(Response::HTTP_NOT_FOUND, $error);
         }
         $prev = $app['logger.manager.change']->getPrevChangelogEntry($contenttype, $contentid, $id);
         $next = $app['logger.manager.change']->getNextChangelogEntry($contenttype, $contentid, $id);
@@ -465,7 +479,7 @@ class Backend implements ControllerProviderInterface
      *
      * @param Application $app The application/container
      *
-     * @return mixed
+     * @return \Twig_Markup
      */
     public function omnisearch(Application $app)
     {
@@ -490,7 +504,7 @@ class Backend implements ControllerProviderInterface
      * @param Application $app     The application/container
      * @param Request     $request The Symfony Request
      *
-     * @return string
+     * @return \Twig_Markup|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function prefill(Application $app, Request $request)
     {
@@ -509,14 +523,19 @@ class Backend implements ControllerProviderInterface
             ))
             ->getForm();
 
-        if (($request->getMethod() == 'POST') || ($request->get('force') == 1)) {
-            $form->bind($request);
+        if ($request->isMethod('POST') || ($request->get('force') == 1)) {
+            $form->submit($request);
             $ctypes = $form->get('contenttypes')->getData();
 
             try {
                 $content = $app['storage']->preFill($ctypes);
                 $app['session']->getFlashBag()->add('success', $content);
             } catch (RequestException $e) {
+                $msg = "Timeout attempting to the 'Lorem Ipsum' generator. Unable to add dummy content.";
+                $app['session']->getFlashBag()->add('error', $msg);
+                $app['logger.system']->error($msg, array('event' => 'storage'));
+            } catch (V3RequestException $e) {
+                /** @deprecated removed when PHP 5.3 support is dropped */
                 $msg = "Timeout attempting to the 'Lorem Ipsum' generator. Unable to add dummy content.";
                 $app['session']->getFlashBag()->add('error', $msg);
                 $app['logger.system']->error($msg, array('event' => 'storage'));
@@ -539,7 +558,7 @@ class Backend implements ControllerProviderInterface
      * @param Application $app             The application/container
      * @param string      $contenttypeslug The content type slug
      *
-     * @return mixed
+     * @return \Twig_Markup|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function overview(Application $app, $contenttypeslug)
     {
@@ -577,7 +596,7 @@ class Backend implements ControllerProviderInterface
         }
 
         // Perhaps also filter on taxonomies
-        foreach($app['config']->get('taxonomy') as $taxonomykey => $taxonomy) {
+        foreach ($app['config']->get('taxonomy') as $taxonomykey => $taxonomy) {
             if ($app['request']->query->get('taxonomy-' . $taxonomykey)) {
                 $contentparameters[$taxonomykey] = $app['request']->query->get('taxonomy-' . $taxonomykey);
                 $filter[] = $app['request']->query->get('taxonomy-' . $taxonomykey);
@@ -589,7 +608,8 @@ class Backend implements ControllerProviderInterface
         $context = array(
             'contenttype'     => $contenttype,
             'multiplecontent' => $multiplecontent,
-            'filter'          => $filter
+            'filter'          => $filter,
+            'permissions'     => $this->getContentTypeUserPermissions($app, $contenttypeslug, $app['users']->getCurrentUser())
         );
 
         return $app['render']->render('overview/overview.twig', array('context' => $context));
@@ -603,7 +623,7 @@ class Backend implements ControllerProviderInterface
      * @param Application $app             The application/container
      * @param Request     $request         The Symfony Request
      *
-     * @return mixed
+     * @return \Twig_Markup|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function relatedTo($contenttypeslug, $id, Application $app, Request $request)
     {
@@ -655,7 +675,6 @@ class Backend implements ControllerProviderInterface
          */
 
         $content = $app['storage']->getContent($contenttypeslug, array('id' => $id));
-        $relatedContent = $content->related($showContenttype['slug']);
 
         $context = array(
             'id'               => $id,
@@ -664,10 +683,11 @@ class Backend implements ControllerProviderInterface
             'contenttype'      => $contenttype,
             'relations'        => $relations,
             'show_contenttype' => $showContenttype,
-            'related_content'  => $relatedContent,
+            'related_content'  => is_null($relations) ? null : $content->related($showContenttype['slug']),
+            'permissions'      => $this->getContentTypeUserPermissions($app, $contenttypeslug, $app['users']->getCurrentUser())
         );
 
-        return $app['twig']->render('relatedto/relatedto.twig', array('context' => $context));
+        return $app['render']->render('relatedto/relatedto.twig', array('context' => $context));
     }
 
     /**
@@ -678,7 +698,7 @@ class Backend implements ControllerProviderInterface
      * @param Application $app             The application/container
      * @param Request     $request         The Symfony Request
      *
-     * @return mixed
+     * @return \Twig_Markup|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function editContent($contenttypeslug, $id, Application $app, Request $request)
     {
@@ -702,7 +722,7 @@ class Backend implements ControllerProviderInterface
 
         $tmpreferrer = $tmp['path'];
         if (!empty($tmp['query'])) {
-            $tmpreferrer .= "?" . $tmp['query'];
+            $tmpreferrer .= '?' . $tmp['query'];
         }
 
         if (strpos($tmpreferrer, '/overview/') !== false || ($tmpreferrer == $app['paths']['bolt'])) {
@@ -711,9 +731,9 @@ class Backend implements ControllerProviderInterface
 
         $contenttype = $app['storage']->getContentType($contenttypeslug);
 
-        if ($request->getMethod() == "POST") {
+        if ($request->isMethod('POST')) {
             if (!$app['users']->checkAntiCSRFToken()) {
-                $app->abort(400, Trans::__('Something went wrong'));
+                $app->abort(Response::HTTP_BAD_REQUEST, Trans::__('Something went wrong'));
             }
             if (!empty($id)) {
                 // Check if we're allowed to edit this content.
@@ -733,12 +753,11 @@ class Backend implements ControllerProviderInterface
 
             // If we have an ID now, this is an existing record
             if ($id) {
-                $content = $app['storage']->getContent($contenttype['slug'], array('id' => $id, 'status' => '!'));
+                $content = $app['storage']->getContent($contenttype['slug'], array('id' => $id, 'status' => '!undefined'));
                 $oldStatus = $content['status'];
-                $newStatus = $content['status'];
             } else {
                 $content = $app['storage']->getContentObject($contenttypeslug);
-                $oldStatus = '';
+                $oldStatus = 'draft';
             }
 
             // Add non successfull control values to request values
@@ -772,7 +791,6 @@ class Backend implements ControllerProviderInterface
             // To check whether the status is allowed, we act as if a status
             // *transition* were requested.
             $content->setFromPost($requestAll, $contenttype);
-            $newStatus = $content['status'];
 
             // Don't try to spoof the $id.
             if (!empty($content['id']) && $id != $content['id']) {
@@ -781,101 +799,102 @@ class Backend implements ControllerProviderInterface
                 return Lib::redirect('dashboard');
             }
 
-            // Save the record, and return to the overview screen, or to the record (if we clicked 'save and continue')
-            $statusOK = $app['users']->isContentStatusTransitionAllowed($oldStatus, $newStatus, $contenttype['slug'], $id);
-            if ($statusOK) {
-                // Get the associate record change comment
-                $comment = $request->request->get('changelog-comment');
+            /*
+             * From here we save the record, and return to the overview screen,
+             * or to the record (if we clicked 'save and continue')
+             */
 
-                // Save the record
-                $id = $app['storage']->saveContent($content, $comment);
+            // Fallback to the old status if transition is not permitted
+            $this->setTransitionStatus($app, $content, $contenttype['slug'], $id, $oldStatus);
 
-                // Log the change
-                if ($new) {
-                    $app['session']->getFlashBag()->add('success', Trans::__('contenttypes.generic.saved-new', array('%contenttype%' => $contenttypeslug)));
-                    $app['logger.system']->info('Created: ' . $content->getTitle(), array('event' => 'content'));
-                } else {
-                    $app['session']->getFlashBag()->add('success', Trans::__('contenttypes.generic.saved-changes', array('%contenttype%' => $contenttype['slug'])));
-                    $app['logger.system']->info('Saved: ' . $content->getTitle(), array('event' => 'content'));
-                }
+            // Get the associate record change comment
+            $comment = $request->request->get('changelog-comment');
 
-                /*
-                 * We now only get a returnto parameter if we are saving a new
-                 * record and staying on the same page, i.e. "Save {contenttype}"
-                 */
-                if ($app['request']->get('returnto')) {
-                    $returnto = $app['request']->get('returnto');
+            // Save the record
+            $id = $app['storage']->saveContent($content, $comment);
 
-                    if ($returnto == "new") {
-                        return Lib::redirect('editcontent', array('contenttypeslug' => $contenttype['slug'], 'id' => $id), '#' . $app['request']->get('returnto'));
-                    } elseif ($returnto == "saveandnew") {
-                        return Lib::redirect('editcontent', array('contenttypeslug' => $contenttype['slug'], 'id' => 0), '#' . $app['request']->get('returnto'));
-                    } elseif ($returnto == "ajax") {
-                        /*
-                         * Flush any buffers from saveConent() dispatcher hooks
-                         * and make sure our JSON output is clean.
-                         *
-                         * Currently occurs due to a 404 exception being generated
-                         * in \Bolt\Storage::saveContent() dispatchers:
-                         *     $this->app['dispatcher']->dispatch(StorageEvents::PRE_SAVE, $event);
-                         *     $this->app['dispatcher']->dispatch(StorageEvents::POST_SAVE, $event);
-                         */
-                        if (ob_get_length()) {
-                            ob_end_clean();
-                        }
-
-                        // Get our record after POST_SAVE hooks are dealt with and return the JSON
-                        $content = $app['storage']->getContent($contenttype['slug'], array('id' => $id, 'returnsingle' => true, 'status' => '!'));
-
-                        $val = array();
-
-                        foreach ($content->values as $key => $value) {
-                            // Some values are returned as \Twig_Markup and JSON can't deal with that
-                            if (is_array($value)) {
-                                foreach ($value as $subkey => $subvalue) {
-                                    if (gettype($subvalue) == 'object' && get_class($subvalue) == 'Twig_Markup') {
-                                        $val[$key][$subkey] = $subvalue->__toString();
-                                    }
-                                }
-                            } else {
-                                $val[$key] = $value;
-                            }
-                        }
-
-                        if (isset($val['datechanged'])) {
-                            $val['datechanged'] = date_format(new \DateTime($val['datechanged']), 'c');
-                        }
-
-                        $lc = localeconv();
-                        foreach ($contenttype['fields'] as $key => $values) {
-                            switch ($values['type']) {
-                                case 'float':
-                                    // Adjust decimal point dependent on locale
-                                    if ($lc['decimal_point'] === ',') {
-                                        $val[$key] = str_replace('.', ',', $val[$key]);
-                                    }
-                                    break;
-                            }
-                        }
-
-                        // unset flashbag for ajax
-                        $app['session']->getFlashBag()->clear('success');
-
-                        return new JsonResponse($val);
-                    }
-                }
-
-                // No returnto, so we go back to the 'overview' for this contenttype.
-                // check if a pager was set in the referrer - if yes go back there
-                $editreferrer = $app['request']->get('editreferrer');
-                if ($editreferrer) {
-                    Lib::simpleredirect($editreferrer);
-                } else {
-                    return Lib::redirect('overview', array('contenttypeslug' => $contenttype['slug']));
-                }
+            // Log the change
+            if ($new) {
+                $app['session']->getFlashBag()->add('success', Trans::__('contenttypes.generic.saved-new', array('%contenttype%' => $contenttypeslug)));
+                $app['logger.system']->info('Created: ' . $content->getTitle(), array('event' => 'content'));
             } else {
-                $app['session']->getFlashBag()->add('error', Trans::__('contenttypes.generic.error-saving', array('%contenttype%' => $contenttype['slug'])));
-                $app['logger.system']->error('Save error: ' . $content->getTitle(), array('event' => 'content'));
+                $app['session']->getFlashBag()->add('success', Trans::__('contenttypes.generic.saved-changes', array('%contenttype%' => $contenttype['slug'])));
+                $app['logger.system']->info('Saved: ' . $content->getTitle(), array('event' => 'content'));
+            }
+
+            /*
+             * We now only get a returnto parameter if we are saving a new
+             * record and staying on the same page, i.e. "Save {contenttype}"
+             */
+            if ($app['request']->get('returnto')) {
+                $returnto = $app['request']->get('returnto');
+
+                if ($returnto === 'new') {
+                    return Lib::redirect('editcontent', array('contenttypeslug' => $contenttype['slug'], 'id' => $id), '#' . $app['request']->get('returnto'));
+                } elseif ($returnto == 'saveandnew') {
+                    return Lib::redirect('editcontent', array('contenttypeslug' => $contenttype['slug'], 'id' => 0), '#' . $app['request']->get('returnto'));
+                } elseif ($returnto === 'ajax') {
+                    /*
+                     * Flush any buffers from saveContent() dispatcher hooks
+                     * and make sure our JSON output is clean.
+                     *
+                     * Currently occurs due to a 404 exception being generated
+                     * in \Bolt\Storage::saveContent() dispatchers:
+                     *     $this->app['dispatcher']->dispatch(StorageEvents::PRE_SAVE, $event);
+                     *     $this->app['dispatcher']->dispatch(StorageEvents::POST_SAVE, $event);
+                     */
+                    if (ob_get_length()) {
+                        ob_end_clean();
+                    }
+
+                    // Get our record after POST_SAVE hooks are dealt with and return the JSON
+                    $content = $app['storage']->getContent($contenttype['slug'], array('id' => $id, 'returnsingle' => true, 'status' => '!undefined'));
+
+                    $val = array();
+
+                    foreach ($content->values as $key => $value) {
+                        // Some values are returned as \Twig_Markup and JSON can't deal with that
+                        if (is_array($value)) {
+                            foreach ($value as $subkey => $subvalue) {
+                                if (gettype($subvalue) == 'object' && get_class($subvalue) == 'Twig_Markup') {
+                                    $val[$key][$subkey] = $subvalue->__toString();
+                                }
+                            }
+                        } else {
+                            $val[$key] = $value;
+                        }
+                    }
+
+                    if (isset($val['datechanged'])) {
+                        $val['datechanged'] = date_format(new \DateTime($val['datechanged']), 'c');
+                    }
+
+                    $lc = localeconv();
+                    foreach ($contenttype['fields'] as $key => $values) {
+                        switch ($values['type']) {
+                            case 'float':
+                                // Adjust decimal point dependent on locale
+                                if ($lc['decimal_point'] === ',') {
+                                    $val[$key] = str_replace('.', ',', $val[$key]);
+                                }
+                                break;
+                        }
+                    }
+
+                    // unset flashbag for ajax
+                    $app['session']->getFlashBag()->clear('success');
+
+                    return new JsonResponse($val);
+                }
+            }
+
+            // No returnto, so we go back to the 'overview' for this contenttype.
+            // check if a pager was set in the referrer - if yes go back there
+            $editreferrer = $app['request']->get('editreferrer');
+            if ($editreferrer) {
+                Lib::simpleredirect($editreferrer, true);
+            } else {
+                return Lib::redirect('overview', array('contenttypeslug' => $contenttype['slug']));
             }
         }
 
@@ -884,7 +903,7 @@ class Backend implements ControllerProviderInterface
             $content = $app['storage']->getContent($contenttype['slug'], array('id' => $id));
 
             if (empty($content)) {
-                $app->abort(404, Trans::__('contenttypes.generic.not-existing', array('%contenttype%' => $contenttype['slug'])));
+                return $app->abort(Response::HTTP_NOT_FOUND, Trans::__('contenttypes.generic.not-existing', array('%contenttype%' => $contenttype['slug'])));
             }
 
             // Check if we're allowed to edit this content.
@@ -923,6 +942,7 @@ class Backend implements ControllerProviderInterface
             $content->setValue('datechanged', '');
             $content->setValue('username', '');
             $content->setValue('ownerid', '');
+            // $content->setValue('templatefields', array());
             $app['session']->getFlashBag()->add('info', Trans::__('contenttypes.generic.duplicated-finalize', array('%contenttype%' => $contenttype['slug'])));
         }
 
@@ -946,11 +966,43 @@ class Backend implements ControllerProviderInterface
             }
         }
 
+        if ((!empty($content['templatefields'])) && (!empty($content['templatefields']->contenttype['fields']))) {
+            foreach ($content['templatefields']->contenttype['fields'] as $key => &$values) {
+                if (isset($values['upload'])) {
+                    $values['canUpload'] = $filesystem->has($values['upload']) && $filesystem->getVisibility($values['upload']);
+                } else {
+                    $values['canUpload'] = true;
+                }
+            }
+        }
+
+        // Determine which templates will result in templatefields
+        $templateFieldTemplates = array();
+        if ($templateFieldsConfig = $app['config']->get('theme/templatefields')) {
+            $templateFieldTemplates = array_keys($templateFieldsConfig);
+            // Special case for default template
+            $toRepair = array();
+            foreach ($contenttype['fields'] as $name => $field) {
+                if ($field['type'] == 'templateselect' && !empty($content->values[$name])) {
+                    $toRepair[$name] = $content->values[$name];
+                    $content->setValue($name, '');
+                }
+            }
+            if ($content->hasTemplateFields()) {
+                $templateFieldTemplates[] = '';
+            }
+
+            foreach ($toRepair as $name => $value) {
+                $content->setValue($name, $value);
+            }
+        }
+
         // Info
         $hasIncomingRelations = is_array($content->relation);
         $hasRelations = isset($contenttype['relations']);
         $hasTabs = $contenttype['groups'] !== false;
         $hasTaxonomy = isset($contenttype['taxonomy']);
+        $hasTemplateFields = $content->hasTemplateFields();
 
         // Generate tab groups
         $groups = array();
@@ -985,6 +1037,10 @@ class Backend implements ControllerProviderInterface
         if ($hasTaxonomy || (is_array($contenttype['groups']) && in_array('taxonomy', $contenttype['groups']))) {
             $addGroup('taxonomy', Trans::__('contenttypes.generic.group.taxonomy'));
         }
+        if ($hasTemplateFields || (is_array($contenttype['groups']) && in_array('template', $contenttype['groups']))) {
+            $addGroup('template', Trans::__('Template'));
+        }
+
         $addGroup('meta', Trans::__('contenttypes.generic.group.meta'));
 
         // Render
@@ -995,6 +1051,8 @@ class Backend implements ControllerProviderInterface
             'allowed_status' => $allowedStatuses,
             'contentowner'   => $contentowner,
             'fields'         => $app['config']->fields->fields(),
+            'fieldtemplates' => $templateFieldTemplates,
+            'permissions'    => $this->getContentTypeUserPermissions($app, $contenttypeslug, $app['users']->getCurrentUser()),
             'can_upload'     => $app['users']->isAllowed('files:uploads'),
             'groups'         => $groups,
             'has'            => array(
@@ -1002,6 +1060,7 @@ class Backend implements ControllerProviderInterface
                 'relations'          => $hasRelations,
                 'tabs'               => $hasTabs,
                 'taxonomy'           => $hasTaxonomy,
+                'templatefields'     => $hasTemplateFields,
             ),
         );
 
@@ -1009,30 +1068,57 @@ class Backend implements ControllerProviderInterface
     }
 
     /**
+     * Check whether the status is allowed.
+     *
+     * We act as if a status *transition* were requested and fallback to the old
+     * status otherwise.
+     *
+     * @param Application $app
+     * @param Content     $content
+     * @param string      $contentTypeSlug
+     * @param integer     $id
+     * @param string      $oldStatus
+     */
+    private function setTransitionStatus(Application $app, Content $content, $contentTypeSlug, $id, $oldStatus)
+    {
+        $canTransition = $app['users']->isContentStatusTransitionAllowed($oldStatus, $content['status'], $contentTypeSlug, $id);
+        if (!$canTransition) {
+            $content->setValue('status', $oldStatus);
+        }
+    }
+
+    /**
      * Deletes a content item.
      *
-     * @param Application $app             The application/container
-     * @param string      $contenttypeslug The content type slug
-     * @param integer     $id              The content ID
+     * @param Application    $app             The application/container
+     * @param string         $contenttypeslug The content type slug
+     * @param integer|string $id              The content ID or comma-delimited list of IDs
      *
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteContent(Application $app, $contenttypeslug, $id)
     {
+        $ids = explode(',', $id);
         $contenttype = $app['storage']->getContentType($contenttypeslug);
 
-        $content = $app['storage']->getContent($contenttype['slug'], array('id' => $id, 'status' => '!'));
-        $title = $content->getTitle();
+        foreach ($ids as $id) {
+            $content = $app['storage']->getContent($contenttype['slug'], array('id' => $id, 'status' => '!undefined'));
+            $title = $content->getTitle();
 
-        if (!$app['users']->isAllowed("contenttype:{$contenttype['slug']}:delete:$id")) {
-            $app['session']->getFlashBag()->add('error', Trans::__('Permission denied', array()));
-        } elseif ($app['users']->checkAntiCSRFToken() && $app['storage']->deleteContent($contenttype['slug'], $id)) {
-            $app['session']->getFlashBag()->add('info', Trans::__("Content '%title%' has been deleted.", array('%title%' => $title)));
-        } else {
-            $app['session']->getFlashBag()->add('info', Trans::__("Content '%title%' could not be deleted.", array('%title%' => $title)));
+            if (!$app['users']->isAllowed("contenttype:{$contenttype['slug']}:delete:$id")) {
+                $app['session']->getFlashBag()->add('error', Trans::__('Permission denied', array()));
+            } elseif ($app['users']->checkAntiCSRFToken() && $app['storage']->deleteContent($contenttype['slug'], $id)) {
+                $app['session']->getFlashBag()->add('info', Trans::__("Content '%title%' has been deleted.", array('%title%' => $title)));
+            } else {
+                $app['session']->getFlashBag()->add('info', Trans::__("Content '%title%' could not be deleted.", array('%title%' => $title)));
+            }
         }
 
-        return Lib::redirect('overview', array('contenttypeslug' => $contenttype['slug']));
+        // get the parameters from the URL of the previous page, so we can return to it.
+        $redirectParameters = Lib::getQueryParameters($app['request']->server->get('HTTP_REFERER'));
+        $redirectParameters['contenttypeslug'] = $contenttype['slug'];
+
+        return Lib::redirect('overview', $redirectParameters);
     }
 
     /**
@@ -1043,7 +1129,7 @@ class Backend implements ControllerProviderInterface
      * @param string      $contenttypeslug The content type slug
      * @param integer     $id              The content ID
      *
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function contentAction(Application $app, $action, $contenttypeslug, $id)
     {
@@ -1052,27 +1138,38 @@ class Backend implements ControllerProviderInterface
         }
         $contenttype = $app['storage']->getContentType($contenttypeslug);
 
-        $content = $app['storage']->getContent($contenttype['slug'] . "/" . $id);
+        $content = $app['storage']->getContent($contenttype['slug'] . '/' . $id);
         $title = $content->getTitle();
+
+        // get the parameters from the URL of the previous page, so we can return to it.
+        $redirectParameters = Lib::getQueryParameters($app['request']->server->get('HTTP_REFERER'));
+        $redirectParameters['contenttypeslug'] = $contenttype['slug'];
 
         // map actions to new statuses
         $actionStatuses = array(
             'held'    => 'held',
-            'publish' => 'published',
             'draft'   => 'draft',
+            'publish' => 'published',
         );
+        // Map actions to requre permission
+        $actionPermissions = array(
+            'publish' => 'publish',
+            'held'    => 'depublish',
+            'draft'   => 'depublish',
+        );
+
         if (!isset($actionStatuses[$action])) {
             $app['session']->getFlashBag()->add('error', Trans::__('No such action for content.'));
 
-            return Lib::redirect('overview', array('contenttypeslug' => $contenttype['slug']));
+            return Lib::redirect('overview', $redirectParameters);
         }
         $newStatus = $actionStatuses[$action];
 
-        if (!$app['users']->isAllowed("contenttype:{$contenttype['slug']}:edit:$id") ||
+        if (!$app['users']->isAllowed("contenttype:{$contenttype['slug']}:{$actionPermissions[$action]}:$id") ||
             !$app['users']->isContentStatusTransitionAllowed($content['status'], $newStatus, $contenttype['slug'], $id)) {
-            $app['session']->getFlashBag()->add('error', Trans::__('You do not have the right privileges to edit that record.'));
+            $app['session']->getFlashBag()->add('error', Trans::__('You do not have the right privileges to %ACTION% that record.', array('%ACTION%' => $actionPermissions[$action])));
 
-            return Lib::redirect('overview', array('contenttypeslug' => $contenttype['slug']));
+            return Lib::redirect('overview', $redirectParameters);
         }
 
         if ($app['storage']->updateSingleValue($contenttype['slug'], $id, 'status', $newStatus)) {
@@ -1081,7 +1178,7 @@ class Backend implements ControllerProviderInterface
             $app['session']->getFlashBag()->add('info', Trans::__("Content '%title%' could not be modified.", array('%title%' => $title)));
         }
 
-        return Lib::redirect('overview', array('contenttypeslug' => $contenttype['slug']));
+        return Lib::redirect('overview', $redirectParameters);
     }
 
     /**
@@ -1089,7 +1186,7 @@ class Backend implements ControllerProviderInterface
      *
      * @param Application $app The application/container
      *
-     * @return mixed
+     * @return \Twig_Markup
      */
     public function users(Application $app)
     {
@@ -1117,15 +1214,15 @@ class Backend implements ControllerProviderInterface
      *
      * @param Application $app The application/container
      *
-     * @return mixed
+     * @return \Twig_Markup
      */
     public function roles(Application $app)
     {
         $contenttypes = $app['config']->get('contenttypes');
-        $permissions = array('view', 'edit', 'create', 'publish', 'depublish', 'change-ownership');
+        $permissions = $app['permissions']->getContentTypePermissions();
         $effectivePermissions = array();
         foreach ($contenttypes as $contenttype) {
-            foreach ($permissions as $permission) {
+            foreach (array_keys($permissions) as $permission) {
                 $effectivePermissions[$contenttype['slug']][$permission] =
                     $app['permissions']->getRolesByContentTypePermission($permission, $contenttype['slug']);
             }
@@ -1137,7 +1234,7 @@ class Backend implements ControllerProviderInterface
             'global_permissions'    => $globalPermissions,
         );
 
-        return $app['twig']->render('roles/roles.twig', array('context' => $context));
+        return $app['render']->render('roles/roles.twig', array('context' => $context));
     }
 
     /**
@@ -1147,7 +1244,7 @@ class Backend implements ControllerProviderInterface
      * @param Application $app     The application/container
      * @param Request     $request The Symfony Request
      *
-     * @return mixed
+     * @return \Twig_Markup|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function userEdit($id, Application $app, Request $request)
     {
@@ -1157,9 +1254,15 @@ class Backend implements ControllerProviderInterface
         if (!empty($id)) {
             $user = $app['users']->getUser($id);
 
-            // Verify the current user has access to edit this user
-            if (!$app['permissions']->isAllowedToManipulate($user, $currentuser)) {
-                $app['session']->getFlashBag()->add('error', Trans::__('You do not have the right privileges to edit that user.'));
+            if (is_array($user)) {
+                // Verify the current user has access to edit this user
+                if (!$app['permissions']->isAllowedToManipulate($user, $currentuser)) {
+                    $app['session']->getFlashBag()->add('error', Trans::__('You do not have the right privileges to edit that user.'));
+
+                    return Lib::redirect('users');
+                }
+            } else {
+                $app['session']->getFlashBag()->add('error', Trans::__('No such user.'));
 
                 return Lib::redirect('users');
             }
@@ -1229,7 +1332,7 @@ class Backend implements ControllerProviderInterface
         $form = $form->getForm();
 
         // Check if the form was POST-ed, and valid. If so, store the user.
-        if ($request->getMethod() == 'POST') {
+        if ($request->isMethod('POST')) {
             $user = $this->validateUserForm($app, $form);
 
             $currentuser = $app['users']->getCurrentUser();
@@ -1272,7 +1375,7 @@ class Backend implements ControllerProviderInterface
      * @param Application $app
      * @param Request     $request
      *
-     * @return string
+     * @return \Twig_Markup|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function userFirst(Application $app, Request $request)
     {
@@ -1288,6 +1391,8 @@ class Backend implements ControllerProviderInterface
         $dbdriver = $app['config']->get('general/database/driver');
         if ($dbdriver === 'sqlite' || $dbdriver === 'pdo_sqlite') {
             $note = Trans::__('page.edit-users.note-sqlite');
+        } else {
+            $note = '';
         }
 
         // If we get here, chances are we don't have the tables set up, yet.
@@ -1306,7 +1411,7 @@ class Backend implements ControllerProviderInterface
         $form = $form->getForm();
 
         // Check if the form was POST-ed, and valid. If so, store the user.
-        if ($request->getMethod() === 'POST') {
+        if ($request->isMethod('POST')) {
             if ($this->validateUserForm($app, $form, true)) {
                 // To the dashboard, where 'login' will be triggered
                 return $app->redirect(Lib::path('dashboard'));
@@ -1316,7 +1421,7 @@ class Backend implements ControllerProviderInterface
         $context = array(
             'kind'        => 'create',
             'form'        => $form->createView(),
-            'note'        => $note ? $note : '',
+            'note'        => $note,
             'displayname' => $user['displayname'],
         );
 
@@ -1353,26 +1458,30 @@ class Backend implements ControllerProviderInterface
             } else {
                 $app['logger.system']->info(Trans::__('page.edit-users.log.user-added', array('%user%' => $user['displayname'])), array('event' => 'security'));
 
-                // Create a welcome email
-                $mailhtml = $app['render']->render(
-                    'email/firstuser.twig',
-                    array(
-                        'sitename' => $app['config']->get('general/sitename')
-                    )
-                );
+                if ($firstuser) {
+                    // Create a welcome email
+                    $mailhtml = $app['render']->render(
+                        'email/firstuser.twig',
+                        array(
+                            'sitename' => $app['config']->get('general/sitename')
+                        )
+                    )->getContent();
 
-                try {
-                    // Send a welcome email
-                    $message = $app['mailer']
-                        ->createMessage('message')
-                        ->setSubject(Trans::__('New Bolt site has been set up'))
-                        ->setFrom(array($user['email'] => 'Bolt'))
-                        ->setTo(array($user['email']   => $user['displayname']))
-                        ->setBody(strip_tags($mailhtml))
-                        ->addPart($mailhtml, 'text/html');
+                    try {
+                        // Send a welcome email
+                        $message = $app['mailer']
+                            ->createMessage('message')
+                            ->setSubject(Trans::__('New Bolt site has been set up'))
+                            ->setFrom(array($app['config']->get('general/mailoptions/senderMail', $user['email']) => $app['config']->get('general/mailoptions/senderName', $app['config']->get('general/sitename'))))
+                            ->setTo(array($user['email']   => $user['displayname']))
+                            ->setBody(strip_tags($mailhtml))
+                            ->addPart($mailhtml, 'text/html');
 
-                    $app['mailer']->send($message);
-                } catch (\Exception $e) {
+                        $app['mailer']->send($message);
+                    } catch (\Exception $e) {
+                        // Sending message failed. What else can we do, sending with snailmail?
+                        $app['logger.system']->error("The 'mailoptions' need to be set in app/config/config.yml", array('event' => 'config'));
+                    }
                 }
             }
 
@@ -1394,7 +1503,7 @@ class Backend implements ControllerProviderInterface
      * @param Application $app     The application/container
      * @param Request     $request The Symfony Request
      *
-     * @return string
+     * @return \Twig_Markup|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function profile(Application $app, Request $request)
     {
@@ -1410,7 +1519,7 @@ class Backend implements ControllerProviderInterface
         $form = $form->getForm();
 
         // Check if the form was POST-ed, and valid. If so, store the user.
-        if ($request->getMethod() == 'POST') {
+        if ($request->isMethod('POST')) {
             $form->submit($app['request']->get($form->getName()));
 
             if ($form->isValid()) {
@@ -1445,7 +1554,7 @@ class Backend implements ControllerProviderInterface
      * @param string      $action The action
      * @param integer     $id     The user ID
      *
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function userAction(Application $app, $action, $id)
     {
@@ -1457,7 +1566,7 @@ class Backend implements ControllerProviderInterface
         $user = $app['users']->getUser($id);
 
         if (!$user) {
-            $app['session']->getFlashBag()->add('error', 'No such user.');
+            $app['session']->getFlashBag()->add('error', Trans::__('No such user.'));
 
             return Lib::redirect('users');
         }
@@ -1479,7 +1588,7 @@ class Backend implements ControllerProviderInterface
 
         switch ($action) {
 
-            case "disable":
+            case 'disable':
                 if ($app['users']->setEnabled($id, 0)) {
                     $app['logger.system']->info("Disabled user '{$user['displayname']}'.", array('event' => 'security'));
 
@@ -1489,7 +1598,7 @@ class Backend implements ControllerProviderInterface
                 }
                 break;
 
-            case "enable":
+            case 'enable':
                 if ($app['users']->setEnabled($id, 1)) {
                     $app['logger.system']->info("Enabled user '{$user['displayname']}'.", array('event' => 'security'));
                     $app['session']->getFlashBag()->add('info', Trans::__("User '%s' is enabled.", array('%s' => $user['displayname'])));
@@ -1498,7 +1607,7 @@ class Backend implements ControllerProviderInterface
                 }
                 break;
 
-            case "delete":
+            case 'delete':
 
                 if ($app['users']->checkAntiCSRFToken() && $app['users']->deleteUser($id)) {
                     $app['logger.system']->info("Deleted user '{$user['displayname']}'.", array('event' => 'security'));
@@ -1521,7 +1630,7 @@ class Backend implements ControllerProviderInterface
      *
      * @param Application $app The application/container
      *
-     * @return mixed
+     * @return \Twig_Markup
      */
     public function about(Application $app)
     {
@@ -1536,28 +1645,39 @@ class Backend implements ControllerProviderInterface
      * @param Application $app       The application/container
      * @param Request     $request   The Symfony Request
      *
-     * @return mixed
+     * @return \Twig_Markup
      */
     public function files($namespace, $path, Application $app, Request $request)
     {
         // No trailing slashes in the path.
         $path = rtrim($path, '/');
 
+        // Defaults
+        $files      = array();
+        $folders    = array();
+        $formview   = false;
+        $uploadview = true;
+
         $filesystem = $app['filesystem']->getFilesystem($namespace);
 
         if (!$filesystem->authorized($path)) {
             $error = Trans::__("You don't have the correct permissions to display the file or directory '%s'.", array('%s' => $path));
-            $app->abort(403, $error);
+            $app->abort(Response::HTTP_FORBIDDEN, $error);
         }
 
-        $uploadview = true;
-        if (!$app['users']->isAllowed("files:uploads")) {
+        if (!$app['users']->isAllowed('files:uploads')) {
             $uploadview = false;
         }
 
-        if ($filesystem->getVisibility($path) === 'public') {
+        try {
+            $visibility = $filesystem->getVisibility($path);
+        } catch (FileNotFoundException $fnfe) {
+            $visibility = false;
+        }
+
+        if ($visibility === 'public') {
             $validFolder = true;
-        } elseif ($filesystem->getVisibility($path) === 'readonly') {
+        } elseif ($visibility === 'readonly') {
             $validFolder = true;
             $uploadview = false;
         } else {
@@ -1574,9 +1694,9 @@ class Backend implements ControllerProviderInterface
                     'FileUpload',
                     'file',
                     array(
-                        'label' => Trans::__('Upload a file to this folder'),
-                        'multiple' => TRUE,
-                        'attr'  => array(
+                        'label'    => Trans::__('Upload a file to this folder'),
+                        'multiple' => true,
+                        'attr'     => array(
                         'data-filename-placement' => 'inside',
                         'title'                   => Trans::__('Select file …'))
                     )
@@ -1585,7 +1705,7 @@ class Backend implements ControllerProviderInterface
 
             // Handle the upload.
             if ($request->isMethod('POST')) {
-                $form->bind($request);
+                $form->submit($request);
                 if ($form->isValid()) {
                     $files = $request->files->get($form->getName());
                     $files = $files['FileUpload'];
@@ -1612,8 +1732,15 @@ class Backend implements ControllerProviderInterface
                                 );
 
                                 // Add the file to our stack.
-                                $app['stack']->add($path . "/" . $filename);
+                                $app['stack']->add($path . '/' . $filename);
                                 $result->confirm();
+                            } else {
+                                foreach ($result->getMessages() as $message) {
+                                    $app['session']->getFlashBag()->add(
+                                        'error',
+                                        $message->__toString()
+                                    );
+                                }
                             }
                         } else {
                             $extensionList = array();
@@ -1638,9 +1765,7 @@ class Backend implements ControllerProviderInterface
                 return Lib::redirect('files', array('path' => $path, 'namespace' => $namespace));
             }
 
-            if ($uploadview === false) {
-                $formview = false;
-            } else {
+            if ($uploadview !== false) {
                 $formview = $form->createView();
             }
 
@@ -1649,10 +1774,10 @@ class Backend implements ControllerProviderInterface
 
         // Get the pathsegments, so we can show the path as breadcrumb navigation.
         $pathsegments = array();
-        $cumulative = "";
+        $cumulative = '';
         if (!empty($path)) {
-            foreach (explode("/", $path) as $segment) {
-                $cumulative .= $segment . "/";
+            foreach (explode('/', $path) as $segment) {
+                $cumulative .= $segment . '/';
                 $pathsegments[$cumulative] = $segment;
             }
         }
@@ -1686,11 +1811,11 @@ class Backend implements ControllerProviderInterface
      * @param Application $app       The application/container
      * @param Request     $request   The Symfony Request
      *
-     * @return mixed
+     * @return \Twig_Markup|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function fileEdit($namespace, $file, Application $app, Request $request)
     {
-        if ($namespace == 'app' && dirname($file) == "config") {
+        if ($namespace == 'app' && dirname($file) == 'config') {
             // Special case: If requesting one of the major config files, like contenttypes.yml, set the path to the
             // correct dir, which might be 'app/config', but it might be something else.
             $namespace = 'config';
@@ -1701,30 +1826,30 @@ class Backend implements ControllerProviderInterface
 
         if (!$filesystem->authorized($file)) {
             $error = Trans::__("You don't have correct permissions to edit the file '%s'.", array('%s' => $file));
-            $app->abort(403, $error);
+            $app->abort(Response::HTTP_FORBIDDEN, $error);
         }
 
         /** @var \League\Flysystem\File $file */
         $file = $filesystem->get($file);
-
+        $datechanged = date_format(new \DateTime('@' . $file->getTimestamp()), 'c');
         $type = Lib::getExtension($file->getPath());
 
         // Get the pathsegments, so we can show the path.
         $path = dirname($file->getPath());
         $pathsegments = array();
-        $cumulative = "";
+        $cumulative = '';
         if (!empty($path)) {
-            foreach (explode("/", $path) as $segment) {
-                $cumulative .= $segment . "/";
+            foreach (explode('/', $path) as $segment) {
+                $cumulative .= $segment . '/';
                 $pathsegments[$cumulative] = $segment;
             }
         }
 
-        $contents = null;
-        if (!$file->exists() || !($contents = $file->read())) {
+        if (!$file->exists() || $file->read() === false) {
             $error = Trans::__("The file '%s' doesn't exist, or is not readable.", array('%s' => $file->getPath()));
-            $app->abort(404, $error);
+            $app->abort(Response::HTTP_NOT_FOUND, $error);
         }
+        $contents = $file->read();
 
         if (!$file->update($contents)) {
             $app['session']->getFlashBag()->add(
@@ -1750,7 +1875,7 @@ class Backend implements ControllerProviderInterface
             $filegroup[] = basename($basename . '_local.yml');
         }
 
-        $data['contents'] = $contents;
+        $data = array('contents' => $contents);
 
         /** @var Form $form */
         $form = $app['form.factory']
@@ -1759,41 +1884,44 @@ class Backend implements ControllerProviderInterface
             ->getForm();
 
         // Check if the form was POST-ed, and valid. If so, store the user.
-        if ($request->getMethod() == "POST") {
-            $form->bind($app['request']->get($form->getName()));
+        if ($request->isMethod('POST')) {
+            $form->submit($app['request']->get($form->getName()));
 
             if ($form->isValid()) {
                 $data = $form->getData();
                 $contents = Input::cleanPostedData($data['contents']) . "\n";
 
-                $ok = true;
+                $result = array('ok' => true, 'msg' => 'Unhandled state.');
 
                 // Before trying to save a yaml file, check if it's valid.
-                if ($type == "yml") {
+                if ($type === 'yml') {
                     $yamlparser = new Yaml\Parser();
                     try {
-                        $ok = $yamlparser->parse($contents);
+                        $yamlparser->parse($contents);
                     } catch (ParseException $e) {
-                        $ok = false;
-                        $app['session']->getFlashBag()->add('error', Trans::__("File '%s' could not be saved:", array('%s' => $file->getPath())) . $e->getMessage());
+                        $result['ok'] = false;
+                        $result['msg'] = Trans::__("File '%s' could not be saved:", array('%s' => $file->getPath())) . $e->getMessage();
                     }
                 }
 
-                if ($ok) {
+                if ($result['ok']) {
+                    // Remove ^M (or \r) characters from the file.
+                    $contents = str_ireplace("\x0D", '', $contents);
                     if ($file->update($contents)) {
-                        $app['session']->getFlashBag()->add('info', Trans::__("File '%s' has been saved.", array('%s' => $file->getPath())));
-                        // If we've saved a translation, back to it
-                        if (preg_match('#resources/translations/(..)/(.*)\.yml$#', $file->getPath(), $m)) {
-                            return Lib::redirect('translation', array('domain' => $m[2], 'tr_locale' => $m[1]));
-                        }
-                        Lib::redirect('fileedit', array('file' => $file->getPath()), '');
+                        $result['msg'] = Trans::__("File '%s' has been saved.", array('%s' => $file->getPath()));
+                        $result['datechanged'] = date_format(new \DateTime('@' . $file->getTimestamp()), 'c');
                     } else {
-                        $app['session']->getFlashBag()->add('error', Trans::__("File '%s' could not be saved, for some reason.", array('%s' => $file->getPath())));
+                        $result['msg'] = Trans::__("File '%s' could not be saved, for some reason.", array('%s' => $file->getPath()));
                     }
                 }
-                // If we reach this point, the form will be shown again, with the error
-                // in the input, so the user can try again.
+            } else {
+                $result = array(
+                    'ok' => false,
+                    'msg' => Trans::__("File '%s' could not be saved, because the form wasn't valid.", array('%s' => $file->getPath()))
+                );
             }
+
+            return new JsonResponse($result);
         }
 
         // For 'related' files we might need to keep track of the current dirname on top of the namespace.
@@ -1812,7 +1940,8 @@ class Backend implements ControllerProviderInterface
             'additionalpath' => $additionalpath,
             'namespace'      => $namespace,
             'write_allowed'  => $writeallowed,
-            'filegroup'      => $filegroup
+            'filegroup'      => $filegroup,
+            'datechanged'    => $datechanged
         );
 
         return $app['render']->render('editfile/editfile.twig', array('context' => $context));
@@ -1826,7 +1955,7 @@ class Backend implements ControllerProviderInterface
      * @param Application $app       The application/container
      * @param Request     $request   The Symfony Request
      *
-     * @return mixed
+     * @return \Twig_Markup|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function translation($domain, $tr_locale, Application $app, Request $request)
     {
@@ -1849,8 +1978,8 @@ class Backend implements ControllerProviderInterface
             ->getForm();
 
         // Check if the form was POST-ed, and valid. If so, store the file.
-        if ($request->getMethod() == 'POST') {
-            $form->bind($app['request']->get($form->getName()));
+        if ($request->isMethod('POST')) {
+            $form->submit($app['request']->get($form->getName()));
 
             if ($form->isValid()) {
                 $data = $form->getData();
@@ -1901,7 +2030,7 @@ class Backend implements ControllerProviderInterface
      * @param Request     $request The Symfony Request
      * @param Application $app     The application/container
      *
-     * @return mixed
+     * @return null|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public static function before(Request $request, Application $app)
     {
@@ -1980,17 +2109,17 @@ class Backend implements ControllerProviderInterface
      *
      * @param Application $app
      * @param array       $user
-     * @param boolean     $addusername
+     * @param boolean     $editusername
      *
-     * @return Symfony\Component\Form\FormBuilder
+     * @return \Symfony\Component\Form\FormBuilder
      */
-    private function getUserForm(Application $app, array $user, $addusername = false)
+    private function getUserForm(Application $app, array $user, $editusername = false)
     {
         // Start building the form
         $form = $app['form.factory']->createBuilder('form', $user);
 
-        // Username goes first
-        if ($addusername) {
+        // Username goes first (editable when not viewing own profile)
+        if ($editusername) {
             $form->add(
                 'username',
                 'text',
@@ -2002,7 +2131,21 @@ class Backend implements ControllerProviderInterface
                     )
                 )
             );
+        } else {
+            $form->add(
+                'username',
+                'text',
+                array(
+                    'constraints' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 2, 'max' => 32))),
+                    'label'       => Trans::__('page.edit-users.label.username'),
+                    'attr'        => array(
+                        'placeholder' => Trans::__('page.edit-users.placeholder.username')
+                    ),
+                    'read_only'   => true
+                )
+            );
         }
+
 
         // Add the other fields
         $form
@@ -2064,11 +2207,11 @@ class Backend implements ControllerProviderInterface
      *   * Email is unique
      *   * Displaynames are unique
      *
-     * @param Application                        $app
-     * @param Symfony\Component\Form\FormBuilder $form
-     * @param boolean                            $addusername
+     * @param Application                         $app
+     * @param \Symfony\Component\Form\FormBuilder $form
+     * @param boolean                             $addusername
      *
-     * @return Symfony\Component\Form\FormBuilder
+     * @return \Symfony\Component\Form\FormBuilder
      */
     private function setUserFormValidation(Application $app, FormBuilder $form, $addusername = false)
     {
@@ -2102,6 +2245,12 @@ class Backend implements ControllerProviderInterface
                     }
                 }
 
+                // Issue 3491 : Password must be different from username
+                $username = $form['username']->getData();
+                if (!empty($username) && $pass1 === $username) {
+                    $form['password']->addError(new FormError(Trans::__('page.edit-users.error.password-different-username')));
+                }
+
                 // Email addresses must be unique.
                 if (!$app['users']->checkAvailability('email', $form['email']->getData(), $id)) {
                     $form['email']->addError(new FormError(Trans::__('page.edit-users.error.email-used')));
@@ -2115,5 +2264,21 @@ class Backend implements ControllerProviderInterface
         );
 
         return $form;
+    }
+
+    /**
+     * Helper to get a user's permissions for a ContentType.
+     *
+     * @param Application $app
+     * @param string      $contentTypeSlug
+     * @param array       $user
+     */
+    private function getContentTypeUserPermissions(Application $app, $contentTypeSlug, $user = null)
+    {
+        if ($user === null) {
+            return $app['permissions']->getContentTypePermissions();
+        }
+
+        return $app['permissions']->getContentTypeUserPermissions($contentTypeSlug, $user);
     }
 }

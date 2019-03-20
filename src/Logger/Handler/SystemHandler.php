@@ -59,9 +59,7 @@ class SystemHandler extends AbstractProcessingHandler
             $this->initialize();
         }
 
-        if (isset($record['context']['event'])
-            && $record['context']['event'] === ''
-            && isset($record['context']['exception'])
+        if (isset($record['context']['exception'])
             && ($e = $record['context']['exception'])
             && $e instanceof \Exception
         ) {
@@ -70,8 +68,9 @@ class SystemHandler extends AbstractProcessingHandler
                 array(
                     'file'     => $e->getFile(),
                     'line'     => $e->getLine(),
-                    'class'    => $trace['class'],
-                    'function' => $trace['function']
+                    'class'    => isset($trace['class']) ? $trace['class'] : '',
+                    'function' => isset($trace['function']) ? $trace['function'] : '',
+                    'message'  => $e->getMessage()
                 )
             );
         } elseif ($this->app['debug']) {
@@ -80,8 +79,8 @@ class SystemHandler extends AbstractProcessingHandler
 
             $source = json_encode(
                 array(
-                    'File'     => str_replace($this->app['resources']->getPath('root'), "", $backtrace['file']),
-                    'Line'     => $backtrace['line']
+                    'file'     => str_replace($this->app['resources']->getPath('root'), '', $backtrace['file']),
+                    'line'     => $backtrace['line']
                 )
             );
         } else {
@@ -97,10 +96,10 @@ class SystemHandler extends AbstractProcessingHandler
                     'level'      => $record['level'],
                     'date'       => $record['datetime']->format('Y-m-d H:i:s'),
                     'message'    => $record['message'],
-                    'ownerid'    => isset($user['id']) ? $user['id'] : '',
+                    'ownerid'    => isset($user['id']) ? $user['id'] : null,
                     'requesturi' => $this->app['request']->getRequestUri(),
-                    'route'      => $this->app['request']->get('_route'),
-                    'ip'         => $this->app['request']->getClientIp(),
+                    'route'      => $this->app['request']->get('_route', ''),
+                    'ip'         => $this->app['request']->getClientIp() ? : '127.0.0.1',
                     'context'    => isset($record['context']['event']) ? $record['context']['event'] : '',
                     'source'     => $source
                 )

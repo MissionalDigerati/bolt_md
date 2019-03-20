@@ -6,6 +6,11 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Bolt\\Extension\\MissionalDigerati\\RelatedSort\\' => array($baseDir . '/local/missionaldigerati/boltutilitybox'),
+    'Bolt\\Extension\\MissionalDigerati\\BoltRelatedSort\\' => array($baseDir . '/local/missionaldigerati/boltrelatedsort'),
+    'Bolt\\Extension\\MissionalDigerati\\BoltPrivateContent\\' => array($baseDir . '/local/missionaldigerati/boltprivatecontent'),
+    'Bolt\\Extension\\MissionalDigerati\\BoltPiconSelector\\' => array($baseDir . '/local/missionaldigerati/boltpiconselector'),
+    'Bolt\\Extension\\MissionalDigerati\\BoltClassManager\\' => array($baseDir . '/local/missionaldigerati/boltclassmanager'),
     'Bolt\\Extension\\Bolt\\SimpleForms\\' => array($vendorDir . '/bolt/simpleforms'),
     'Bolt\\Extension\\Bolt\\GoogleAnalytics\\' => array($vendorDir . '/bolt/googleanalytics'),
     'Bolt\\Composer\\' => array($baseDir . '/'),

@@ -3,11 +3,14 @@
 namespace Bolt;
 
 use Bolt;
+use Bolt\Composer\Action\BoltExtendJson;
 use Bolt\Extensions\ExtensionInterface;
 use Bolt\Extensions\Snippets\Location as SnippetLocation;
-use Bolt\Helpers\String;
+use Bolt\Helpers\Str;
 use Bolt\Translation\Translator as Trans;
 use Composer\Autoload\ClassLoader;
+use Composer\Json\JsonFile;
+use Composer\Json\JsonManipulator;
 use Monolog\Logger;
 use Symfony\Component\Finder\Finder;
 
@@ -105,7 +108,7 @@ class Extensions
         $this->basefolder = $app['resources']->getPath('extensions');
         $this->matchedcomments = array();
 
-        if ($app['config']->get('general/add_jquery')) {
+        if ($app['config']->get('general/add_jquery') || $app['config']->get('theme/add_jquery')) {
             $this->addjquery = true;
         } else {
             $this->addjquery = false;
@@ -167,32 +170,134 @@ class Extensions
         $flag = $this->app['filesystem']->has('extensions://local');
 
         // Check that local exists
-        if ($flag) {
-            // Find init.php files that are exactly 2 directories below etensions/local/
-            $finder = new Finder();
-            $finder->files()
-                   ->in($this->basefolder . '/local')
-                   ->followLinks()
-                   ->name('init.php')
-                   ->depth('== 2');
+        if (!$flag) {
+            return;
+        }
 
-            foreach ($finder as $file) {
-                /** @var \Symfony\Component\Finder\SplFileInfo $file */
-                try {
-                    // Include the extensions core file
-                    require_once dirname($file->getRealpath()) . '/Extension.php';
+        // Find init.php files that are exactly 2 directories below etensions/local/
+        $finder = new Finder();
+        $finder->files()
+               ->in($this->basefolder . '/local')
+               ->followLinks()
+               ->name('init.php')
+               ->depth('== 2')
+        ;
 
-                    // Include the init file
-                    require_once $file->getRealpath();
+        foreach ($finder as $file) {
+            /** @var \Symfony\Component\Finder\SplFileInfo $file */
+            try {
+                // Include the extensions core file
+                require_once dirname($file->getRealpath()) . '/Extension.php';
 
-                    // Mark is as a local extension
-                    $extension = end($this->enabled);
-                    $extension->setInstallType('local');
-                } catch (\Exception $e) {
-                    $this->logInitFailure('Error importing local extension class', $file->getBasename(), $e, Logger::ERROR);
-                }
+                // Include the init file
+                require_once $file->getRealpath();
+
+                // Mark is as a local extension
+                $extension = end($this->enabled);
+                $extension->setInstallType('local');
+            } catch (\Exception $e) {
+                $this->logInitFailure('Error importing local extension class', $file->getBasename(), $e, Logger::ERROR);
             }
         }
+    }
+
+    /**
+     * Check for local extension composer.json files and import their PSR-4 settings.
+     *
+     * @param boolean $force
+     *
+     * @internal
+     */
+    public function checkLocalAutoloader($force = false)
+    {
+        if (!$this->app['filesystem']->has('extensions://local/')) {
+            return;
+        }
+
+        if (!$force && $this->app['filesystem']->has('cache://.local.autoload.built')) {
+            return;
+        }
+
+        if (!$this->app['filesystem']->has('extensions://composer.json')) {
+            $initjson = new BoltExtendJson($this->app['extend.manager']->getOptions());
+            $this->json = $initjson->updateJson($this->app);
+        }
+
+        $finder = new Finder();
+        $finder->files()
+            ->in($this->basefolder . '/local')
+            ->followLinks()
+            ->name('composer.json')
+            ->depth('== 2')
+        ;
+
+        if ($finder->count() > 0) {
+            $this->setLocalExtensionPsr4($finder);
+        }
+    }
+
+    /**
+     * Write the PSR-4 data to the extensions/composer.json file.
+     *
+     * @param Finder $finder
+     */
+    private function setLocalExtensionPsr4(Finder $finder)
+    {
+        // Get Bolt's extension JSON
+        $composerOptions = $this->app['extend.manager']->getOptions();
+        $composerJsonFile = new JsonFile($composerOptions['composerjson']);
+        $boltJson = $composerJsonFile->read();
+        $boltPsr4 = isset($boltJson['autoload']['psr-4']) ? $boltJson['autoload']['psr-4'] : array();
+
+        foreach ($finder as $file) {
+            try {
+                $extensionJsonFile = new JsonFile($file->getRealpath());
+                $json = $extensionJsonFile->read();
+            } catch (\Exception $e) {
+                $this->logInitFailure('Reading local extension composer.json file failed', $file->getRealpath(), $e, Logger::ERROR);
+            }
+
+            if (isset($json['autoload']['psr-4'])) {
+                $basePath = str_replace($this->app['resources']->getPath('extensions/local'), 'local', dirname($file->getRealpath()));
+                $psr4 = $this->getLocalExtensionPsr4($basePath, $json['autoload']['psr-4']);
+                $boltPsr4 = array_merge($boltPsr4, $psr4);
+            }
+        }
+
+        // Modify Bolt's extension JSON and write out changes
+        $boltJson['autoload']['psr-4'] = $boltPsr4;
+        $composerJsonFile->write($boltJson);
+        $this->app['extend.manager']->dumpautoload();
+        $this->app['filesystem']->put('cache://.local.autoload.built', time());
+    }
+
+    /**
+     * Get the PSR-4 data for a local extension with the paths adjusted.
+     *
+     * @param string $path
+     * @param array  $autoload
+     *
+     * @return array
+     */
+    private function getLocalExtensionPsr4($path, array $autoload)
+    {
+        $psr4 = array();
+        foreach ($autoload as $namespace => $namespacePaths) {
+            $paths = null;
+            if (is_string($namespacePaths)) {
+                $paths = "$path/$namespacePaths";
+            } else {
+                foreach ($namespacePaths as $namespacePath) {
+                    $paths[] = "$path/$namespacePath";
+                }
+            }
+
+            // Ensure the namespace is valid for PSR-4
+            $namespace = rtrim($namespace, '\\') . '\\';
+            $psr4[$namespace] = $paths;
+        }
+
+        return $psr4;
     }
 
     /**
@@ -251,7 +356,7 @@ class Extensions
      */
     public function getComposerConfig($extensionName)
     {
-        return $this->composer[$extensionName];
+        return isset($this->composer[$extensionName]) ? $this->composer[$extensionName] : array();
     }
 
     /**
@@ -403,6 +508,17 @@ class Extensions
         return $this->assets;
     }
 
+    /**
+     * Clear all previously added assets.
+     */
+    public function clearAssets()
+    {
+        $this->assets = array(
+            'css' => array(),
+            'js'  => array()
+        );
+    }
+
     private function getNamespace($extension)
     {
         $classname = get_class($extension);
@@ -419,16 +535,29 @@ class Extensions
      * Add a particular CSS file to the output. This will be inserted before the
      * other css files.
      *
-     * @param string $filename
-     * @param bool   $late
-     * @param int    $priority
+     * @param string $filename File name to add to href=""
+     * @param array  $options  'late'     - True to add to the end of the HTML <body>
+     *                         'priority' - Loading priority
+     *                         'attrib'   - A string containing either/or 'defer', and 'async'
      */
-    public function addCss($filename, $late = false, $priority = 0)
+    public function addCss($filename, $options = array())
     {
+        // Handle pre-2.2 function parameters, namely $late and $priority
+        if (!is_array($options)) {
+            $args = func_get_args();
+
+            $options = array(
+                'late'     => isset($args[1]) ? isset($args[1]) : false,
+                'priority' => isset($args[2]) ? $args[2] : 0,
+                'attrib'   => false
+            );
+        }
+
         $this->assets['css'][md5($filename)] = array(
             'filename' => $filename,
-            'late'     => $late,
-            'priority' => $priority
+            'late'     => isset($options['late'])     ? $options['late']     : false,
+            'priority' => isset($options['priority']) ? $options['priority'] : 0,
+            'attrib'   => isset($options['attrib'])   ? $options['attrib']   : false
         );
     }
 
@@ -436,16 +565,29 @@ class Extensions
      * Add a particular javascript file to the output. This will be inserted after
      * the other javascript files.
      *
-     * @param string $filename
-     * @param bool   $late
-     * @param int    $priority
+     * @param string $filename File name to add to src=""
+     * @param array  $options  'late'     - True to add to the end of the HTML <body>
+     *                         'priority' - Loading priority
+     *                         'attrib'   - A string containing either/or 'defer', and 'async'
      */
-    public function addJavascript($filename, $late = false, $priority = 0)
+    public function addJavascript($filename, $options = array())
     {
+        // Handle pre-2.2 function parameters, namely $late and $priority
+        if (!is_array($options)) {
+            $args = func_get_args();
+
+            $options = array(
+                'late'     => isset($args[1]) ? isset($args[1]) : false,
+                'priority' => isset($args[2]) ? $args[2] : 0,
+                'attrib'   => false
+            );
+        }
+
         $this->assets['js'][md5($filename)] = array(
-            'filename'  => $filename,
-            'late'      => $late,
-            'priority'  => $priority
+            'filename' => $filename,
+            'late'     => isset($options['late'])     ? $options['late']     : false,
+            'priority' => isset($options['priority']) ? $options['priority'] : 0,
+            'attrib'   => isset($options['attrib'])   ? $options['attrib']   : false
         );
     }
 
@@ -703,11 +845,12 @@ class Extensions
             array_walk($files, create_function('&$v, $k', '$v = $v[2];'));
 
             foreach ($files as $file) {
-                $late = $file['late'];
+                $late     = $file['late'];
                 $filename = $file['filename'];
+                $attrib   = $file['attrib'] ? ' ' . $file['attrib'] : '';
 
-                if ($type == 'js') {
-                    $htmlJs = sprintf('<script src="%s"></script>', $filename);
+                if ($type === 'js') {
+                    $htmlJs = sprintf('<script src="%s"%s></script>', $filename, $attrib);
                     if ($late) {
                         $html = $this->insertEndOfBody($htmlJs, $html);
                     } else {
@@ -744,7 +887,7 @@ class Extensions
 
             // Try to insert it after <head>
             $replacement = sprintf("%s\n%s\t%s", $matches[0], $matches[1], $tag);
-            $html = String::replaceFirst($matches[0], $replacement, $html);
+            $html = Str::replaceFirst($matches[0], $replacement, $html);
         } else {
 
             // Since we're serving tag soup, just append it.
@@ -770,7 +913,7 @@ class Extensions
 
             // Try to insert it after <body>
             $replacement = sprintf("%s\n%s\t%s", $matches[0], $matches[1], $tag);
-            $html = String::replaceFirst($matches[0], $replacement, $html);
+            $html = Str::replaceFirst($matches[0], $replacement, $html);
         } else {
 
             // Since we're serving tag soup, just append it.
@@ -792,11 +935,11 @@ class Extensions
     public function insertEndOfHead($tag, $html)
     {
         // first, attempt to insert it before the </head> tag, matching indentation.
-        if (preg_match("~^([ \t]*)</head~mi", $html, $matches)) {
+        if (preg_match("~([ \t]*)</head~mi", $html, $matches)) {
 
             // Try to insert it just before </head>
             $replacement = sprintf("%s\t%s\n%s", $matches[1], $tag, $matches[0]);
-            $html = String::replaceFirst($matches[0], $replacement, $html);
+            $html = Str::replaceFirst($matches[0], $replacement, $html);
         } else {
 
             // Since we're serving tag soup, just append it.
@@ -818,11 +961,11 @@ class Extensions
     public function insertEndOfBody($tag, $html)
     {
         // first, attempt to insert it before the </body> tag, matching indentation.
-        if (preg_match("~^([ \t]*)</body~mi", $html, $matches)) {
+        if (preg_match("~([ \t]*)</body~mi", $html, $matches)) {
 
             // Try to insert it just before </head>
             $replacement = sprintf("%s\t%s\n%s", $matches[1], $tag, $matches[0]);
-            $html = String::replaceFirst($matches[0], $replacement, $html);
+            $html = Str::replaceFirst($matches[0], $replacement, $html);
         } else {
 
             // Since we're serving tag soup, just append it.
@@ -844,11 +987,11 @@ class Extensions
     public function insertEndOfHtml($tag, $html)
     {
         // first, attempt to insert it before the </body> tag, matching indentation.
-        if (preg_match("~^([ \t]*)</html~mi", $html, $matches)) {
+        if (preg_match("~([ \t]*)</html~mi", $html, $matches)) {
 
             // Try to insert it just before </head>
             $replacement = sprintf("%s\t%s\n%s", $matches[1], $tag, $matches[0]);
-            $html = String::replaceFirst($matches[0], $replacement, $html);
+            $html = Str::replaceFirst($matches[0], $replacement, $html);
         } else {
 
             // Since we're serving tag soup, just append it.
@@ -874,7 +1017,7 @@ class Extensions
             // matches[0] has some elements, the last index is -1, because zero indexed.
             $last = count($matches[0]) - 1;
             $replacement = sprintf("%s\n%s%s", $matches[0][$last], $matches[1][$last], $tag);
-            $html = String::replaceFirst($matches[0][$last], $replacement, $html);
+            $html = Str::replaceFirst($matches[0][$last], $replacement, $html);
         } else {
             $html = $this->insertEndOfHead($tag, $html);
         }
@@ -898,7 +1041,7 @@ class Extensions
             // matches[0] has some elements, the last index is -1, because zero indexed.
             $last = count($matches[0]) - 1;
             $replacement = sprintf("%s\n%s%s", $matches[0][$last], $matches[1][$last], $tag);
-            $html = String::replaceFirst($matches[0][$last], $replacement, $html);
+            $html = Str::replaceFirst($matches[0][$last], $replacement, $html);
         } else {
             $html = $this->insertEndOfHead($tag, $html);
         }
@@ -921,7 +1064,7 @@ class Extensions
 
             // Try to insert it before the match
             $replacement = sprintf("%s%s\n%s\t%s", $matches[1], $tag, $matches[0], $matches[1]);
-            $html = String::replaceFirst($matches[0], $replacement, $html);
+            $html = Str::replaceFirst($matches[0], $replacement, $html);
         } else {
 
             // Since we're serving tag soup, just append it.
@@ -946,7 +1089,7 @@ class Extensions
 
             // Try to insert it before the match
             $replacement = sprintf("%s%s\n%s\t%s", $matches[1], $tag, $matches[0], $matches[1]);
-            $html = String::replaceFirst($matches[0], $replacement, $html);
+            $html = Str::replaceFirst($matches[0], $replacement, $html);
         } else {
 
             // Since we're serving tag soup, just append it.
@@ -982,7 +1125,7 @@ class Extensions
             // matches[0] has some elements, the last index is -1, because zero indexed.
             $last = count($matches[0]) - 1;
             $replacement = sprintf("%s\n%s%s", $matches[0][$last], $matches[1][$last], $tag);
-            $html = String::replaceFirst($matches[0][$last], $replacement, $html);
+            $html = Str::replaceFirst($matches[0][$last], $replacement, $html);
         } elseif ($insidehead) {
             // Second attempt: entire document
             $html = $this->insertAfterJs($tag, $html, false);
@@ -1011,7 +1154,7 @@ class Extensions
         // jquery-1.8.2.min.js
         // jquery-1.5.js
         if (!preg_match('/<script(.*)jquery(-latest|-[0-9\.]*)?(\.min)?\.js/', $html)) {
-            $jqueryfile = $this->app['paths']['app'] . 'view/js/jquery-1.11.2.min.js';
+            $jqueryfile = $this->app['paths']['app'] . 'view/js/jquery-1.12.1.min.js';
             $html = $this->insertBeforeJs('<script src="' . $jqueryfile . '"></script>', $html);
         }
 

@@ -8,6 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * @final
+ */
 class Twig_Extension_Optimizer extends Twig_Extension
 {
     protected $optimizers;
@@ -17,17 +21,11 @@ class Twig_Extension_Optimizer extends Twig_Extension
         $this->optimizers = $optimizers;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNodeVisitors()
     {
         return array(new Twig_NodeVisitor_Optimizer($this->optimizers));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'optimizer';

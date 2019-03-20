@@ -169,7 +169,7 @@ final class RequirePackage
         $removeKey = $options['dev'] ? 'require' : 'require-dev';
         $baseRequirements = array_key_exists($requireKey, $composerDefinition) ? $composerDefinition[$requireKey] : array();
 
-        if (!$this->updateFileCleanly($json, $baseRequirements, $package, $requireKey, $removeKey, $sortPackages, $postreset)) {
+        if (!$this->updateFileCleanly($json, $package, $requireKey, $removeKey, $sortPackages, $postreset)) {
             foreach ($package as $name => $version) {
                 $baseRequirements[$name] = $version;
 
@@ -189,7 +189,6 @@ final class RequirePackage
      * Cleanly update a Composer JSON file.
      *
      * @param JsonFile $json
-     * @param array    $base
      * @param array    $new
      * @param string   $requireKey
      * @param string   $removeKey
@@ -198,7 +197,7 @@ final class RequirePackage
      *
      * @return boolean
      */
-    private function updateFileCleanly(JsonFile $json, array $base, array $new, $requireKey, $removeKey, $sortPackages, $postreset)
+    private function updateFileCleanly(JsonFile $json, array $new, $requireKey, $removeKey, $sortPackages, $postreset)
     {
         $contents = file_get_contents($json->getPath());
 
@@ -206,7 +205,7 @@ final class RequirePackage
 
         foreach ($new as $package => $constraint) {
             if ($postreset) {
-                $constraint = $this->findBestVersionForPackage($package);
+                $constraint = $this->findBestVersionForPackage($package, $constraint);
             }
 
             if (!$manipulator->addLink($requireKey, $package, $constraint, $sortPackages)) {
@@ -255,17 +254,18 @@ final class RequirePackage
     /**
      * Given a package name, this determines the best version to use in the require key.
      *
-     * This returns a version with the ~ operator prefixed when possible.
+     * This returns a version with the ^ operator prefixed when possible.
      *
      * @param string $name
+     * @param string $targetPackageVersion
      *
      * @throws \InvalidArgumentException
      *
      * @return string
      */
-    private function findBestVersionForPackage($name)
+    private function findBestVersionForPackage($name, $targetPackageVersion)
     {
-        $package = $this->versionSelector->findBestCandidate($name);
+        $package = $this->versionSelector->findBestCandidate($name, $targetPackageVersion);
 
         if (!$package) {
             throw new \InvalidArgumentException(

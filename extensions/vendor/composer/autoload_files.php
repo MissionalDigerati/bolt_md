@@ -6,6 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    $vendorDir . '/bolt/simpleforms/init.php',
-    $vendorDir . '/bolt/googleanalytics/init.php',
+    'f0fccfd8125cabfe1284498d88fd3ab6' => $vendorDir . '/bolt/simpleforms/init.php',
+    'c5f6accce5fcb5a2a1691bbc36239f3b' => $vendorDir . '/bolt/googleanalytics/init.php',
 );

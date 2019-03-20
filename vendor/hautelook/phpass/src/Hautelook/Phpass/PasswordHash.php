@@ -66,6 +66,11 @@ class PasswordHash
     public function get_random_bytes($count)
     {
         $output = '';
+        
+        if (is_callable('random_bytes')) {
+            return random_bytes($count);
+        }
+        
         if (@is_readable('/dev/urandom') &&
             ($fh = @fopen('/dev/urandom', 'rb'))) {
             $output = fread($fh, $count);
@@ -309,6 +314,6 @@ class PasswordHash
             $hash = crypt($password, $stored_hash);
         }
 
-        return $hash == $stored_hash;
+        return $hash === $stored_hash;
     }
 }

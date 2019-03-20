@@ -1,20 +1,195 @@
-# app/resources/translations/ru/messages.ru.yml – generated on 2014-11-21 17:27:50 UTC
+# app/resources/translations/ru/messages.ru.yml – generated on 2016-03-31 11:40:38 UTC
 
 # Warning: Translations are in the process of being moved to a new keyword-based translation
-#          at the moment. This is an ongoing process. Translations currently in the
-#          repository are automatically mapped to the new scheme. Be aware that there
-#          can be a race condition between that process and your PR so that it's
-#          eventually necessary to remap your translations. If you're planning on
+#          at the moment. This is an ongoing process. Translations currently in the 
+#          repository are automatically mapped to the new scheme. Be aware that there 
+#          can be a race condition between that process and your PR so that it's 
+#          eventually necessary to remap your translations. If you're planning on 
 #          updating your translations, it's best to ask on IRC to time your contribution
 #          in order to prevent merge conflicts.
 
 #  no unused messages
-#  no untranslated messages
-#  no untranslated keyword based messages
-# 355 translations
-# 130 keyword based translations
+# 148 untranslated messages
+#  21 untranslated keyword based messages
+# 288 translations
+# 120 keyword based translations
 
-#--- 355 translations ---------------------------------------------------------
+#--- 148 untranslated messages ------------------------------------------------
+
+"Add Selected": #
+"Add a new extension using the form below.": #
+"Add some sample <a href='%url%' class='btn btn-default'>Records with Loripsum text</a>": #
+"Are you sure you want to delete %FILENAME%?": #
+"Are you sure you want to remove these images?": #
+"Are you sure you want to remove this file?": #
+"Are you sure you want to remove this image?": #
+"Are you sure you wish to delete these records? There is no undo.": #
+"Are you sure you wish to delete this record? There is no undo.": #
+"Before you can start using the theme on your site we need to make a copy to your theme folder.": #
+"Cannot check for updates in read-only mode": #
+"Cannot check installed packages in read-only mode": #
+"Check for updates": #
+"Check/Uncheck all": #
+"Checking for available updates (this may take up to 60 seconds)": #
+"Checking installed packages": #
+"Clear Change Log": #
+"Clear System Log": #
+"Close editor": #
+"Config": #
+"Configure Extensions": #
+"Copy to theme folder": #
+"Copying theme assets …": #
+"Depublish date is in the past. Change the status if you want to depublish now": #
+"Detected Bolt version change to <b>%VERSION%</b>, and the cache has been cleared. Please <a href=\"%URI%\">check the database</a>, if you haven't done so already.": #
+"Do you really want to delete %FOLDERNAME%?": #
+"Edit Roles and Permissions": #
+"Everything is up to date!": #
+"Extend %boltname%": #
+"Extension": #
+"Extensions loading has been disabled by an administrator in the %config% file. ": #
+"Failed to send password request. Please check the email settings.": #
+"Field “%FIELD_NAME%”:": #
+"File '%s' could not be saved, because the form wasn't valid.": #
+"Full list …": #
+"Has to be a floating point number!": #
+"Hints:": #
+"Html": #
+"Id": #
+"If you would like to give the theme an alternative name you can add one here.": #
+"Install Package": #
+"Install This Version": #
+"Install a new Extension": #
+"Install all updates": #
+"Installation complete": #
+"Installing package": #
+"Installing selected package version (this may take up to 60 seconds).": #
+"Invalid menu path (%PATH%) set in menu.yml. Does not match any configured contenttypes or routes.": #
+"Invalid menu path (%PATH%) set in menu.yml. Probably should be a link: instead!": #
+"Is required or needs to match a pattern!": #
+"Is required!": #
+"Keyword …": #
+"Live Edit": #
+"Malformed JSON response. Ensure no debugging or other code is being added to the response": #
+"Markdown": #
+"More info/help": #
+"Multiselect": # "Multi-select"
+"New Bolt site has been set up": #
+"No Bolt Extensions installed.": #
+"No Stable Versions Available": #
+"No Test Versions Available": #
+"No content found.": #
+"No files in the list, yet.": #
+"No images in the list, yet.": #
+"No results found for '%search%'. Please try another search.": #
+"No such user.": #
+"No theme name found. Theme is not generated.": #
+"Not yet installed.": #
+"Only root can change file extensions.": #
+"Other content": #
+"Please confirm that you want to remove this extension?": #
+"Please enter a new folder name": #
+"Preparing to install package …": #
+"Preparing to remove package …": #
+"Readme": #
+"Related content:": #
+"Remove selected": #
+"Running install of all packages …": #
+"Running update …": #
+"Searching for available updates …": #
+"Slug": #
+"Slug:": #
+"Stable versions": #
+"Status": #
+"System cURL library doesn't support TLS, or the Certificate Authority setup has not been completed (%ERROR%). See http://curl.haxx.se/docs/sslcerts.htmlfor more details. Downgrading to HTTP.": #
+"Testing connection to extension server failed: %errormessage%": #
+"The Bolt extensions Repo at %repository% is currently unavailable. Check your connection and try again shortly.": #
+"The Bolt extensions file '%composerjson%' isn't readable.": #
+"The change log has been cleared.": #
+"The change log has been trimmed.": #
+"The database needs to be updated/repaired. Go to 'Configuration' > '<a href=\"%link%\">Check Database</a>' to do this now.": #
+"The extensions directory (<code>%dir%</code>) does not exist, or it is not writable. ": #
+"The field %field% has been changed to \"%newValue%\"": #
+"The system log has been cleared.": #
+"The system log has been trimmed.": #
+"The value has to be at least “%MINVAL%”!": #
+"The value must not be greater than “%MAXVAL%”!": #
+"The versions listed below are compatible with the version of Bolt you are using. Since they are unstable versions, we recommend you <strong>do not</strong> use these on production systems.": #
+"The versions listed below are marked as stable releases by the developer and are compatible with the version of Bolt you are currently using.": #
+"Theme installation complete": #
+"Theme successfully generated. You can now edit it directly from your theme folder.": #
+"There are no saved changes, yet.": #
+"There was an error uploading the file.\\nMake sure that the file type is of:\\n%typelist%": # "There was an error uploading the file.\\\nMake sure that the file type is of:\\\n%typelist%\n"
+"This template adds new fields. Save, then refresh to see these changes.": #
+"This website is <a href='%url%' target='_blank' title='Sophisticated, lightweight & simple CMS'>Built with Bolt</a>.": # "Sítio criado em <a href='%url%' target='_blank' title='Sofisticado, leve e simples - CMS Bolt'>CMS Bolt</a>."
+"This will install all available updates.": #
+"This will make sure all packages listed are installed. Use this if you've recently moved to a new server or if you have manually added an extension.": #
+"This will overwrite any existing files! Are you sure?": #
+"This won't install anything, just show you available updates": #
+"Thumbnail": #
+"Time in 24h/12h format": #
+"Trim Change Log": #
+"Trim System Log": #
+"Unable to create directory: %DIR%": #
+"Unable to delete directory: %DIR%": #
+"Unable to delete file: %FILE%": #
+"Unable to rename directory: %DIR%": #
+"Unable to rename file: %FILE%": #
+"Unfortunately, no content could be found. Try another page, or go to the <a href=\"%paths_root%\">homepage</a>.": #
+"Uninstall": #
+"Unique Alias": #
+"Unstable test versions": #
+"Update Package": #
+"Updates": #
+"Upload not allowed": #
+"Uploading": #
+"Users & Permissions": #
+"Version": #
+"Versions": #
+"View Roles": #
+"View/install Extensions": #
+"Warning": #
+"We were unable to generate the theme. It is likely that your theme directory is not writable by Bolt. Check the permissions and try reinstalling.": #
+"You can discover new extensions by visiting": #
+"You can now start using the installed extension, documentation and implementation instructions can be found using the link below.": #
+"You cannot '%s' yourself.": #
+"You do not have the right privileges to %ACTION% that record.": #
+"You do not have the right privileges to edit that user.": #
+"You do not have the right privileges to upload.": #
+"You have unfinished changes on this page. If you continue without saving, you will lose these changes.": #
+"You may lose some of your template fields with this change. Go to the template section and note down the values before doing this.": #
+"Your Currently Installed Extensions": #
+"by": #
+"cURL experienced an error: %errormessage%": #
+"filtered by <em>'%filter%'</em>": #
+"general.bolt-documentation-on-github": # "Bolt documentation on GitHub"
+"logs.system-log": # "System Log"
+"or": #
+
+#--- 21 untranslated keyword based messages -----------------------------------
+
+"component.changelog-detail.by": # "by"
+"contenttypes.generic.group.ungrouped": # "Ungrouped"
+"contenttypes.generic.recent-changes-one": # "Recent changes to this %contenttype%"
+"field.general.select-from-stack": # "Select from stack"
+"field.geolocation.label.snap": # "Snap to nearest address"
+"field.geolocation.title-pin": # "Marker"
+"field.markdown.label.markedview": # "Markdown"
+"field.slug.message.set": # "Set the slug to:"
+"field.slug.message.unlock": # "Are you sure you wish to unlock the slug? This might break existing links to this record."
+"field.video.preview.button.close": # "Close"
+"field.video.preview.no-url": # "No video url is set, no video to show."
+"menu.configuration.routing": # "Routing set up"
+"page.ckeditor-browse-server.pixel": # "px."
+"page.edit-users.error.password-different-username": # "Password must not match the username."
+"page.edit-users.label.email": # "Email"
+"page.edit-users.message.change-self": # "You've been logged off, because you changed your own username. Please log on again."
+"panel.latest-activity.by": # "by"
+"panel.latest-activity.change": # "Latest changes"
+"panel.latest-activity.created": # "Created"
+"panel.latest-activity.deleted": # "Deleted"
+"panel.latest-activity.system": # "Latest system activity"
+
+#--- 288 translations ---------------------------------------------------------
 
 "%name% № %id%": "%Имя% № %id%"
 "%s files could not be deleted. You should delete them manually.": "%s файлы не могут быть удалены. Вы должны удалить их вручную."
@@ -23,14 +198,9 @@
 "(no group)": "(нет группы)"
 "(none)": "(отсутствует)"
 "A password reset link has been sent to '%user%'.": "Ссылка для сброса пароля была выслана '%user%'."
-general.about: "О проекте"
-general.about-bolt: "О Bolt"
 "Actions": "Действия"
-users.actions-for-users: "Действия пользователей"
 "Add a brief, optional comment to describe what's changed.": "Кратко, необязательный комментарий, который описывает что изменилось."
 "Add a comment:": "Добавить комментарий:"
-"Add a new extension using the form below.": "Добавить новое расширение, использую форму ниже."
-"Add some sample <a href='%url%' class='btn btn-tertiary'>Records with Loripsum text</a>": "Добавить контент <a href='%url%' class='btn btn-tertiary'>Records with Loripsum text</a>"
 "Added to <tt>%key%</tt> '%title%'": "Добавлено <tt>%key%</tt> '%title%'"
 "Alas, no about!": "Увы, раздел 'О нас' отсутсвует!"
 "All content types": "Все сущности"
@@ -40,13 +210,10 @@ users.actions-for-users: "Действия пользователей"
 "Anonymous": "Аноним"
 "Are you sure you want to delete %username%?": "Вы действительно хотите удалить пользователя %username%?"
 "Author:": "Автор:"
-"Before you can start using the theme on your site we need to make a copy to your theme folder.": "Прежде чем начать использовать тему на вашем сайте, мы должны сделать копию в папку тем."
 "Below are the third party libraries that are used by Bolt.": "Ниже приведен перечень библиотек, используемых Bolt."
 "Body": "Тело"
 "Bolt - Fatal error.": "Bolt - Неустранимая ошибка."
 "Bolt Extension could not be found. Please check at %site% to ensure correct name.": "Расширение не было найдено. Пожалуйста пройдите по ссылке %site% чтобы проверить имя."
-general.bolt-documentation-on-github: "Документация Bolt на GitHub"
-general.bolt-on-github: "Bolt в GitHub"
 "Browse Versions": "Обзор версий"
 "Browser / platform": "Браузер / платформа"
 "Built-in role, automatically granted at all times, even if no user is logged in": "Роль, которая назначается автоматически каждый раз, даже если пользователь не залогинен"
@@ -54,8 +221,6 @@ general.bolt-on-github: "Bolt в GitHub"
 "Built-in role, only valid in the context of a resource, and automatically assigned to the owner of that resource.": "Роль, действует только в контексте ресурса, и автоматически присваивается владельцу этого ресурса."
 "Built-in superuser role, automatically grants all permissions": "Роль супер-пользователя, автоматически предоставляет все разрешения"
 "Cancel": "Отмена"
-"Cannot check for updates in read-only mode": "Невозможно проверить наличие обновления в режиме 'только для чтения'"
-"Cannot check installed packages in read-only mode": "Невозможно проверить установленные пакеты в режиме 'только для чтения'"
 "Categories": "Категории"
 "Category": "Категория"
 "Change Log": "История изменений"
@@ -65,22 +230,16 @@ general.bolt-on-github: "Bolt в GitHub"
 "Chapters": "Разделы"
 "Check again": "Проверить снова"
 "Check database": "Проверить базу данных"
-"Check for updates": "Проверить наличие обновлений"
-"Checking for available updates (this may take up to 60 seconds)": "Идет проверка на наличие обновлений (это может занять до 60 секунд)"
-"Checking installed packages": "Проверка установленных пакетов"
-contenttypes.general.choose-an-entry: "Выберите запрись"
+"Choose an entry": "Выберите запрись"
 "Class:": "Класс:"
-"Clear Activitylog": "Очистить журнал активности"
 "Clear cache again": "Очистить кэш снова"
 "Clear filter": "Сбросить фильтр"
 "Clear sort/filter": "Сбросить сортировку/фильтр"
 "Clear the cache": "Очистить кэш"
-"Clear the current log": "Очистить текущий лог"
 "Click to change current status.": "Нажмите для смены статуса."
 "Code:": "Код:"
 "Collapse sidebar": "Свернуть боковую панель"
 "Configuration": "Настройки"
-"Configure Extensions": "Настройки расширений"
 "Content": "Контент"
 "Content '%title%' could not be deleted.": "Не удалось удалить запись '%title%'."
 "Content '%title%' could not be modified.": "Не удалось изменить запись '%title%'."
@@ -111,7 +270,6 @@ contenttypes.general.choose-an-entry: "Выберите запрись"
 "Detail template": "Сведения о шаблоне"
 "Details": "Сведения"
 "Disable %username%": "Отключить %username%"
-"Do you really want to delete %foldername%?": "Вы действительно хотите удалить папку %foldername%?"
 "Done!": "Готово!"
 "Draft": "Черновик"
 "Duplicate %filename%": "Копия %filename%"
@@ -119,13 +277,9 @@ contenttypes.general.choose-an-entry: "Выберите запрись"
 "Edit file": "Редактирование файла"
 "Enable %username%": "Включить %username%"
 "Everybody": "Все"
-"Everything is up to date!": "Всё в актуальном состоянии!"
 "Excerpt": "Задержка"
 "Expand sidebar": "Развернуть боковую панель"
-"Extend ": "Продлить "
-"Extension": "Расширение"
-"Extension log": "Журнал расширений"
-"Extensions": "Расширения"
+"Extensions": "Просмотр/установка расширений"
 "Extras": "Дополнительно"
 "File": "Файл"
 "File '%file%' could not be uploaded (wrong/disallowed file type). Make sure the file extension is one of the following:": "Файл '%file%' не может быть загружен (неверный/неразрешенный тип файла). Убедитесь что расширение файла является одним из следующих:"
@@ -144,28 +298,19 @@ contenttypes.general.choose-an-entry: "Выберите запрись"
 "Fill the database with Dummy Content": "Наполнить базу данных демо-контентом"
 "Filter": "Фильтр"
 "Filtering": "Фильтрация"
-"Filtering …": "Фильтрация …"
 "Find": "Найти"
 "Floatfield": "Поле Float"
 "Folder '%s' could not be found, or is not readable.": "Папка '%s' не может быть найдена, или недоступна для чтения."
 "Folder permissions insufficient": "Недостаточно прав на чтение папки"
 "Folders": "Папки"
-"Full list …": "Full list …"
 "Geolocation": "Геолокация"
 "Global Permissions": "Глобальные права"
-"Html": "Html"
 "IP address": "IP адрес"
 "If there was a Page with 'about' for a slug, it would've been shown here. But there isn't one, so that's why you're seeing this placeholder.": "Если бы была страница с url 'about', вы бы не увидели бы этого. Покуда не таких, вот вы и видите эту строку."
-"If you would like to give the theme an alternative name you can add one here.": "Если вы хотите задать алиас для темы, вы можете добавить это здесь."
 "Image": "Изображение"
 "Imagelist": "Изображения"
 "Info": "Информация"
-"Install a new Extension": "Установить новое расширение"
 "Install all Packages": "Установить все пакеты"
-"Install all updates": "Установить все обновления"
-"Installation complete": "Установка завершена"
-"Installing package": "Установка пакета"
-"Installing selected package version (this may take up to 60 seconds).": "Установка выбранной версии пакета (это может занять до 60 секунд)."
 "Integerfield": "Поле Integer"
 "Last edited on:": "Последнее редактирование:"
 "Last known IP": "Последний известный IP"
@@ -177,7 +322,6 @@ contenttypes.general.choose-an-entry: "Выберите запрись"
 "Long messages": "Длинные сообщения"
 "Main configuration": "Основная конфигурация"
 "Maintenance": "Обслуживание"
-"Markdown": "Markdown"
 "Menu setup": "Настройка меню"
 "Message:": "Сообщение:"
 "Messages": "Сообщения"
@@ -186,12 +330,7 @@ contenttypes.general.choose-an-entry: "Выберите запрись"
 "Modifications made to the database:": "Изменения выполнены для базы данных:"
 "Modifications needed:": "Изменения необходимы:"
 "Modified": "Изменено"
-"More info/help": "Больше информации/помощь"
-"Multiselect": "Multi-select"
-"No Stable Versions Available": "Нет доступных Стабильных версий"
-"No Test Versions Available": "Нет доступных Тестовых версий"
 "No relations found!": "Не найдено связей!"
-"No results found for '%search%'. Please try another search.": "Нет результатов для '%search%'. Попробуйте другой поиск."
 "No such action for content.": "Неверное действие для контента."
 "No such action for user '%s'.": "Неверное действие для пользователя '%s'."
 "None": "Отсутствует"
@@ -200,7 +339,6 @@ contenttypes.general.choose-an-entry: "Выберите запрись"
 "Omnisearch": "Омнипоиск"
 "Options": "Настройки"
 "Order: %sort%": "Сортировка: %sort%"
-"Other contenttypes": "Другие сущности"
 "Overview": "Обзор"
 "Overview for": "Обзор для"
 "Owner": "Владелец"
@@ -215,13 +353,11 @@ contenttypes.general.choose-an-entry: "Выберите запрись"
 "Permissions": "Разрешения"
 "Place on stack": "Поместить в стек"
 "Please choose the record you want to link to:": "Пожалуйста выберите запись, с которой вы хотите сделать связь:"
-"Please enter a new file name": "Пожалуйста, введите новое имя файла"
-"Please enter a new folder name": "Пожалуйста, введите новое имя папки"
+"Please enter a new file name!": "Пожалуйста, введите новое имя файла!"
+"Please enter a new folder name!": "Пожалуйста, введите новое имя папки!"
 "Please log on.": "Пожалуйста входите."
 "Please provide a username": "Пожалуйста, введите имя пользователя"
 "Prefill database": "Предзаполнение базы данных"
-"Preparing to install package …": "Подготавливаемся установить пакет …"
-"Preparing to remove package …": "Подготавливаемся удалить пакет …"
 "Preview": "Предварительный просмотр"
 "Profile": "Профиль"
 "Provided by:": "Предоставлено:"
@@ -231,15 +367,12 @@ contenttypes.general.choose-an-entry: "Выберите запрись"
 "Published on:": "Опубликовано:"
 "Read more": "Далее"
 "Related content": "Материалы по теме"
-"Related content:": "Материалы по теме:"
 "Relationships": "Связи"
 "Rename %foldername%": "Переименовать %foldername%"
 "Roles": "Роли"
 "Roles and Permissions": "Роли и права доступа"
-menu.configuration.routing: "Установка роутинга"
 "Run all Updates": "Запустить все обновления"
 "Run update check": "Проверить обновления"
-"Running install of all packages …": "Идет установка всех пакетов …"
 "Save & create new record": "Сохранить и создать новую запись"
 "Save & return to overview": "Сохранить и показать обзор"
 "Saved on:": "Сохранено:"
@@ -248,7 +381,6 @@ menu.configuration.routing: "Установка роутинга"
 "Search for …": "Поиск для …"
 "Search results for <b> %search% </b>.": "Результаты для <b> %search% </b>."
 "Search …": "Поиск …"
-"Searching for available updates …": "Идет поиск обновлений …"
 "Select": "Выбор"
 "Select a page": "Выбрать страницу"
 "Select all": "Выбрать все"
@@ -265,13 +397,9 @@ menu.configuration.routing: "Установка роутинга"
 "Size": "Размер"
 "Skipped <tt>%key%</tt> (already has records)": "Пропущено <tt>%key%</tt> (уже имеется записи)"
 "Skipped <tt>%key%</tt> (not checked)": "Пропущено <tt>%key%</tt> (не проверено)"
-"Slug": "Slug"
-"Slug:": "Slug:"
 "Something went wrong": "Что то не так"
 "Sophisticated, lightweight & simple CMS": "Мощная, лёгкая и простая CMS"
-"Stable Versions": "Стабильные версии"
 "Stack": "Стек"
-"Status": "Статус"
 "Status:": "Статус:"
 "Tag": "Тег"
 "Tags": "Теги"
@@ -279,11 +407,7 @@ menu.configuration.routing: "Установка роутинга"
 "Teaser": "Тизер"
 "Template": "Шаблон"
 "Textarea": "Текстовое поле"
-general.thanks: "Спасибо"
 "That user does not exist.": "Пользователь не существует."
-"The database needs to be updated/repaired. Go to 'Configuration' > '<a href=\"%link%\">Check Database</a>' to do this now.": "База данных должна быть обновлена / восстановлена. Перейдите в раздел 'Настройки' -> '<a href=\"%link%\">Проверка базы данных</a>', чтобы это сделать."
-"The extensions directory (<code>%dir%</code>) does not exist, or it is not writeable.": "Папка расширений (<code>%dir%</code>) не существует, или недоступен для чтения."
-"The field %field% has been changed to \"%newValue%\"": "Поле %field% изменено на \"%newValue%\""
 "The file '%s' doesn't exist, or is not readable.": "Файл '%s' не существует, или недоступен для чтения."
 "The file '%s' is not writable. You will have to use your own editor to make modifications to this file.": "Файл '%s' недоступен для записи. Вам придется использовать собственный редактор для внесения изменений в этот файл."
 "The folder '%s' could not be found, or is not readable.": "Папка '%s' не найдена, или недоступна для чтения."
@@ -294,29 +418,19 @@ general.thanks: "Спасибо"
 "The slug '%slug%' is used in more than one contenttype. Please edit contenttypes.yml, and make them distinct.": "Slug '%slug%' уже используется для одной из сущностей. Пожалуйста, отредактируйте contenttypes.yml, и сделайте их различным друг от друга."
 "The translations file '%s' can't be created. You will have to use your own editor to make modifications to this file.": "Файл перевода '%s' не может быть создан. Вам необходимо используя свой редактор чтобы сделать изменения для этого файла."
 "The translations file '%s' is not readable.": "Перевод '%s' недоступен для чтения."
-"The versions listed below are compatible with the version of Bolt you are using. Since they are unstable versions, we recommend you <strong>do not</strong> use these on production systems.": "Следующие версии совместимы с версией Bolt которую вы используете. Если у них нет стабильных версий, мы рекомендуем <strong>не использовать</strong> на продакшене."
-"The versions listed below are marked as stable releases by the developer and are compatible with the version of Bolt you are currently using.": "Следующие версии помечены как стабильные разработчиком и совместимы с версией Bolt которую вы используете."
-"Theme Installation Complete": "Установка темы завершено"
 "There are no items on the Stack, yet.": "В стеке пока файлов нет."
 "There are no users in the database. Please create the first user.": "В базе данных нет пользователей. Пожалуйста, создайте одного."
 "There are no users present in the system. Please create the first user, which will be granted root privileges.": "В системе нет ни одного пользователя. Пожалуйста создайте одного, которому будут доступны root привилегии."
 "There should always be at least one 'root' user. You have just been promoted. Congratulations!": "Всегда должен быть хотя бы один 'root' пользователь. Вы только что были повышены. Поздравляем!"
 "This is a checkbox": "Это чекбокс"
 "This record is related to:": "Эта запись относится к:"
-"This website is <a href='%url%' target='_blank' title='Sophisticated, lightweight & simple CMS'>Built with Bolt</a>.": "Сайт <a href='%url%' target='_blank' title='Мощная, лёгкая и простая CMS'>использует Bolt CMS</a>."
-"This will install all available updates.": "Это установит все доступные обновления."
-"This will make sure all packages listed are installed. Use this if you've recently moved to a new server or if you have manually added an extension.": "Это проверит, все ли текущие пакеты установлены. Используйте это если вы переехали на новый сервер, или добавили новый пакет вручную."
-"This won't install anything, just show you available updates": "Это не установка, только показывает доступные обновления"
 "Timed publish": "Отложенная публикация"
 "Tip:": "Подсказка:"
 "Title": "Заголовок"
 "Translations": "Переводы"
-"Trim Activitylog": "Обрезать лог активности"
 "Try logging in with your ftp-client and make the file readable. Else try to go <a>back</a> to the last page.": "Попробуйте зайти при помощи ftp-клиента и сделать эти файл доступными для чтения. Или пройдите <a>назад</a> на последнюю страницу."
 "Types": "Типы"
-"Unstable Test Versions": "Нестабильные Тестовые версии"
 "Update the database": "Обновить базу данных"
-"Updates": "Обновления"
 "Upload": "Загрузка"
 "Upload a file to this folder": "Загрузить файл в эту папку"
 "Upload file": "Загрузить файл"
@@ -333,18 +447,13 @@ general.thanks: "Спасибо"
 "Username": "Имя пользователя"
 "Username or password not correct. Please check your input.": "Имя пользователя или пароль неверный. Попробуйте еще раз."
 "Users": "Пользователи"
-"Version": "Версия"
-"Version:": "Версия:"
 "Video": "Видео"
 "View (saved version) on site": "Просмотр (сохранённой версии) на сайте"
 "View on site": "Просмотреть на сайте"
 "View related content": "Посмотреть материалы по теме"
 "View site": "Открыть сайт"
 "View/edit Templates": "Просмотр/редактирование шаблонов"
-"View/install Extensions": "Просмотр/установка расширений"
 "Written by <em>%name%</em> on %date%": "Написано <em>%name%</em> от %date%"
-"You can discover new extensions by visiting": "Вы можете просмотреть новые расширения пройдя"
-"You can now start using the installed extension, documentation and implementation instructions can be found using the link below.": "Теперь вы можете использовать установленное расширение, документация по использованию вы можете найти по ссылке ниже."
 "You do not have the right privileges to create a new record.": "У вас недостаточно прав на создание новой записи."
 "You do not have the right privileges to edit that record.": "У вас недостаточно прав на редактирование этой записи."
 "You do not have the right privileges to view that page.": "У вас недостаточно прав на просмотр этой страницы."
@@ -353,29 +462,29 @@ general.thanks: "Спасибо"
 "You have been logged out.": "Вы успешно разлогинились."
 "You should set 'homepage:' in your 'app/config/config.yml' to an existing record. Make sure that the content is published, otherwise it will not be shown.": "Вы должны установить 'homepage:' в вашем 'app/config/config.yml' на существующую запись. Убедитесь, что контент опубликован, в противном случае он не будет показан."
 "You've been logged on successfully.": "Вы успешно вошли."
-"Your Currently Installed Extensions": "Ваши текущие установленные расширения"
 "Your account is disabled. Sorry about that.": "Ваш аккаунт был заблокирован. Мы сожалеем об этом."
 "Your database is already up to date.": "Ваша база данных актуальна."
 "Your database is now up to date.": "Ваша база данных теперь актуальна."
-users.your-password: "Ваш пароль"
 "and edited": "и редактирован"
 "back to editing": "назад к редактированию"
-"by": ""
-"in:": "в:"
+"general.about": "О проекте"
+"general.about-bolt": "О Bolt"
+"general.bolt-on-github": "Bolt в GitHub"
 "line": "строка"
+"logs.change-log": "История изменений"
 "no content …": "нет контента …"
 "no title …": "нет заголовка …"
 "none": "отсутствует"
 "of": "из"
 "show all": "показать все"
+"users.actions-for-users": "Действия пользователей"
+"users.your-password": "Ваш пароль"
 
-#--- 130 keyword based translations -------------------------------------------
+#--- 120 keyword based translations -------------------------------------------
 
 component:
     changelog-detail:
-        by: ""
         field: "поле"
-        no-comment: "Без комментариев"
         value-new: "Новое значение"
         value-old: "Старое значение"
     changelog-pager:
@@ -390,7 +499,10 @@ contenttypes:
         duplicate: "Дублирование %contenttype%"
         duplicated-finalize: "Контент дублируется. Нажмите 'Сохранить %contenttype%' для подтверждения."
         edit: "Редактирование %contenttype%"
-        error-saving: "Произошла ошибка во время сохранения %contenttype%."
+        group:
+            meta: "Мета"
+            relations: "Связи"
+            taxonomy: "Таксономия"
         invalid-field: "Невозможно установить %field% в %contenttype%: Поле недействительно."
         last-modified: "Последнее редактирование %contenttypes%"
         new: "Новый %contenttype%"
@@ -417,7 +529,6 @@ field:
     general:
         allowed-filetypes: "Доступные типы файлов:"
         select-from-server: "Выбрать из сервера"
-        select-from-stack: "Выбрать из стека"
     geolocation:
         label:
             address-lookup: "Поиск адреса"
@@ -427,10 +538,10 @@ field:
         matched-address: "Найденный адрес"
         placeholder:
             address: "Улица, ZIP код, город или другое местоположение"
+    markdown:
+        label:
+            preview: "Предварительный просмотр"
     slug:
-        message:
-            set: "Установить slug для:"
-            unlock: "Вы уверены что хотите разблокировать slug? Это может сломать существуюшие ссылки на эту запись."
         permalink: "Постоянная ссылка"
     video:
         button:
@@ -443,9 +554,6 @@ field:
         pixel: "пиксель"
         placeholder:
             url: "Адрес ролика на Youtube, Vimeo или другого ресурса"
-        preview:
-            button.close: "Закрыть"
-            no-url: "Ролик не задан, нет видео для показа."
 
 generic:
     noscript:
@@ -457,7 +565,6 @@ page:
         files: "Файлы"
         folders: "Папки"
         modified: "Изменен"
-        pixel: "px."
         size: "Размер файла"
         title: "Файлы"
     dashboard:
@@ -472,7 +579,6 @@ page:
             save: "Сохранить"
         confirm-revert: "Вы действительно хотите откатить изменения? Все не сохранённые данные будут утеряны."
         note-related: "Примечание, файл имеет связанные файлы:"
-        path: "Путь:"
         title:
             edit: "Редактировать файл"
             view: "Просмотр файла"
@@ -491,13 +597,12 @@ page:
         error:
             displayname-used: "Отображаемое имя уже занято. Выберите другое отображаемое имя."
             email-used: "Этот email уже занят. Пожалуйста выберите другое email адрес."
-            password-mismatch: "Пароли не совпадают."
+            password-mismatch: "Пароли должны совпадать."
             password-short: "Пароль слишком короткий. Пароль должен быть длинное 6 и более символов."
             username-used: "Имя пользователя уже занято. Выберите другое имя пользователя."
         label:
             assigned-roles: "Назначенные роли"
             display-name: "Отображаемое имя"
-            email: "Email"
             last-ip: "Последний IP"
             last-seen: "Последний раз заходил"
             password: "Пароль"
@@ -532,7 +637,7 @@ page:
         cookies-required: "Примечание: Сookies необходимы чтобы войти в Bolt. Пожалуйста, разрешите использование Cookies в настройках."
         label:
             password: "Пароль"
-            username: "Имя пользователя"
+            username: "Имя пользователя / email"
         password-hide: "Скрыть"
         password-show: "Показать"
         placeholder:
@@ -543,8 +648,6 @@ panel:
     latest-activity:
         button:
             more: "больше активности"
-        by: ""
-        fixme: "Отредактируй меня:"
         logged-in: "Вошел в систему"
         logged-out: "Вышел из системы"
         saved: "Сохранён"

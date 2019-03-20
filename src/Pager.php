@@ -52,14 +52,10 @@ class Pager extends \ArrayObject
         } else {
             unset($parameters['page']);
         }
-        array_walk(
-            $parameters,
-            function (&$item, $key) {
-                $item = "$key=$item";
-            }
-        );
-        $parameters[] = $pageid . '=';
-        $link = '?' . implode('&', $parameters);
+
+        $parameters[$pageid] = '';
+        $currentUrl = $this->app['resources']->getUrl('current');
+        $link = $currentUrl . '?' . http_build_query($parameters);
 
         return $link;
     }

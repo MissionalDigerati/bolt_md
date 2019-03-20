@@ -48,7 +48,7 @@ class Extend implements ControllerProviderInterface, ServiceProviderInterface
 
         $app['extend.info'] = $app->share(
             function ($app) {
-                return new ExtensionsInfoService($app['extend.site'], $app['extend.urls']);
+                return new ExtensionsInfoService($app['guzzle.client'], $app['extend.site'], $app['extend.urls'], $app['deprecated.php']);
             }
         );
     }
@@ -117,7 +117,7 @@ class Extend implements ControllerProviderInterface, ServiceProviderInterface
      * @param Request            $request
      * @param \Silex\Application $app
      *
-     * @return string
+     * @return null|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function before(Request $request, Silex\Application $app)
     {
@@ -171,7 +171,7 @@ class Extend implements ControllerProviderInterface, ServiceProviderInterface
     {
         $theme = $request->get('theme');
         $newName = $request->get('name');
-        
+
         if (empty($theme)) {
             return new Response(Trans::__('No theme name found. Theme is not generated.'));
         }
@@ -197,6 +197,8 @@ class Extend implements ControllerProviderInterface, ServiceProviderInterface
                 return new Response(Trans::__('We were unable to generate the theme. It is likely that your theme directory is not writable by Bolt. Check the permissions and try reinstalling.'));
             }
         }
+
+        throw new PackageManagerException("Invalid theme source directory: $source");
     }
 
     /**
@@ -284,12 +286,10 @@ class Extend implements ControllerProviderInterface, ServiceProviderInterface
         $package = $request->get('package');
         $versions = array('dev' => array(), 'stable' => array());
         $info = $app['extend.info']->info($package, $app['bolt_version']);
-        if (isset($info->version)) {
+        if (isset($info->version) && is_array($info->version)) {
             foreach ($info->version as $version) {
                 $versions[$version->stability][] = $version;
             }
-        } else {
-            $versions = array('error' => true, 'dev' => array(), 'stable' => array());
         }
 
         return new JsonResponse($versions);
