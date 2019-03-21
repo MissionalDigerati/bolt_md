@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -27,9 +27,9 @@ class Twig_NodeVisitor_Sandbox extends Twig_BaseNodeVisitor
     {
         if ($node instanceof Twig_Node_Module) {
             $this->inAModule = true;
-            $this->tags = array();
-            $this->filters = array();
-            $this->functions = array();
+            $this->tags = [];
+            $this->filters = [];
+            $this->functions = [];
 
             return $node;
         } elseif ($this->inAModule) {
@@ -48,6 +48,11 @@ class Twig_NodeVisitor_Sandbox extends Twig_BaseNodeVisitor
                 $this->functions[$node->getAttribute('name')] = $node;
             }
 
+            // the .. operator is equivalent to the range() function
+            if ($node instanceof Twig_Node_Expression_Binary_Range && !isset($this->functions['range'])) {
+                $this->functions['range'] = $node;
+            }
+
             // wrap print to check __toString() calls
             if ($node instanceof Twig_Node_Print) {
                 return new Twig_Node_SandboxedPrint($node->getNode('expr'), $node->getTemplateLine(), $node->getNodeTag());
@@ -62,7 +67,7 @@ class Twig_NodeVisitor_Sandbox extends Twig_BaseNodeVisitor
         if ($node instanceof Twig_Node_Module) {
             $this->inAModule = false;
 
-            $node->setNode('display_start', new Twig_Node(array(new Twig_Node_CheckSecurity($this->filters, $this->tags, $this->functions), $node->getNode('display_start'))));
+            $node->setNode('display_start', new Twig_Node([new Twig_Node_CheckSecurity($this->filters, $this->tags, $this->functions), $node->getNode('display_start')]));
         }
 
         return $node;
@@ -73,3 +78,5 @@ class Twig_NodeVisitor_Sandbox extends Twig_BaseNodeVisitor
         return 0;
     }
 }
+
+class_alias('Twig_NodeVisitor_Sandbox', 'Twig\NodeVisitor\SandboxNodeVisitor', false);

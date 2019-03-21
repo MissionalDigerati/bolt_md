@@ -6,12 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Bolt\\Composer\\ExtensionInstaller' => $baseDir . '/ExtensionInstaller.php',
-    'Bolt\\Extension\\Bolt\\GoogleAnalytics\\Extension' => $vendorDir . '/bolt/googleanalytics/Extension.php',
-    'Bolt\\Extension\\Bolt\\SimpleForms\\Extension' => $vendorDir . '/bolt/simpleforms/Extension.php',
-    'Bolt\\Extension\\MissionalDigerati\\BoltClassManager\\Extension' => $baseDir . '/local/missionaldigerati/boltclassmanager/Extension.php',
-    'Bolt\\Extension\\MissionalDigerati\\BoltPiconSelector\\Extension' => $baseDir . '/local/missionaldigerati/boltpiconselector/Extension.php',
-    'Bolt\\Extension\\MissionalDigerati\\BoltPiconSelector\\PiconSelectorField' => $baseDir . '/local/missionaldigerati/boltpiconselector/PiconSelectorField.php',
-    'Bolt\\Extension\\MissionalDigerati\\BoltPrivateContent\\Extension' => $baseDir . '/local/missionaldigerati/boltprivatecontent/Extension.php',
-    'Bolt\\Extension\\MissionalDigerati\\BoltRelatedSort\\Extension' => $baseDir . '/local/missionaldigerati/boltrelatedsort/Extension.php',
+    'Example\\EventChoice' => $vendorDir . '/bolt/boltforms/docs/example/Choice/EventChoice.php',
+    'Example\\StaticChoice' => $vendorDir . '/bolt/boltforms/docs/example/Choice/StaticChoice.php',
+    'Example\\TraversableChoice' => $vendorDir . '/bolt/boltforms/docs/example/Choice/TraversableChoice.php',
 );

@@ -3,8 +3,8 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2010 Fabien Potencier
- * (c) 2010 Arnaud Le Blanc
+ * (c) Fabien Potencier
+ * (c) Arnaud Le Blanc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -38,7 +38,7 @@ interface Twig_TokenParserBrokerInterface
     /**
      * Gets the Twig_ParserInterface.
      *
-     * @return null|Twig_ParserInterface A Twig_ParserInterface instance or null
+     * @return Twig_ParserInterface|null A Twig_ParserInterface instance or null
      */
     public function getParser();
 }

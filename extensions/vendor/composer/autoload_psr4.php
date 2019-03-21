@@ -6,12 +6,11 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Bolt\\Extension\\MissionalDigerati\\RelatedSort\\' => array($baseDir . '/local/missionaldigerati/boltutilitybox'),
-    'Bolt\\Extension\\MissionalDigerati\\BoltRelatedSort\\' => array($baseDir . '/local/missionaldigerati/boltrelatedsort'),
-    'Bolt\\Extension\\MissionalDigerati\\BoltPrivateContent\\' => array($baseDir . '/local/missionaldigerati/boltprivatecontent'),
-    'Bolt\\Extension\\MissionalDigerati\\BoltPiconSelector\\' => array($baseDir . '/local/missionaldigerati/boltpiconselector'),
-    'Bolt\\Extension\\MissionalDigerati\\BoltClassManager\\' => array($baseDir . '/local/missionaldigerati/boltclassmanager'),
-    'Bolt\\Extension\\Bolt\\SimpleForms\\' => array($vendorDir . '/bolt/simpleforms'),
-    'Bolt\\Extension\\Bolt\\GoogleAnalytics\\' => array($vendorDir . '/bolt/googleanalytics'),
-    'Bolt\\Composer\\' => array($baseDir . '/'),
+    'ReCaptcha\\' => array($vendorDir . '/google/recaptcha/src/ReCaptcha'),
+    'Bolt\\Extension\\MissionalDigerati\\BoltUtilityBox\\' => array($vendorDir . '/missionaldigerati/boltutilitybox/src'),
+    'Bolt\\Extension\\MissionalDigerati\\BoltPiconSelector\\' => array($vendorDir . '/missionaldigerati/boltpiconselector/src'),
+    'Bolt\\Extension\\Bolt\\GoogleAnalytics\\' => array($vendorDir . '/bolt/googleanalytics/src'),
+    'Bolt\\Extension\\Bolt\\EmailSpooler\\' => array($vendorDir . '/bolt/email-spooler/src'),
+    'Bolt\\Extension\\Bolt\\BoltForms\\' => array($vendorDir . '/bolt/boltforms/src'),
+    'Bolt\\Composer\\EventListener\\' => array($baseDir . '/../vendor/bolt/bolt/src/Composer/EventListener'),
 );

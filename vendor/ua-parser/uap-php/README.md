@@ -1,8 +1,11 @@
 # ua-parser PHP Library #
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ua-parser/uap-php?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/ua-parser/uap-php.svg?branch=master)](https://travis-ci.org/ua-parser/uap-php) [![Dependency Status](https://www.versioneye.com/user/projects/54b2a6f48014baeded000219/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54b2a6f48014baeded000219) [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/ua-parser/uap-php.svg)](http://isitmaintained.com/project/ua-parser/uap-php "Average time to resolve an issue") [![Percentage of issues still open](http://isitmaintained.com/badge/open/ua-parser/uap-php.svg)](http://isitmaintained.com/project/ua-parser/uap-php "Percentage of issues still open")
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ua-parser/uap-php?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/ua-parser/uap-php.svg?branch=master)](https://travis-ci.org/ua-parser/uap-php) [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/ua-parser/uap-php.svg)](http://isitmaintained.com/project/ua-parser/uap-php "Average time to resolve an issue") [![Percentage of issues still open](http://isitmaintained.com/badge/open/ua-parser/uap-php.svg)](http://isitmaintained.com/project/ua-parser/uap-php "Percentage of issues still open")
 
 This is the PHP library for the [uap-core](https://github.com/ua-parser/uap-core) project.
+
+## Installation ##
+Add `ua-parser/uap-php` to the require section of your `composer.json` file and run `composer update`.  
 
 ## Demo ##
 
@@ -119,5 +122,3 @@ Also, many thanks to the following major contributors to the PHP library:
 * The initial list of generic feature phones & smartphones came from Mobile Web OSP under the MIT license
 * The initial list of spiders was taken from Yiibu's profile project under the MIT license.
 
-## Installation ##
-Add `ua-parser/uap-php` to the require section of your `composer.json` file and run `composer update`.  

@@ -1,84 +1,158 @@
 [
     {
-        "name": "bolt/simpleforms",
-        "version": "1.3",
-        "version_normalized": "1.3.0.0",
+        "name": "bolt/boltforms",
+        "version": "v4.2.6",
+        "version_normalized": "4.2.6.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/jadwigo/SimpleForms.git",
-            "reference": "2e0e1ce0cae1447d92ec79626af00fc027c584d2"
+            "url": "https://github.com/bolt/boltforms.git",
+            "reference": "bdbaef3aea1efe3e94993390c5da12eeb5f00ede"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/jadwigo/SimpleForms/zipball/2e0e1ce0cae1447d92ec79626af00fc027c584d2",
-            "reference": "2e0e1ce0cae1447d92ec79626af00fc027c584d2",
+            "url": "https://api.github.com/repos/bolt/boltforms/zipball/bdbaef3aea1efe3e94993390c5da12eeb5f00ede",
+            "reference": "bdbaef3aea1efe3e94993390c5da12eeb5f00ede",
             "shasum": ""
         },
         "require": {
-            "bolt/bolt": ">=2.0.0,<3.0.0"
+            "bolt/bolt": "^3.0",
+            "bolt/email-spooler": "^3.0",
+            "google/recaptcha": "^1.1.2"
         },
-        "time": "2015-04-30 15:26:29",
+        "require-dev": {
+            "phpunit/phpunit": "^4.7"
+        },
+        "suggest": {
+            "rossriley/formeditor": "A UI editor for form configuration."
+        },
+        "time": "2019-01-24T17:10:52+00:00",
         "type": "bolt-extension",
         "extra": {
+            "bolt-assets": "web",
+            "bolt-class": "Bolt\\Extension\\Bolt\\BoltForms\\BoltFormsExtension",
+            "bolt-icon": "icon-boltforms.png",
             "branch-alias": {
-                "dev-master": "1.*"
+                "dev-4.0": "4.0.x-dev"
             }
         },
         "installation-source": "dist",
         "autoload": {
-            "files": [
-                "init.php"
-            ],
             "psr-4": {
-                "Bolt\\Extension\\Bolt\\SimpleForms\\": ""
+                "Bolt\\Extension\\Bolt\\BoltForms\\": [
+                    "src/"
+                ]
+            },
+            "classmap": [
+                "docs/example/"
+            ]
+        },
+        "autoload-dev": {
+            "psr-4": {
+                "Bolt\\Extension\\Bolt\\BoltForms\\Tests\\": "tests/",
+                "Bolt\\Tests\\": "vendor/bolt/bolt/tests/phpunit/unit/"
             }
         },
+        "license": [
+            "GPL-3.0+",
+            "LGPL-3.0+"
+        ],
         "authors": [
             {
-                "name": "Lodewijk Evers",
-                "email": "lodewijk@twokings.nl",
-                "homepage": "https://github.com/jadwigo"
+                "name": "Gawain Lynch",
+                "email": "gawain.lynch@gmail.com"
             }
         ],
-        "description": "This extension will allow you to insert simple forms on your site, for users to get in touch, send you a quick note or something like that. To use, configure the required fields in config.yml, and place <code>{{ simpleform('contact') }}</code> in your templates.",
+        "description": "Powerful and flexible HTML form generator for Bolt based on Symfony Forms",
         "keywords": [
-            "email",
+            "comments",
+            "contact",
             "forms",
-            "input",
-            "upload"
+            "reCaptcha",
+            "uploads"
         ],
         "support": {
-            "source": "https://github.com/jadwigo/SimpleForms/tree/1.3",
-            "issues": "https://github.com/jadwigo/SimpleForms/issues"
+            "source": "https://github.com/bolt/boltforms/tree/4.2",
+            "issues": "https://github.com/bolt/boltforms/issues"
+        }
+    },
+    {
+        "name": "bolt/email-spooler",
+        "version": "v3.1.1",
+        "version_normalized": "3.1.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/bolt/bolt-extension-email-spooler.git",
+            "reference": "75a0e2dd2bd004af623d22a8d24d33be986ba9cf"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/bolt/bolt-extension-email-spooler/zipball/75a0e2dd2bd004af623d22a8d24d33be986ba9cf",
+            "reference": "75a0e2dd2bd004af623d22a8d24d33be986ba9cf",
+            "shasum": ""
+        },
+        "require": {
+            "bolt/bolt": "^3.3",
+            "php": ">=5.5.9"
+        },
+        "time": "2018-05-19T14:33:45+00:00",
+        "type": "bolt-extension",
+        "extra": {
+            "bolt-class": "Bolt\\Extension\\Bolt\\EmailSpooler\\EmailSpoolerExtension",
+            "branch-alias": {
+                "dev-master": "3.1.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Bolt\\Extension\\Bolt\\EmailSpooler\\": "src"
+            }
+        },
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Gawain Lynch",
+                "email": "gawain.lynch@gmail.com"
+            }
+        ],
+        "keywords": [
+            "email",
+            "spool"
+        ],
+        "support": {
+            "source": "https://github.com/bolt/bolt-extension-email-spooler/tree/master"
         }
     },
     {
         "name": "bolt/googleanalytics",
-        "version": "v1.0.1",
-        "version_normalized": "1.0.1.0",
+        "version": "v2.1.4",
+        "version_normalized": "2.1.4.0",
         "source": {
             "type": "git",
             "url": "https://github.com/bolt/GoogleAnalytics.git",
-            "reference": "ed62b081e174a6655d26f0a08f4ff505b3ddf6fa"
+            "reference": "e7f4f5b9ea0ce3a6aa50c02f7fc676512c805a86"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/bolt/GoogleAnalytics/zipball/ed62b081e174a6655d26f0a08f4ff505b3ddf6fa",
-            "reference": "ed62b081e174a6655d26f0a08f4ff505b3ddf6fa",
+            "url": "https://api.github.com/repos/bolt/GoogleAnalytics/zipball/e7f4f5b9ea0ce3a6aa50c02f7fc676512c805a86",
+            "reference": "e7f4f5b9ea0ce3a6aa50c02f7fc676512c805a86",
             "shasum": ""
         },
         "require": {
-            "bolt/bolt": ">=2.0.0,<3.0.0"
+            "bolt/bolt": "^3.3"
         },
-        "time": "2014-12-02 14:15:44",
+        "time": "2018-10-23T14:08:54+00:00",
         "type": "bolt-extension",
+        "extra": {
+            "bolt-assets": "web",
+            "bolt-class": "Bolt\\Extension\\Bolt\\GoogleAnalytics\\GoogleAnalyticsExtension"
+        },
         "installation-source": "dist",
         "autoload": {
-            "files": [
-                "init.php"
-            ],
             "psr-4": {
-                "Bolt\\Extension\\Bolt\\GoogleAnalytics\\": ""
+                "Bolt\\Extension\\Bolt\\GoogleAnalytics\\": "src"
             }
         },
         "license": [
@@ -88,11 +162,219 @@
             {
                 "name": "Bob den Otter",
                 "email": "bob@twokings.nl"
+            },
+            {
+                "name": "Aaron Valandra",
+                "email": "avaland@woopta.com"
+            },
+            {
+                "name": "Gawain Lynch",
+                "email": "gawain.lynch@gmail.com"
             }
         ],
+        "description": "A Google Analytics extension for Bolt",
+        "keywords": [
+            "analytics",
+            "google",
+            "statistics"
+        ],
         "support": {
-            "source": "https://github.com/bolt/GoogleAnalytics/tree/v1.0.1",
+            "source": "https://github.com/bolt/GoogleAnalytics/tree/v2.1.4",
             "issues": "https://github.com/bolt/GoogleAnalytics/issues"
+        }
+    },
+    {
+        "name": "google/recaptcha",
+        "version": "1.2.1",
+        "version_normalized": "1.2.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/google/recaptcha.git",
+            "reference": "e7add3be59211482ecdb942288f52da64a35f61a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/google/recaptcha/zipball/e7add3be59211482ecdb942288f52da64a35f61a",
+            "reference": "e7add3be59211482ecdb942288f52da64a35f61a",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.5"
+        },
+        "require-dev": {
+            "friendsofphp/php-cs-fixer": "^2.2.20|^2.12",
+            "php-coveralls/php-coveralls": "^2.1",
+            "phpunit/phpunit": "^4.8.36|^5.7.27|^6.59|^7"
+        },
+        "time": "2018-08-05T09:31:53+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.2.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "ReCaptcha\\": "src/ReCaptcha"
+            }
+        },
+        "scripts": {
+            "lint": [
+                "vendor/bin/php-cs-fixer -vvv fix --using-cache=no --dry-run ."
+            ],
+            "lint-fix": [
+                "vendor/bin/php-cs-fixer -vvv fix --using-cache=no ."
+            ],
+            "test": [
+                "vendor/bin/phpunit --colors=always"
+            ],
+            "serve-examples": [
+                "@php -S localhost:8080 -t examples"
+            ]
+        },
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "Client library for reCAPTCHA, a free service that protects websites from spam and abuse.",
+        "homepage": "https://www.google.com/recaptcha/",
+        "keywords": [
+            "abuse",
+            "captcha",
+            "recaptcha",
+            "spam"
+        ],
+        "support": {
+            "forum": "https://groups.google.com/forum/#!forum/recaptcha",
+            "source": "https://github.com/google/recaptcha",
+            "issues": "https://github.com/google/recaptcha/issues"
+        }
+    },
+    {
+        "name": "missionaldigerati/boltpiconselector",
+        "version": "3.0.0",
+        "version_normalized": "3.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/MissionalDigerati/BoltPiconSelector.git",
+            "reference": "1f5b796b1319f83b724865aac6415d686c3b1a4b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/MissionalDigerati/BoltPiconSelector/zipball/1f5b796b1319f83b724865aac6415d686c3b1a4b",
+            "reference": "1f5b796b1319f83b724865aac6415d686c3b1a4b",
+            "shasum": ""
+        },
+        "require": {
+            "bolt/bolt": "^3.3"
+        },
+        "require-dev": {
+            "squizlabs/php_codesniffer": "^3.4"
+        },
+        "time": "2019-03-20T23:17:14+00:00",
+        "type": "bolt-extension",
+        "extra": {
+            "bolt-assets": "web",
+            "bolt-class": "Bolt\\Extension\\MissionalDigerati\\BoltPiconSelector\\BoltPiconSelectorExtension",
+            "bolt-icon": "bolt-icon.png",
+            "bolt-screenshots": []
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Bolt\\Extension\\MissionalDigerati\\BoltPiconSelector\\": "src"
+            }
+        },
+        "scripts": {
+            "lint": [
+                "phpcs --standard=PSR2 src/"
+            ]
+        },
+        "license": [
+            "GPL-3.0+"
+        ],
+        "authors": [
+            {
+                "name": "Missional Digerati",
+                "email": "johnathan@missionaldigerati.org",
+                "homepage": "http://missionaldigerati.org"
+            }
+        ],
+        "description": "An extension for the Bolt CMS that creates a custom field for selecting a Picons icon.",
+        "keywords": [
+            "custom",
+            "field",
+            "picon",
+            "selector"
+        ],
+        "support": {
+            "source": "https://github.com/MissionalDigerati/BoltPiconSelector/tree/3.0.0",
+            "issues": "https://github.com/MissionalDigerati/BoltPiconSelector/issues"
+        }
+    },
+    {
+        "name": "missionaldigerati/boltutilitybox",
+        "version": "3.1.0",
+        "version_normalized": "3.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/MissionalDigerati/BoltUtilityBox.git",
+            "reference": "191cdb8b7cba4a5f89b5c7956baa70ef533850cb"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/MissionalDigerati/BoltUtilityBox/zipball/191cdb8b7cba4a5f89b5c7956baa70ef533850cb",
+            "reference": "191cdb8b7cba4a5f89b5c7956baa70ef533850cb",
+            "shasum": ""
+        },
+        "require": {
+            "bolt/bolt": "^3.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^7.5",
+            "squizlabs/php_codesniffer": "^3.4"
+        },
+        "time": "2019-03-21T18:35:08+00:00",
+        "type": "bolt-extension",
+        "extra": {
+            "bolt-assets": "web",
+            "bolt-class": "Bolt\\Extension\\MissionalDigerati\\BoltUtilityBox\\BoltUtilityBoxExtension",
+            "bolt-icon": "bolt-icon.png",
+            "bolt-screenshots": []
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Bolt\\Extension\\MissionalDigerati\\BoltUtilityBox\\": "src"
+            }
+        },
+        "scripts": {
+            "lint": [
+                "phpcs --standard=PSR2 src/"
+            ],
+            "test": [
+                "phpunit --colors=always tests/"
+            ]
+        },
+        "license": [
+            "GPL-3.0+"
+        ],
+        "authors": [
+            {
+                "name": "Missional Digerati",
+                "email": "johnathan@missionaldigerati.org",
+                "homepage": "http://missionaldigerati.org"
+            }
+        ],
+        "description": "Bolt Utility Box contains various utility methods for Bolt CMS.",
+        "keywords": [
+            "methods",
+            "twig",
+            "utility"
+        ],
+        "support": {
+            "source": "https://github.com/MissionalDigerati/BoltUtilityBox/tree/3.1.0",
+            "issues": "https://github.com/MissionalDigerati/BoltUtilityBox/issues"
         }
     }
 ]

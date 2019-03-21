@@ -60,20 +60,32 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
             throw new \InvalidArgumentException('Package '.$package->getPrettyName().' is missing reference information');
         }
 
-        $this->io->writeError("  - Installing <info>" . $package->getName() . "</info> (<comment>" . $package->getFullPrettyVersion() . "</comment>)");
+        $this->io->writeError("  - Installing <info>" . $package->getName() . "</info> (<comment>" . $package->getFullPrettyVersion() . "</comment>): ", false);
         $this->filesystem->emptyDirectory($path);
 
         $urls = $package->getSourceUrls();
         while ($url = array_shift($urls)) {
             try {
                 if (Filesystem::isLocalPath($url)) {
-                    # realpath() below will not understand
-                    # url that starts with "file://"
+                    // realpath() below will not understand
+                    // url that starts with "file://"
                     $needle = 'file://';
+                    $isFileProtocol = false;
                     if (0 === strpos($url, $needle)) {
                         $url = substr($url, strlen($needle));
+                        $isFileProtocol = true;
                     }
+
+                    // realpath() below will not understand %20 spaces etc.
+                    if (false !== strpos($url, '%')) {
+                        $url = rawurldecode($url);
+                    }
+
                     $url = realpath($url);
+
+                    if ($isFileProtocol) {
+                        $url = $needle . $url;
+                    }
                 }
                 $this->doDownload($package, $path, $url);
                 break;
@@ -92,8 +104,6 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
                 }
             }
         }
-
-        $this->io->writeError('');
     }
 
     /**
@@ -120,7 +130,8 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
             $to = $target->getFullPrettyVersion();
         }
 
-        $this->io->writeError("  - Updating <info>" . $name . "</info> (<comment>" . $from . "</comment> => <comment>" . $to . "</comment>)");
+        $actionName = VersionParser::isUpgrade($initial->getVersion(), $target->getVersion()) ? 'Updating' : 'Downgrading';
+        $this->io->writeError("  - " . $actionName . " <info>" . $name . "</info> (<comment>" . $from . "</comment> => <comment>" . $to . "</comment>): ", false);
 
         $this->cleanChanges($initial, $path, true);
         $urls = $target->getSourceUrls();
@@ -177,8 +188,6 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
         if (!$urls && $exception) {
             throw $exception;
         }
-
-        $this->io->writeError('');
     }
 
     /**

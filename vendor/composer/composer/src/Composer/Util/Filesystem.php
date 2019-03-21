@@ -103,6 +103,10 @@ class Filesystem
             return $this->removeJunction($directory);
         }
 
+        if (is_link($directory)) {
+            return unlink($directory);
+        }
+
         if (!file_exists($directory) || !is_dir($directory)) {
             return true;
         }
@@ -247,27 +251,44 @@ class Filesystem
      */
     public function copyThenRemove($source, $target)
     {
+        $this->copy($source, $target);
         if (!is_dir($source)) {
-            copy($source, $target);
             $this->unlink($source);
 
             return;
+        }
+
+        $this->removeDirectoryPhp($source);
+    }
+
+    /**
+     * Copies a file or directory from $source to $target.
+     *
+     * @param string $source
+     * @param string $target
+     * @return bool
+     */
+    public function copy($source, $target)
+    {
+        if (!is_dir($source)) {
+            return copy($source, $target);
         }
 
         $it = new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS);
         $ri = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::SELF_FIRST);
         $this->ensureDirectoryExists($target);
 
+        $result = true;
         foreach ($ri as $file) {
             $targetPath = $target . DIRECTORY_SEPARATOR . $ri->getSubPathName();
             if ($file->isDir()) {
                 $this->ensureDirectoryExists($targetPath);
             } else {
-                copy($file->getPathname(), $targetPath);
+                $result = $result && copy($file->getPathname(), $targetPath);
             }
         }
 
-        $this->removeDirectoryPhp($source);
+        return $result;
     }
 
     public function rename($source, $target)
@@ -477,7 +498,7 @@ class Filesystem
      */
     public static function isLocalPath($path)
     {
-        return (bool) preg_match('{^(file://|/|/?[a-z]:[\\\\/]|\.\.[\\\\/]|[a-z0-9_.-]+[\\\\/])}i', $path);
+        return (bool) preg_match('{^(file://(?!//)|/(?!/)|/?[a-z]:[\\\\/]|\.\.[\\\\/]|[a-z0-9_.-]+[\\\\/])}i', $path);
     }
 
     public static function getPlatformPath($path)
@@ -506,7 +527,7 @@ class Filesystem
 
     protected function getProcess()
     {
-        return new ProcessExecutor;
+        return $this->processExecutor;
     }
 
     /**
@@ -544,7 +565,7 @@ class Filesystem
 
         chdir($cwd);
 
-        return (bool) $result;
+        return $result;
     }
 
     /**
@@ -613,9 +634,11 @@ class Filesystem
         if (!is_dir($target)) {
             throw new IOException(sprintf('Cannot junction to "%s" as it is not a directory.', $target), 0, null, $target);
         }
-        $cmd = sprintf('mklink /J %s %s',
-                       ProcessExecutor::escape(str_replace('/', DIRECTORY_SEPARATOR, $junction)),
-                       ProcessExecutor::escape(realpath($target)));
+        $cmd = sprintf(
+            'mklink /J %s %s',
+            ProcessExecutor::escape(str_replace('/', DIRECTORY_SEPARATOR, $junction)),
+            ProcessExecutor::escape(realpath($target))
+        );
         if ($this->getProcess()->execute($cmd, $output) !== 0) {
             throw new IOException(sprintf('Failed to create junction to "%s" at "%s".', $target, $junction), 0, null, $target);
         }
@@ -624,6 +647,15 @@ class Filesystem
 
     /**
      * Returns whether the target directory is a Windows NTFS Junction.
+     *
+     * We test if the path is a directory and not an ordinary link, then check
+     * that the mode value returned from lstat (which gives the status of the
+     * link itself) is not a directory.
+     *
+     * This relies on the fact that PHP does not set this value because there is
+     * no universal file type flag for a junction or a mount point. However a
+     * bug in PHP can cause a random value to be returned and this could result
+     * in a junction not being detected: https://bugs.php.net/bug.php?id=77552
      *
      * @param  string $junction Path to check.
      * @return bool
@@ -636,21 +668,13 @@ class Filesystem
         if (!is_dir($junction) || is_link($junction)) {
             return false;
         }
-        /**
-         * According to MSDN at https://msdn.microsoft.com/en-us/library/14h5k7ff.aspx we can detect a junction now
-         * using the 'mode' value from stat: "The _S_IFDIR bit is set if path specifies a directory; the _S_IFREG bit
-         * is set if path specifies an ordinary file or a device." We have just tested for a directory above, so if
-         * we have a directory that isn't one according to lstat(...) we must have a junction.
-         *
-         * #define	_S_IFDIR	0x4000
-         * #define	_S_IFREG	0x8000
-         *
-         * Stat cache should be cleared before to avoid accidentally reading wrong information from previous installs.
-         */
+
+        // Important to clear all caches first
         clearstatcache(true, $junction);
         $stat = lstat($junction);
 
-        return !($stat['mode'] & 0xC000);
+        // S_IFDIR is 0x4000, S_IFMT is the 0xF000 bitmask
+        return $stat ? 0x4000 !== ($stat['mode'] & 0xF000) : false;
     }
 
     /**

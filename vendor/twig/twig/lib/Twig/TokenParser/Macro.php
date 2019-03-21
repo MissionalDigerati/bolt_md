@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -32,7 +32,7 @@ class Twig_TokenParser_Macro extends Twig_TokenParser
 
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
         $this->parser->pushLocalScope();
-        $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
+        $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
         if ($token = $stream->nextIf(Twig_Token::NAME_TYPE)) {
             $value = $token->getValue();
 
@@ -43,7 +43,7 @@ class Twig_TokenParser_Macro extends Twig_TokenParser
         $this->parser->popLocalScope();
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
-        $this->parser->setMacro($name, new Twig_Node_Macro($name, new Twig_Node_Body(array($body)), $arguments, $lineno, $this->getTag()));
+        $this->parser->setMacro($name, new Twig_Node_Macro($name, new Twig_Node_Body([$body]), $arguments, $lineno, $this->getTag()));
     }
 
     public function decideBlockEnd(Twig_Token $token)
@@ -56,3 +56,5 @@ class Twig_TokenParser_Macro extends Twig_TokenParser
         return 'macro';
     }
 }
+
+class_alias('Twig_TokenParser_Macro', 'Twig\TokenParser\MacroTokenParser', false);

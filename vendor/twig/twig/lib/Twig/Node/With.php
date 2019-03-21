@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2016 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,12 +18,12 @@ class Twig_Node_With extends Twig_Node
 {
     public function __construct(Twig_Node $body, Twig_Node $variables = null, $only = false, $lineno, $tag = null)
     {
-        $nodes = array('body' => $body);
+        $nodes = ['body' => $body];
         if (null !== $variables) {
             $nodes['variables'] = $variables;
         }
 
-        parent::__construct($nodes, array('only' => (bool) $only), $lineno, $tag);
+        parent::__construct($nodes, ['only' => (bool) $only], $lineno, $tag);
     }
 
     public function compile(Twig_Compiler $compiler)
@@ -44,7 +44,7 @@ class Twig_Node_With extends Twig_Node
             ;
 
             if ($this->getAttribute('only')) {
-                $compiler->write("\$context = array('_parent' => \$context);\n");
+                $compiler->write("\$context = ['_parent' => \$context];\n");
             } else {
                 $compiler->write("\$context['_parent'] = \$context;\n");
             }
@@ -60,3 +60,5 @@ class Twig_Node_With extends Twig_Node
         ;
     }
 }
+
+class_alias('Twig_Node_With', 'Twig\Node\WithNode', false);

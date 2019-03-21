@@ -114,13 +114,18 @@ class RemoteFilesystem
     /**
      * Merges new options
      *
-     * @return array $options
+     * @param array $options
      */
     public function setOptions(array $options)
     {
         $this->options = array_replace_recursive($this->options, $options);
     }
 
+    /**
+     * Check is disable TLS.
+     *
+     * @return bool
+     */
     public function isTlsDisabled()
     {
         return $this->disableTls === true;
@@ -176,6 +181,24 @@ class RemoteFilesystem
     }
 
     /**
+     * @param  array       $headers array of returned headers like from getLastHeaders()
+     * @return string|null
+     */
+    public function findStatusMessage(array $headers)
+    {
+        $value = null;
+        foreach ($headers as $header) {
+            if (preg_match('{^HTTP/\S+ \d+}i', $header)) {
+                // In case of redirects, http_response_headers contains the headers of all responses
+                // so we can not return directly and need to keep iterating
+                $value = $header;
+            }
+        }
+
+        return $value;
+    }
+
+    /**
      * Get file content or copy action.
      *
      * @param string $originUrl         The origin URL
@@ -195,6 +218,23 @@ class RemoteFilesystem
             $originUrl = 'github.com';
         }
 
+        // Gitlab can be installed in a non-root context (i.e. gitlab.com/foo). When downloading archives the originUrl
+        // is the host without the path, so we look for the registered gitlab-domains matching the host here
+        if (
+            $this->config
+            && is_array($this->config->get('gitlab-domains'))
+            && false === strpos($originUrl, '/')
+            && !in_array($originUrl, $this->config->get('gitlab-domains'))
+        ) {
+            foreach ($this->config->get('gitlab-domains') as $gitlabDomain) {
+                if (0 === strpos($gitlabDomain, $originUrl)) {
+                    $originUrl = $gitlabDomain;
+                    break;
+                }
+            }
+            unset($gitlabDomain);
+        }
+
         $this->scheme = parse_url($fileUrl, PHP_URL_SCHEME);
         $this->bytesMax = 0;
         $this->originUrl = $originUrl;
@@ -207,8 +247,8 @@ class RemoteFilesystem
         $this->redirects = 1; // The first request counts.
 
         // capture username/password from URL if there is one
-        if (preg_match('{^https?://(.+):(.+)@([^/]+)}i', $fileUrl, $match)) {
-            $this->io->setAuthentication($originUrl, urldecode($match[1]), urldecode($match[2]));
+        if (preg_match('{^https?://([^:/]+):([^@/]+)@([^/]+)}i', $fileUrl, $match)) {
+            $this->io->setAuthentication($originUrl, rawurldecode($match[1]), rawurldecode($match[2]));
         }
 
         $tempAdditionalOptions = $additionalOptions;
@@ -228,7 +268,6 @@ class RemoteFilesystem
 
         $options = $this->getOptionsForUrl($originUrl, $tempAdditionalOptions);
         unset($tempAdditionalOptions);
-        $userlandFollow = isset($options['http']['follow_location']) && !$options['http']['follow_location'];
 
         $origFileUrl = $fileUrl;
 
@@ -245,18 +284,13 @@ class RemoteFilesystem
             unset($options['gitlab-token']);
         }
 
-        if (isset($options['bitbucket-token'])) {
-            $fileUrl .= (false === strpos($fileUrl, '?') ? '?' : '&') . 'access_token='.$options['bitbucket-token'];
-            unset($options['bitbucket-token']);
-        }
-
         if (isset($options['http'])) {
             $options['http']['ignore_errors'] = true;
         }
 
-        if ($this->degradedMode && substr($fileUrl, 0, 21) === 'http://packagist.org/') {
+        if ($this->degradedMode && substr($fileUrl, 0, 26) === 'http://repo.packagist.org/') {
             // access packagist using the resolved IPv4 instead of the hostname to force IPv4 protocol
-            $fileUrl = 'http://' . gethostbyname('packagist.org') . substr($fileUrl, 20);
+            $fileUrl = 'http://' . gethostbyname('repo.packagist.org') . substr($fileUrl, 20);
             $degradedPackagist = true;
         }
 
@@ -268,12 +302,12 @@ class RemoteFilesystem
         unset($origFileUrl, $actualContextOptions);
 
         // Check for secure HTTP, but allow insecure Packagist calls to $hashed providers as file integrity is verified with sha256
-        if ((substr($fileUrl, 0, 23) !== 'http://packagist.org/p/' || (false === strpos($fileUrl, '$') && false === strpos($fileUrl, '%24'))) && empty($degradedPackagist) && $this->config) {
+        if ((!preg_match('{^http://(repo\.)?packagist\.org/p/}', $fileUrl) || (false === strpos($fileUrl, '$') && false === strpos($fileUrl, '%24'))) && empty($degradedPackagist) && $this->config) {
             $this->config->prohibitUrlByConfig($fileUrl, $this->io);
         }
 
         if ($this->progress && !$isRedirect) {
-            $this->io->writeError("    Downloading: <comment>Connecting...</comment>", false);
+            $this->io->writeError("Downloading (<comment>connecting...</comment>)", false);
         }
 
         $errorMessage = '';
@@ -286,12 +320,32 @@ class RemoteFilesystem
             $errorMessage .= preg_replace('{^file_get_contents\(.*?\): }', '', $msg);
         });
         try {
-            $result = file_get_contents($fileUrl, false, $ctx);
+            $result = $this->getRemoteContents($originUrl, $fileUrl, $ctx, $http_response_header);
+
+            if (!empty($http_response_header[0])) {
+                $statusCode = $this->findStatusCode($http_response_header);
+                if (in_array($statusCode, array(401, 403)) && $this->retryAuthFailure) {
+                    $warning = null;
+                    if ($this->findHeaderValue($http_response_header, 'content-type') === 'application/json') {
+                        $data = json_decode($result, true);
+                        if (!empty($data['warning'])) {
+                            $warning = $data['warning'];
+                        }
+                    }
+                    $this->promptAuthAndRetry($statusCode, $this->findStatusMessage($http_response_header), $warning, $http_response_header);
+                }
+            }
 
             $contentLength = !empty($http_response_header[0]) ? $this->findHeaderValue($http_response_header, 'content-length') : null;
             if ($contentLength && Platform::strlen($result) < $contentLength) {
                 // alas, this is not possible via the stream callback because STREAM_NOTIFY_COMPLETED is documented, but not implemented anywhere in PHP
-                throw new TransportException('Content-Length mismatch');
+                $e = new TransportException('Content-Length mismatch, received '.Platform::strlen($result).' bytes out of the expected '.$contentLength);
+                $e->setHeaders($http_response_header);
+                $e->setStatusCode($this->findStatusCode($http_response_header));
+                $e->setResponse($result);
+                $this->io->writeError('Content-Length mismatch, received '.Platform::strlen($result).' out of '.$contentLength.' bytes: (' . base64_encode($result).')', true, IOInterface::DEBUG);
+
+                throw $e;
             }
 
             if (PHP_VERSION_ID < 50600 && !empty($options['ssl']['peer_fingerprint'])) {
@@ -315,13 +369,14 @@ class RemoteFilesystem
             }
             $result = false;
         }
-        if ($errorMessage && !ini_get('allow_url_fopen')) {
+        if ($errorMessage && !filter_var(ini_get('allow_url_fopen'), FILTER_VALIDATE_BOOLEAN)) {
             $errorMessage = 'allow_url_fopen must be enabled in php.ini ('.$errorMessage.')';
         }
         restore_error_handler();
         if (isset($e) && !$this->retry) {
             if (!$this->degradedMode && false !== strpos($e->getMessage(), 'Operation timed out')) {
                 $this->degradedMode = true;
+                $this->io->writeError('');
                 $this->io->writeError(array(
                     '<error>'.$e->getMessage().'</error>',
                     '<error>Retrying with degraded mode, check https://getcomposer.org/doc/articles/troubleshooting.md#degraded-mode for more info</error>',
@@ -335,15 +390,19 @@ class RemoteFilesystem
 
         $statusCode = null;
         $contentType = null;
+        $locationHeader = null;
         if (!empty($http_response_header[0])) {
             $statusCode = $this->findStatusCode($http_response_header);
             $contentType = $this->findHeaderValue($http_response_header, 'content-type');
+            $locationHeader = $this->findHeaderValue($http_response_header, 'location');
         }
 
         // check for bitbucket login page asking to authenticate
         if ($originUrl === 'bitbucket.org'
+            && !$this->isPublicBitBucketDownload($fileUrl)
             && substr($fileUrl, -4) === '.zip'
-            && preg_match('{^text/html\b}i', $contentType)
+            && (!$locationHeader || substr($locationHeader, -4) !== '.zip')
+            && $contentType && preg_match('{^text/html\b}i', $contentType)
         ) {
             $result = false;
             if ($this->retryAuthFailure) {
@@ -351,9 +410,20 @@ class RemoteFilesystem
             }
         }
 
-        // handle 3xx redirects for php<5.6, 304 Not Modified is excluded
+        // check for gitlab 404 when downloading archives
+        if ($statusCode === 404
+            && $this->config && in_array($originUrl, $this->config->get('gitlab-domains'), true)
+            && false !== strpos($fileUrl, 'archive.zip')
+        ) {
+            $result = false;
+            if ($this->retryAuthFailure) {
+                $this->promptAuthAndRetry(401);
+            }
+        }
+
+        // handle 3xx redirects, 304 Not Modified is excluded
         $hasFollowedRedirect = false;
-        if ($userlandFollow && $statusCode >= 300 && $statusCode <= 399 && $statusCode !== 304 && $this->redirects < $this->maxRedirects) {
+        if ($statusCode >= 300 && $statusCode <= 399 && $statusCode !== 304 && $this->redirects < $this->maxRedirects) {
             $hasFollowedRedirect = true;
             $result = $this->handleRedirect($http_response_header, $additionalOptions, $result);
         }
@@ -362,7 +432,7 @@ class RemoteFilesystem
         if ($statusCode && $statusCode >= 400 && $statusCode <= 599) {
             if (!$this->retry) {
                 if ($this->progress && !$this->retry && !$isRedirect) {
-                    $this->io->overwriteError("    Downloading: <error>Failed</error>");
+                    $this->io->overwriteError("Downloading (<error>failed</error>)", false);
                 }
 
                 $e = new TransportException('The "'.$this->fileUrl.'" file could not be downloaded ('.$http_response_header[0].')', $statusCode);
@@ -375,12 +445,13 @@ class RemoteFilesystem
         }
 
         if ($this->progress && !$this->retry && !$isRedirect) {
-            $this->io->overwriteError("    Downloading: ".($result === false ? '<error>Failed</error>' : '<comment>100%</comment>'));
+            $this->io->overwriteError("Downloading (".($result === false ? '<error>failed</error>' : '<comment>100%</comment>').")", false);
         }
 
         // decode gzip
         if ($result && extension_loaded('zlib') && substr($fileUrl, 0, 4) === 'http' && !$hasFollowedRedirect) {
-            $decode = 'gzip' === strtolower($this->findHeaderValue($http_response_header, 'content-encoding'));
+            $contentEncoding = $this->findHeaderValue($http_response_header, 'content-encoding');
+            $decode = $contentEncoding && 'gzip' === strtolower($contentEncoding);
 
             if ($decode) {
                 try {
@@ -401,6 +472,7 @@ class RemoteFilesystem
 
                     $this->degradedMode = true;
                     $this->io->writeError(array(
+                        '',
                         '<error>Failed to decode response: '.$e->getMessage().'</error>',
                         '<error>Retrying with degraded mode, check https://getcomposer.org/doc/articles/troubleshooting.md#degraded-mode for more info</error>',
                     ));
@@ -457,6 +529,7 @@ class RemoteFilesystem
                     $this->retry = true;
                 }
             } else {
+                $this->io->writeError('');
                 $this->io->writeError(sprintf(
                     '<error>Your version of PHP, %s, is affected by CVE-2013-6420 and cannot safely perform certificate validation, we strongly suggest you upgrade.</error>',
                     PHP_VERSION
@@ -486,6 +559,7 @@ class RemoteFilesystem
 
             if (!$this->degradedMode && false !== strpos($e->getMessage(), 'Operation timed out')) {
                 $this->degradedMode = true;
+                $this->io->writeError('');
                 $this->io->writeError(array(
                     '<error>'.$e->getMessage().'</error>',
                     '<error>Retrying with degraded mode, check https://getcomposer.org/doc/articles/troubleshooting.md#degraded-mode for more info</error>',
@@ -499,6 +573,33 @@ class RemoteFilesystem
 
         if (!empty($http_response_header[0])) {
             $this->lastHeaders = $http_response_header;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get contents of remote URL.
+     *
+     * @param string   $originUrl The origin URL
+     * @param string   $fileUrl   The file URL
+     * @param resource $context   The stream context
+     *
+     * @return string|false The response contents or false on failure
+     */
+    protected function getRemoteContents($originUrl, $fileUrl, $context, array &$responseHeaders = null)
+    {
+        try {
+            $e = null;
+            $result = file_get_contents($fileUrl, false, $context);
+        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
+        }
+
+        $responseHeaders = isset($http_response_header) ? $http_response_header : array();
+
+        if (null !== $e) {
+            throw $e;
         }
 
         return $result;
@@ -524,29 +625,6 @@ class RemoteFilesystem
                     // but you do not send an appropriate certificate
                     throw new TransportException("The '" . $this->fileUrl . "' URL could not be accessed: " . $message, $messageCode);
                 }
-                // intentional fallthrough to the next case as the notificationCode
-                // isn't always consistent and we should inspect the messageCode for 401s
-
-            case STREAM_NOTIFY_AUTH_REQUIRED:
-                if (401 === $messageCode) {
-                    // Bail if the caller is going to handle authentication failures itself.
-                    if (!$this->retryAuthFailure) {
-                        break;
-                    }
-
-                    $this->promptAuthAndRetry($messageCode);
-                }
-                break;
-
-            case STREAM_NOTIFY_AUTH_RESULT:
-                if (403 === $messageCode) {
-                    // Bail if the caller is going to handle authentication failures itself.
-                    if (!$this->retryAuthFailure) {
-                        break;
-                    }
-
-                    $this->promptAuthAndRetry($messageCode, $message);
-                }
                 break;
 
             case STREAM_NOTIFY_FILE_SIZE_IS:
@@ -559,7 +637,7 @@ class RemoteFilesystem
 
                     if ((0 === $progression % 5) && 100 !== $progression && $progression !== $this->lastProgress) {
                         $this->lastProgress = $progression;
-                        $this->io->overwriteError("    Downloading: <comment>$progression%</comment>", false);
+                        $this->io->overwriteError("Downloading (<comment>$progression%</comment>)", false);
                     }
                 }
                 break;
@@ -569,11 +647,35 @@ class RemoteFilesystem
         }
     }
 
-    protected function promptAuthAndRetry($httpStatus, $reason = null)
+    protected function promptAuthAndRetry($httpStatus, $reason = null, $warning = null, $headers = array())
     {
         if ($this->config && in_array($this->originUrl, $this->config->get('github-domains'), true)) {
-            $message = "\n".'Could not fetch '.$this->fileUrl.', please create a GitHub OAuth token '.($httpStatus === 404 ? 'to access private repos' : 'to go over the API rate limit');
             $gitHubUtil = new GitHub($this->io, $this->config, null);
+            $message = "\n";
+
+            $rateLimited = $gitHubUtil->isRateLimited($headers);
+            if ($rateLimited) {
+                $rateLimit = $gitHubUtil->getRateLimit($headers);
+                if ($this->io->hasAuthentication($this->originUrl)) {
+                    $message = 'Review your configured GitHub OAuth token or enter a new one to go over the API rate limit.';
+                } else {
+                    $message = 'Create a GitHub OAuth token to go over the API rate limit.';
+                }
+
+                $message = sprintf(
+                    'GitHub API limit (%d calls/hr) is exhausted, could not fetch '.$this->fileUrl.'. '.$message.' You can also wait until %s for the rate limit to reset.',
+                    $rateLimit['limit'],
+                    $rateLimit['reset']
+                )."\n";
+            } else {
+                $message .= 'Could not fetch '.$this->fileUrl.', please ';
+                if ($this->io->hasAuthentication($this->originUrl)) {
+                    $message .= 'review your configured GitHub OAuth token or enter a new one to access private repos';
+                } else {
+                    $message .= 'create a GitHub OAuth token to access private repos';
+                }
+            }
+
             if (!$gitHubUtil->authorizeOAuth($this->originUrl)
                 && (!$this->io->isInteractive() || !$gitHubUtil->authorizeOAuthInteractively($this->originUrl, $message))
             ) {
@@ -582,6 +684,11 @@ class RemoteFilesystem
         } elseif ($this->config && in_array($this->originUrl, $this->config->get('gitlab-domains'), true)) {
             $message = "\n".'Could not fetch '.$this->fileUrl.', enter your ' . $this->originUrl . ' credentials ' .($httpStatus === 401 ? 'to access private repos' : 'to go over the API rate limit');
             $gitLabUtil = new GitLab($this->io, $this->config, null);
+
+            if ($this->io->hasAuthentication($this->originUrl) && ($auth = $this->io->getAuthentication($this->originUrl)) && $auth['password'] === 'private-token') {
+                throw new TransportException("Invalid credentials for '" . $this->fileUrl . "', aborting.", $httpStatus);
+            }
+
             if (!$gitLabUtil->authorizeOAuth($this->originUrl)
                 && (!$this->io->isInteractive() || !$gitLabUtil->authorizeOAuthInteractively($this->scheme, $this->originUrl, $message))
             ) {
@@ -593,9 +700,9 @@ class RemoteFilesystem
                 $auth = $this->io->getAuthentication($this->originUrl);
                 if ($auth['username'] !== 'x-token-auth') {
                     $bitbucketUtil = new Bitbucket($this->io, $this->config);
-                    $token = $bitbucketUtil->requestToken($this->originUrl, $auth['username'], $auth['password']);
-                    if (! empty($token)) {
-                        $this->io->setAuthentication($this->originUrl, 'x-token-auth', $token['access_token']);
+                    $accessToken = $bitbucketUtil->requestToken($this->originUrl, $auth['username'], $auth['password']);
+                    if (!empty($accessToken)) {
+                        $this->io->setAuthentication($this->originUrl, 'x-token-auth', $accessToken);
                         $askForOAuthToken = false;
                     }
                 } else {
@@ -604,7 +711,7 @@ class RemoteFilesystem
             }
 
             if ($askForOAuthToken) {
-                $message = "\n".'Could not fetch ' . $this->fileUrl . ', please create a bitbucket OAuth token to ' . ($httpStatus === 401 ? 'to access private repos' : 'to go over the API rate limit');
+                $message = "\n".'Could not fetch ' . $this->fileUrl . ', please create a bitbucket OAuth token to ' . (($httpStatus === 401 || $httpStatus === 403) ? 'access private repos' : 'go over the API rate limit');
                 $bitBucketUtil = new Bitbucket($this->io, $this->config);
                 if (! $bitBucketUtil->authorizeOAuth($this->originUrl)
                     && (! $this->io->isInteractive() || !$bitBucketUtil->authorizeOAuthInteractively($this->originUrl, $message))
@@ -634,7 +741,11 @@ class RemoteFilesystem
                 throw new TransportException("Invalid credentials for '" . $this->fileUrl . "', aborting.", $httpStatus);
             }
 
-            $this->io->overwriteError('    Authentication required (<info>'.parse_url($this->fileUrl, PHP_URL_HOST).'</info>):');
+            $this->io->overwriteError('');
+            if ($warning) {
+                $this->io->writeError('    <warning>'.$warning.'</warning>');
+            }
+            $this->io->writeError('    Authentication required (<info>'.parse_url($this->fileUrl, PHP_URL_HOST).'</info>):');
             $username = $this->io->ask('      Username: ');
             $password = $this->io->askAndHideAnswer('      Password: ');
             $this->io->setAuthentication($this->originUrl, $username, $password);
@@ -653,11 +764,7 @@ class RemoteFilesystem
         if ($this->disableTls === false && PHP_VERSION_ID < 50600 && !stream_is_local($this->fileUrl)) {
             $host = parse_url($this->fileUrl, PHP_URL_HOST);
 
-            if (PHP_VERSION_ID >= 50304) {
-                // Must manually follow when setting CN_match because this causes all
-                // redirects to be validated against the same CN_match value.
-                $userlandFollow = true;
-            } else {
+            if (PHP_VERSION_ID < 50304) {
                 // PHP < 5.3.4 does not support follow_location, for those people
                 // do some really nasty hard coded transformations. These will
                 // still breakdown if the site redirects to a domain we don't
@@ -677,6 +784,7 @@ class RemoteFilesystem
                 // Handle subjectAltName on lesser PHP's.
                 $certMap = $this->peerCertificateMap[$urlAuthority];
 
+                $this->io->writeError('', true, IOInterface::DEBUG);
                 $this->io->writeError(sprintf(
                     'Using <info>%s</info> as CN for subjectAltName enabled host <info>%s</info>',
                     $certMap['cn'],
@@ -685,6 +793,9 @@ class RemoteFilesystem
 
                 $tlsOptions['ssl']['CN_match'] = $certMap['cn'];
                 $tlsOptions['ssl']['peer_fingerprint'] = $certMap['fp'];
+            } elseif (!CaBundle::isOpensslParseSafe() && $host === 'repo.packagist.org') {
+                // handle subjectAltName for packagist.org's repo domain on very old PHPs
+                $tlsOptions['ssl']['CN_match'] = 'packagist.org';
             }
         }
 
@@ -702,10 +813,6 @@ class RemoteFilesystem
             $headers[] = 'Connection: close';
         }
 
-        if (isset($userlandFollow)) {
-            $options['http']['follow_location'] = 0;
-        }
-
         if ($this->io->hasAuthentication($originUrl)) {
             $auth = $this->io->getAuthentication($originUrl);
             if ('github.com' === $originUrl && 'x-oauth-basic' === $auth['password']) {
@@ -713,16 +820,22 @@ class RemoteFilesystem
             } elseif ($this->config && in_array($originUrl, $this->config->get('gitlab-domains'), true)) {
                 if ($auth['password'] === 'oauth2') {
                     $headers[] = 'Authorization: Bearer '.$auth['username'];
+                } elseif ($auth['password'] === 'private-token') {
+                    $headers[] = 'PRIVATE-TOKEN: '.$auth['username'];
                 }
             } elseif ('bitbucket.org' === $originUrl
                 && $this->fileUrl !== Bitbucket::OAUTH2_ACCESS_TOKEN_URL && 'x-token-auth' === $auth['username']
             ) {
-                $options['bitbucket-token'] = $auth['password'];
+                if (!$this->isPublicBitBucketDownload($this->fileUrl)) {
+                    $headers[] = 'Authorization: Bearer ' . $auth['password'];
+                }
             } else {
                 $authStr = base64_encode($auth['username'] . ':' . $auth['password']);
                 $headers[] = 'Authorization: Basic '.$authStr;
             }
         }
+
+        $options['http']['follow_location'] = 0;
 
         if (isset($options['http']['header']) && !is_array($options['http']['header'])) {
             $options['http']['header'] = explode("\r\n", trim($options['http']['header'], "\r\n"));
@@ -759,11 +872,12 @@ class RemoteFilesystem
         if (!empty($targetUrl)) {
             $this->redirects++;
 
+            $this->io->writeError('', true, IOInterface::DEBUG);
             $this->io->writeError(sprintf('Following redirect (%u) %s', $this->redirects, $targetUrl), true, IOInterface::DEBUG);
 
             $additionalOptions['redirects'] = $this->redirects;
 
-            return $this->get($this->originUrl, $targetUrl, $additionalOptions, $this->fileName, $this->progress);
+            return $this->get(parse_url($targetUrl, PHP_URL_HOST), $targetUrl, $additionalOptions, $this->fileName, $this->progress);
         }
 
         if (!$this->retry) {
@@ -857,17 +971,7 @@ class RemoteFilesystem
         if (!isset($defaults['ssl']['cafile']) && !isset($defaults['ssl']['capath'])) {
             $result = CaBundle::getSystemCaRootBundlePath($caBundleLogger);
 
-            if (preg_match('{^phar://}', $result)) {
-                $hash = hash_file('sha256', $result);
-                $targetPath = rtrim(sys_get_temp_dir(), '\\/') . '/composer-cacert-' . $hash . '.pem';
-
-                if (!file_exists($targetPath) || $hash !== hash_file('sha256', $targetPath)) {
-                    $this->streamCopy($result, $targetPath);
-                    chmod($targetPath, 0666);
-                }
-
-                $defaults['ssl']['cafile'] = $targetPath;
-            } elseif (is_dir($result)) {
+            if (is_dir($result)) {
                 $defaults['ssl']['capath'] = $result;
             } else {
                 $defaults['ssl']['cafile'] = $result;
@@ -890,24 +994,6 @@ class RemoteFilesystem
         }
 
         return $defaults;
-    }
-
-    /**
-     * Uses stream_copy_to_stream instead of copy to work around https://bugs.php.net/bug.php?id=64634
-     *
-     * @param string $source
-     * @param string $target
-     */
-    private function streamCopy($source, $target)
-    {
-        $source = fopen($source, 'r');
-        $target = fopen($target, 'w+');
-
-        stream_copy_to_stream($source, $target);
-        fclose($source);
-        fclose($target);
-
-        unset($source, $target);
     }
 
     /**
@@ -978,5 +1064,30 @@ class RemoteFilesystem
         $port = parse_url($url, PHP_URL_PORT) ?: $defaultPort;
 
         return parse_url($url, PHP_URL_HOST).':'.$port;
+    }
+
+    /**
+     * @link https://github.com/composer/composer/issues/5584
+     *
+     * @param string $urlToBitBucketFile URL to a file at bitbucket.org.
+     *
+     * @return bool Whether the given URL is a public BitBucket download which requires no authentication.
+     */
+    private function isPublicBitBucketDownload($urlToBitBucketFile)
+    {
+        $domain = parse_url($urlToBitBucketFile, PHP_URL_HOST);
+        if (strpos($domain, 'bitbucket.org') === false) {
+            // Bitbucket downloads are hosted on amazonaws.
+            // We do not need to authenticate there at all
+            return true;
+        }
+
+        $path = parse_url($urlToBitBucketFile, PHP_URL_PATH);
+
+        // Path for a public download follows this pattern /{user}/{repo}/downloads/{whatever}
+        // {@link https://blog.bitbucket.org/2009/04/12/new-feature-downloads/}
+        $pathParts = explode('/', $path);
+
+        return count($pathParts) >= 4 && $pathParts[3] == 'downloads';
     }
 }

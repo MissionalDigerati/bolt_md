@@ -870,6 +870,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 
 		if (null === $object) {
 			$message = sprintf('Impossible to invoke a method ("%s") on a null variable', $item);
+		} elseif (is_array($object)) {
+			$message = sprintf('Impossible to invoke a method ("%s") on an array.', $item);
 		} else {
 			$message = sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s")', $item, gettype($object), $object);
 		}
@@ -885,9 +887,9 @@ PHP_FUNCTION(twig_template_get_attributes)
 		type_name = zend_zval_type_name(object);
 		Z_ADDREF_P(object);
 		if (Z_TYPE_P(object) == IS_NULL) {
-			convert_to_string_ex(&object);
-
-			TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Impossible to invoke a method (\"%s\") on a %s variable.", item, type_name);
+			TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Impossible to invoke a method (\"%s\") on a null variable.", item);
+		} else if (Z_TYPE_P(object) == IS_ARRAY) {
+			TWIG_RUNTIME_ERROR(template TSRMLS_CC, "Impossible to invoke a method (\"%s\") on an array.", item);
 		} else {
 			convert_to_string_ex(&object);
 
@@ -957,7 +959,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	if (!isset(self::$cache[$class]['methods'])) {
 		if ($object instanceof self) {
 			$ref = new ReflectionClass($class);
-			$methods = array();
+			$methods = [];
 
 			foreach ($ref->getMethods(ReflectionMethod::IS_PUBLIC) as $refMethod) {
 				$methodName = strtolower($refMethod->name);
@@ -1079,7 +1081,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 	// Some objects throw exceptions when they have __call, and the method we try
 	// to call is not supported. If ignoreStrictCheck is true, we should return null.
 	try {
-	    $ret = call_user_func_array(array($object, $method), $arguments);
+	    $ret = call_user_func_array([$object, $method], $arguments);
 	} catch (BadMethodCallException $e) {
 	    if ($call && ($ignoreStrictCheck || !$this->env->isStrictVariables())) {
 	        return null;
@@ -1124,6 +1126,8 @@ PHP_FUNCTION(twig_template_get_attributes)
 		// ret can be null, if e.g. the called method throws an exception
 		if (ret) {
 			if (TWIG_INSTANCE_OF_USERLAND(object, "Twig_TemplateInterface" TSRMLS_CC)) {
+				int self;
+				int old_error_reporting;
 				zval *object_filename;
 				zval *this_filename;
 				zval *filename_func;
@@ -1140,7 +1144,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 				ZVAL_STRINGL(filename_func, "getTemplateName", sizeof("getTemplateName")-1, 1);
 				call_user_function(EG(function_table), &template, filename_func, this_filename, 0, 0 TSRMLS_CC);
 
-				int self = (strcmp(Z_STRVAL_P(object_filename), Z_STRVAL_P(this_filename)) == 0);
+				self = (strcmp(Z_STRVAL_P(object_filename), Z_STRVAL_P(this_filename)) == 0);
 
 				if (strcmp(methodForDeprecation, "renderBlock") == 0 || strcmp(methodForDeprecation, "displayBlock") == 0) {
 					zval **arg0;
@@ -1179,7 +1183,7 @@ PHP_FUNCTION(twig_template_get_attributes)
 					deprecation_message_complement
 				);
 
-				int old_error_reporting = EG(error_reporting);
+				old_error_reporting = EG(error_reporting);
 				EG(error_reporting) = 0;
 				zend_error(E_USER_DEPRECATED, "%s", deprecation_message);
 				EG(error_reporting) = old_error_reporting;

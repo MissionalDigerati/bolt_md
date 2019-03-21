@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -28,19 +28,19 @@ class Twig_Extension_Escaper extends Twig_Extension
 
     public function getTokenParsers()
     {
-        return array(new Twig_TokenParser_AutoEscape());
+        return [new Twig_TokenParser_AutoEscape()];
     }
 
     public function getNodeVisitors()
     {
-        return array(new Twig_NodeVisitor_Escaper());
+        return [new Twig_NodeVisitor_Escaper()];
     }
 
     public function getFilters()
     {
-        return array(
-            new Twig_SimpleFilter('raw', 'twig_raw_filter', array('is_safe' => array('all'))),
-        );
+        return [
+            new Twig_SimpleFilter('raw', 'twig_raw_filter', ['is_safe' => ['all']]),
+        ];
     }
 
     /**
@@ -67,7 +67,7 @@ class Twig_Extension_Escaper extends Twig_Extension
         }
 
         if ('name' === $defaultStrategy) {
-            $defaultStrategy = array('Twig_FileExtensionEscapingStrategy', 'guess');
+            $defaultStrategy = ['Twig_FileExtensionEscapingStrategy', 'guess'];
         }
 
         $this->defaultStrategy = $defaultStrategy;
@@ -108,3 +108,5 @@ function twig_raw_filter($string)
 {
     return $string;
 }
+
+class_alias('Twig_Extension_Escaper', 'Twig\Extension\EscaperExtension', false);

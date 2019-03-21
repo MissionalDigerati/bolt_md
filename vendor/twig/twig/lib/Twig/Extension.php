@@ -3,11 +3,12 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 abstract class Twig_Extension implements Twig_ExtensionInterface
 {
     /**
@@ -19,32 +20,32 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
 
     public function getTokenParsers()
     {
-        return array();
+        return [];
     }
 
     public function getNodeVisitors()
     {
-        return array();
+        return [];
     }
 
     public function getFilters()
     {
-        return array();
+        return [];
     }
 
     public function getTests()
     {
-        return array();
+        return [];
     }
 
     public function getFunctions()
     {
-        return array();
+        return [];
     }
 
     public function getOperators()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -52,7 +53,7 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
      */
     public function getGlobals()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -63,3 +64,6 @@ abstract class Twig_Extension implements Twig_ExtensionInterface
         return get_class($this);
     }
 }
+
+class_alias('Twig_Extension', 'Twig\Extension\AbstractExtension', false);
+class_exists('Twig_Environment');

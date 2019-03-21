@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2012 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -32,14 +32,14 @@ class Twig_TokenParser_Embed extends Twig_TokenParser_Include
         }
 
         // inject a fake parent to make the parent() function work
-        $stream->injectTokens(array(
+        $stream->injectTokens([
             new Twig_Token(Twig_Token::BLOCK_START_TYPE, '', $token->getLine()),
             new Twig_Token(Twig_Token::NAME_TYPE, 'extends', $token->getLine()),
             $parentToken,
             new Twig_Token(Twig_Token::BLOCK_END_TYPE, '', $token->getLine()),
-        ));
+        ]);
 
-        $module = $this->parser->parse($stream, array($this, 'decideBlockEnd'), true);
+        $module = $this->parser->parse($stream, [$this, 'decideBlockEnd'], true);
 
         // override the parent with the correct one
         if ($fakeParentToken === $parentToken) {
@@ -63,3 +63,5 @@ class Twig_TokenParser_Embed extends Twig_TokenParser_Include
         return 'embed';
     }
 }
+
+class_alias('Twig_TokenParser_Embed', 'Twig\TokenParser\EmbedTokenParser', false);

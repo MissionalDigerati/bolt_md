@@ -3,8 +3,8 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
- * (c) 2009 Armin Ronacher
+ * (c) Fabien Potencier
+ * (c) Armin Ronacher
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -139,7 +139,7 @@ class Twig_TokenStream
      */
     public function isEOF()
     {
-        return $this->tokens[$this->current]->getType() === Twig_Token::EOF_TYPE;
+        return Twig_Token::EOF_TYPE === $this->tokens[$this->current]->getType();
     }
 
     /**
@@ -192,3 +192,5 @@ class Twig_TokenStream
         return $this->source;
     }
 }
+
+class_alias('Twig_TokenStream', 'Twig\TokenStream', false);

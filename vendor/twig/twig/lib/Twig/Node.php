@@ -3,8 +3,8 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
- * (c) 2009 Armin Ronacher
+ * (c) Fabien Potencier
+ * (c) Armin Ronacher
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -35,7 +35,7 @@ class Twig_Node implements Twig_NodeInterface
      * @param int    $lineno     The line number
      * @param string $tag        The tag name associated with the Node
      */
-    public function __construct(array $nodes = array(), array $attributes = array(), $lineno = 0, $tag = null)
+    public function __construct(array $nodes = [], array $attributes = [], $lineno = 0, $tag = null)
     {
         foreach ($nodes as $name => $node) {
             if (!$node instanceof Twig_NodeInterface) {
@@ -50,17 +50,17 @@ class Twig_Node implements Twig_NodeInterface
 
     public function __toString()
     {
-        $attributes = array();
+        $attributes = [];
         foreach ($this->attributes as $name => $value) {
             $attributes[] = sprintf('%s: %s', $name, str_replace("\n", '', var_export($value, true)));
         }
 
-        $repr = array(get_class($this).'('.implode(', ', $attributes));
+        $repr = [get_class($this).'('.implode(', ', $attributes)];
 
         if (count($this->nodes)) {
             foreach ($this->nodes as $name => $node) {
                 $len = strlen($name) + 4;
-                $noderepr = array();
+                $noderepr = [];
                 foreach (explode("\n", (string) $node) as $line) {
                     $noderepr[] = str_repeat(' ', $len).$line;
                 }
@@ -251,3 +251,6 @@ class Twig_Node implements Twig_NodeInterface
         return $this->name;
     }
 }
+
+class_alias('Twig_Node', 'Twig\Node\Node', false);
+class_exists('Twig_Compiler');

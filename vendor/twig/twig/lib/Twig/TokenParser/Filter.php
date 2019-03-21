@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -30,7 +30,7 @@ class Twig_TokenParser_Filter extends Twig_TokenParser
         $filter = $this->parser->getExpressionParser()->parseFilterExpressionRaw($ref, $this->getTag());
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
-        $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
+        $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
 
         $block = new Twig_Node_Block($name, $body, $token->getLine());
@@ -49,3 +49,5 @@ class Twig_TokenParser_Filter extends Twig_TokenParser
         return 'filter';
     }
 }
+
+class_alias('Twig_TokenParser_Filter', 'Twig\TokenParser\FilterTokenParser', false);

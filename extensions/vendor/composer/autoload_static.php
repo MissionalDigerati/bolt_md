@@ -4,79 +4,67 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit65d89ff6f5385f484a75bbdf2c198f4c
+class ComposerStaticInit03e7a5f96c4cf525f98c82a84272d45c
 {
-    public static $files = array (
-        'f0fccfd8125cabfe1284498d88fd3ab6' => __DIR__ . '/..' . '/bolt/simpleforms/init.php',
-        'c5f6accce5fcb5a2a1691bbc36239f3b' => __DIR__ . '/..' . '/bolt/googleanalytics/init.php',
-    );
-
     public static $prefixLengthsPsr4 = array (
+        'R' => 
+        array (
+            'ReCaptcha\\' => 10,
+        ),
         'B' => 
         array (
-            'Bolt\\Extension\\MissionalDigerati\\RelatedSort\\' => 45,
-            'Bolt\\Extension\\MissionalDigerati\\BoltRelatedSort\\' => 49,
-            'Bolt\\Extension\\MissionalDigerati\\BoltPrivateContent\\' => 52,
+            'Bolt\\Extension\\MissionalDigerati\\BoltUtilityBox\\' => 48,
             'Bolt\\Extension\\MissionalDigerati\\BoltPiconSelector\\' => 51,
-            'Bolt\\Extension\\MissionalDigerati\\BoltClassManager\\' => 50,
-            'Bolt\\Extension\\Bolt\\SimpleForms\\' => 32,
             'Bolt\\Extension\\Bolt\\GoogleAnalytics\\' => 36,
-            'Bolt\\Composer\\' => 14,
+            'Bolt\\Extension\\Bolt\\EmailSpooler\\' => 33,
+            'Bolt\\Extension\\Bolt\\BoltForms\\' => 30,
+            'Bolt\\Composer\\EventListener\\' => 28,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Bolt\\Extension\\MissionalDigerati\\RelatedSort\\' => 
+        'ReCaptcha\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/local/missionaldigerati/boltutilitybox',
+            0 => __DIR__ . '/..' . '/google/recaptcha/src/ReCaptcha',
         ),
-        'Bolt\\Extension\\MissionalDigerati\\BoltRelatedSort\\' => 
+        'Bolt\\Extension\\MissionalDigerati\\BoltUtilityBox\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/local/missionaldigerati/boltrelatedsort',
-        ),
-        'Bolt\\Extension\\MissionalDigerati\\BoltPrivateContent\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/local/missionaldigerati/boltprivatecontent',
+            0 => __DIR__ . '/..' . '/missionaldigerati/boltutilitybox/src',
         ),
         'Bolt\\Extension\\MissionalDigerati\\BoltPiconSelector\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/local/missionaldigerati/boltpiconselector',
-        ),
-        'Bolt\\Extension\\MissionalDigerati\\BoltClassManager\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/local/missionaldigerati/boltclassmanager',
-        ),
-        'Bolt\\Extension\\Bolt\\SimpleForms\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/bolt/simpleforms',
+            0 => __DIR__ . '/..' . '/missionaldigerati/boltpiconselector/src',
         ),
         'Bolt\\Extension\\Bolt\\GoogleAnalytics\\' => 
         array (
-            0 => __DIR__ . '/..' . '/bolt/googleanalytics',
+            0 => __DIR__ . '/..' . '/bolt/googleanalytics/src',
         ),
-        'Bolt\\Composer\\' => 
+        'Bolt\\Extension\\Bolt\\EmailSpooler\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/',
+            0 => __DIR__ . '/..' . '/bolt/email-spooler/src',
+        ),
+        'Bolt\\Extension\\Bolt\\BoltForms\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bolt/boltforms/src',
+        ),
+        'Bolt\\Composer\\EventListener\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/../vendor/bolt/bolt/src/Composer/EventListener',
         ),
     );
 
     public static $classMap = array (
-        'Bolt\\Composer\\ExtensionInstaller' => __DIR__ . '/../..' . '/ExtensionInstaller.php',
-        'Bolt\\Extension\\Bolt\\GoogleAnalytics\\Extension' => __DIR__ . '/..' . '/bolt/googleanalytics/Extension.php',
-        'Bolt\\Extension\\Bolt\\SimpleForms\\Extension' => __DIR__ . '/..' . '/bolt/simpleforms/Extension.php',
-        'Bolt\\Extension\\MissionalDigerati\\BoltClassManager\\Extension' => __DIR__ . '/../..' . '/local/missionaldigerati/boltclassmanager/Extension.php',
-        'Bolt\\Extension\\MissionalDigerati\\BoltPiconSelector\\Extension' => __DIR__ . '/../..' . '/local/missionaldigerati/boltpiconselector/Extension.php',
-        'Bolt\\Extension\\MissionalDigerati\\BoltPiconSelector\\PiconSelectorField' => __DIR__ . '/../..' . '/local/missionaldigerati/boltpiconselector/PiconSelectorField.php',
-        'Bolt\\Extension\\MissionalDigerati\\BoltPrivateContent\\Extension' => __DIR__ . '/../..' . '/local/missionaldigerati/boltprivatecontent/Extension.php',
-        'Bolt\\Extension\\MissionalDigerati\\BoltRelatedSort\\Extension' => __DIR__ . '/../..' . '/local/missionaldigerati/boltrelatedsort/Extension.php',
+        'Example\\EventChoice' => __DIR__ . '/..' . '/bolt/boltforms/docs/example/Choice/EventChoice.php',
+        'Example\\StaticChoice' => __DIR__ . '/..' . '/bolt/boltforms/docs/example/Choice/StaticChoice.php',
+        'Example\\TraversableChoice' => __DIR__ . '/..' . '/bolt/boltforms/docs/example/Choice/TraversableChoice.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit65d89ff6f5385f484a75bbdf2c198f4c::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit65d89ff6f5385f484a75bbdf2c198f4c::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit65d89ff6f5385f484a75bbdf2c198f4c::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit03e7a5f96c4cf525f98c82a84272d45c::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit03e7a5f96c4cf525f98c82a84272d45c::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit03e7a5f96c4cf525f98c82a84272d45c::$classMap;
 
         }, null, ClassLoader::class);
     }

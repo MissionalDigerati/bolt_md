@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2012 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,12 +20,12 @@
  */
 class Twig_Extension_Staging extends Twig_Extension
 {
-    protected $functions = array();
-    protected $filters = array();
-    protected $visitors = array();
-    protected $tokenParsers = array();
-    protected $globals = array();
-    protected $tests = array();
+    protected $functions = [];
+    protected $filters = [];
+    protected $visitors = [];
+    protected $tokenParsers = [];
+    protected $globals = [];
+    protected $tests = [];
 
     public function addFunction($name, $function)
     {
@@ -108,3 +108,5 @@ class Twig_Extension_Staging extends Twig_Extension
         return 'staging';
     }
 }
+
+class_alias('Twig_Extension_Staging', 'Twig\Extension\StagingExtension', false);

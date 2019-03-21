@@ -15,22 +15,25 @@ the Composer execution process.
 > executed. If a dependency of the root package specifies its own scripts,
 > Composer does not execute those additional scripts.
 
-
 ## Event names
 
 Composer fires the following named events during its execution process:
 
 ### Command Events
 
-- **pre-install-cmd**: occurs before the `install` command is executed with a lock file present.
-- **post-install-cmd**: occurs after the `install` command has been executed with a lock file present.
-- **pre-update-cmd**: occurs before the `update` command is executed, or before the `install` command is executed without a lock file present.
-- **post-update-cmd**: occurs after the `update` command has been executed, or after the `install` command has been executed without a lock file present.
+- **pre-install-cmd**: occurs before the `install` command is executed with a
+  lock file present.
+- **post-install-cmd**: occurs after the `install` command has been executed
+  with a lock file present.
+- **pre-update-cmd**: occurs before the `update` command is executed, or before
+  the `install` command is executed without a lock file present.
+- **post-update-cmd**: occurs after the `update` command has been executed, or
+  after the `install` command has been executed without a lock file present.
 - **post-status-cmd**: occurs after the `status` command has been executed.
 - **pre-archive-cmd**: occurs before the `archive` command is executed.
 - **post-archive-cmd**: occurs after the `archive` command has been executed.
-- **pre-autoload-dump**: occurs before the autoloader is dumped, either
-  during `install`/`update`, or via the `dump-autoload` command.
+- **pre-autoload-dump**: occurs before the autoloader is dumped, either during
+  `install`/`update`, or via the `dump-autoload` command.
 - **post-autoload-dump**: occurs after the autoloader has been dumped, either
   during `install`/`update`, or via the `dump-autoload` command.
 - **post-root-package-install**: occurs after the root package has been
@@ -60,6 +63,9 @@ Composer fires the following named events during its execution process:
 - **pre-file-download**: occurs before files are downloaded and allows
   you to manipulate the `RemoteFilesystem` object prior to downloading files
   based on the URL to be downloaded.
+- **pre-command-run**: occurs before a command is executed and allows you to
+  manipulate the `InputInterface` object's options and arguments to tweak
+  a command's behavior.
 
 > **Note:** Composer makes no assumptions about the state of your dependencies
 > prior to `install` or `update`. Therefore, you should not specify scripts
@@ -150,6 +156,11 @@ class MyClass
 }
 ```
 
+**Note:** During a composer install or update process, a variable named
+`COMPOSER_DEV_MODE` will be added to the environment. If the command was run
+with the `--no-dev` flag, this variable will be set to 0, otherwise it will be
+set to 1.
+
 ## Event classes
 
 When an event is fired, your PHP callback receives as first argument a
@@ -201,8 +212,14 @@ simply running `composer test`:
 }
 ```
 
-> **Note:** Composer's bin-dir is pushed on top of the PATH so that binaries
-> of dependencies are easily accessible as CLI commands when writing scripts.
+Similar to the `run-script` command you can give additional arguments to scripts,
+e.g. `composer test -- --filter <pattern>` will pass `--filter <pattern>` along
+to the `phpunit` script.
+
+> **Note:** Before executing scripts, Composer's bin-dir is temporarily pushed
+> on top of the PATH environment variable so that binaries of dependencies
+> are easily accessible. In this example no matter if the `phpunit` binary is
+> actually in `vendor/bin/phpunit` or `bin/phpunit` it will be found and executed.
 
 ## Referencing scripts
 
@@ -221,6 +238,17 @@ one by prefixing the command name with `@`:
 }
 ```
 
+You can also refer a script and pass it new arguments:
+
+```json
+{
+  "scripts": {
+    "tests": "phpunit",
+    "testsVerbose": "@tests -vvv"
+  }
+}
+```
+
 ## Calling Composer commands
 
 To call Composer commands, you can use `@composer` which will automatically
@@ -232,7 +260,7 @@ resolve to whatever composer.phar is currently being used:
         "test": [
             "@composer install",
             "phpunit"
-        ],
+        ]
     }
 }
 ```
@@ -240,3 +268,37 @@ resolve to whatever composer.phar is currently being used:
 One limitation of this is that you can not call multiple composer commands in
 a row like `@composer install && @composer foo`. You must split them up in a
 JSON array of commands.
+
+## Executing PHP scripts
+
+To execute PHP scripts, you can use `@php` which will automatically
+resolve to whatever php process is currently being used:
+
+```json
+{
+    "scripts": {
+        "test": [
+            "@php script.php",
+            "phpunit"
+        ]
+    }
+}
+```
+
+One limitation of this is that you can not call multiple commands in
+a row like `@php install && @php foo`. You must split them up in a
+JSON array of commands.
+
+## Custom descriptions.
+
+You can set custom script descriptions with the following in your `composer.json`:
+
+```json
+{
+    "scripts-descriptions": {
+        "test": "Run all tests!"
+    }
+}
+```
+
+> **Note:** You can only set custom descriptions of custom commands.

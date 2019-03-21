@@ -165,7 +165,12 @@ class Native implements MapperInterface
                     break;
                 case self::FOCALLENGTH:
                     $parts = explode('/', $value);
-                    $value = (int) reset($parts) / (int) end($parts);
+                    // Avoid division by zero if focal length is invalid
+                    if (end($parts) == '0') {
+                        $value = 0;
+                    } else {
+                        $value = (int) reset($parts) / (int) end($parts);
+                    }
                     break;
                 case self::XRESOLUTION:
                 case self::YRESOLUTION:
@@ -244,11 +249,14 @@ class Native implements MapperInterface
     /**
      * Extract GPS coordinates from components array
      *
-     * @param array $components
+     * @param array|string $components
      * @return float
      */
-    protected function extractGPSCoordinate(array $components)
+    protected function extractGPSCoordinate($components)
     {
+        if (!is_array($components)) {
+            $components = array($components);
+        }
         $components = array_map(array($this, 'normalizeComponent'), $components);
 
         if (count($components) > 2) {

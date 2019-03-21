@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -63,7 +63,7 @@ class Twig_TokenParser_AutoEscape extends Twig_TokenParser
         }
 
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
-        $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
+        $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
         return new Twig_Node_AutoEscape($value, $body, $lineno, $this->getTag());
@@ -79,3 +79,5 @@ class Twig_TokenParser_AutoEscape extends Twig_TokenParser
         return 'autoescape';
     }
 }
+
+class_alias('Twig_TokenParser_AutoEscape', 'Twig\TokenParser\AutoEscapeTokenParser', false);

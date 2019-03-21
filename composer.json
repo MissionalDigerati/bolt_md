@@ -1,34 +1,33 @@
 {
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/MissionalDigerati/BoltUtilityBox.git"
+    "name": "bolt/composer-install",
+    "description": "Sophisticated, lightweight & simple CMS",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^5.5.9 || ^7.0",
+        "bolt/bolt": "^3.6",
+        "passwordlib/passwordlib": "^1.0@beta",
+        "bolt/configuration-notices": "^1.0"
     },
-    {
-      "type": "vcs",
-      "url": "https://github.com/MissionalDigerati/BoltRelatedSort.git"
+    "minimum-stability": "beta",
+    "prefer-stable": true,    
+    "scripts": {
+        "post-install-cmd": [
+            "Bolt\\Composer\\ScriptHandler::installAssets"
+        ],
+        "post-update-cmd": [
+            "Bolt\\Composer\\ScriptHandler::updateProject",
+            "Bolt\\Composer\\ScriptHandler::installAssets"
+        ],
+        "post-create-project-cmd": [
+            "Bolt\\Composer\\ScriptHandler::configureProject",
+            "Bolt\\Composer\\ScriptHandler::installThemesAndFiles",
+            "nut extensions:setup"
+        ]
     },
-    {
-      "type": "vcs",
-      "url": "https://github.com/MissionalDigerati/BoltPrivateContent.git"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/MissionalDigerati/BoltClassManager.git"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/MissionalDigerati/BoltPiconSelector.git"
+    "autoload": {
+        "psr-4": {
+            "Bundle\\": "src/"
+        }
     }
-  ],
-  "require": {
-    "MissionalDigerati/BoltUtilityBox": ">=2.0.0",
-    "MissionalDigerati/BoltRelatedSort": ">=3.0.2",
-    "MissionalDigerati/BoltPrivateContent": ">=2.0.0",
-    "MissionalDigerati/BoltClassManager": ">=2.0.0",
-    "MissionalDigerati/BoltPiconSelector": ">=1.0.0"
-  },
-  "config": {
-    "vendor-dir": "extensions/local"
-  }
 }

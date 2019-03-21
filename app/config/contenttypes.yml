@@ -186,7 +186,7 @@ pages:
         template:
             type: templateselect
             filter: '*.twig'
-        tagline: 
+        tagline:
             type: textarea
             label: 'Tagline'
             class: wide
@@ -201,7 +201,7 @@ pages:
         body_footer:
             type: html
             label: 'Body (Bottom Portion)'
-        seo_description: 
+        seo_description:
             type: textarea
             class: large
             height: 100px
@@ -336,5 +336,3 @@ upcoming_classes:
             format: "{{ item.name|escape }}, {{ item.address|striptags }}"
     sort: date_of_class
     record_template: upcoming_class.twig
-
-

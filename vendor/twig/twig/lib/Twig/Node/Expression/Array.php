@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,7 +14,7 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
 
     public function __construct(array $elements, $lineno)
     {
-        parent::__construct($elements, array(), $lineno);
+        parent::__construct($elements, [], $lineno);
 
         $this->index = -1;
         foreach ($this->getKeyValuePairs() as $pair) {
@@ -26,13 +26,13 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
 
     public function getKeyValuePairs()
     {
-        $pairs = array();
+        $pairs = [];
 
         foreach (array_chunk($this->nodes, 2) as $pair) {
-            $pairs[] = array(
+            $pairs[] = [
                 'key' => $pair[0],
                 'value' => $pair[1],
-            );
+            ];
         }
 
         return $pairs;
@@ -62,7 +62,7 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
 
     public function compile(Twig_Compiler $compiler)
     {
-        $compiler->raw('array(');
+        $compiler->raw('[');
         $first = true;
         foreach ($this->getKeyValuePairs() as $pair) {
             if (!$first) {
@@ -76,6 +76,8 @@ class Twig_Node_Expression_Array extends Twig_Node_Expression
                 ->subcompile($pair['value'])
             ;
         }
-        $compiler->raw(')');
+        $compiler->raw(']');
     }
 }
+
+class_alias('Twig_Node_Expression_Array', 'Twig\Node\Expression\ArrayExpression', false);

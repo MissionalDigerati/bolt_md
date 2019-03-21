@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -25,9 +25,9 @@ class Twig_Filter_Method extends Twig_Filter
     protected $extension;
     protected $method;
 
-    public function __construct(Twig_ExtensionInterface $extension, $method, array $options = array())
+    public function __construct(Twig_ExtensionInterface $extension, $method, array $options = [])
     {
-        $options['callable'] = array($extension, $method);
+        $options['callable'] = [$extension, $method];
 
         parent::__construct($options);
 

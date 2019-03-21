@@ -46,6 +46,7 @@ class Config
         'sort-packages' => false,
         'optimize-autoloader' => false,
         'classmap-authoritative' => false,
+        'apcu-autoloader' => false,
         'prepend-autoloader' => true,
         'github-domains' => array('github.com'),
         'bitbucket-expose-hostname' => true,
@@ -59,17 +60,19 @@ class Config
         'platform' => array(),
         'archive-format' => 'tar',
         'archive-dir' => '.',
+        'htaccess-protect' => true,
         // valid keys without defaults (auth config stuff):
         // bitbucket-oauth
         // github-oauth
         // gitlab-oauth
+        // gitlab-token
         // http-basic
     );
 
     public static $defaultRepositories = array(
         'packagist.org' => array(
             'type' => 'composer',
-            'url' => 'https?://packagist.org',
+            'url' => 'https?://repo.packagist.org',
             'allow_ssl_downgrade' => true,
         ),
     );
@@ -77,7 +80,9 @@ class Config
     private $config;
     private $baseDir;
     private $repositories;
+    /** @var ConfigSourceInterface */
     private $configSource;
+    /** @var ConfigSourceInterface */
     private $authConfigSource;
     private $useEnvironment;
     private $warnedHosts = array();
@@ -125,7 +130,7 @@ class Config
         // override defaults with given config
         if (!empty($config['config']) && is_array($config['config'])) {
             foreach ($config['config'] as $key => $val) {
-                if (in_array($key, array('bitbucket-oauth', 'github-oauth', 'gitlab-oauth', 'http-basic')) && isset($this->config[$key])) {
+                if (in_array($key, array('bitbucket-oauth', 'github-oauth', 'gitlab-oauth', 'gitlab-token', 'http-basic')) && isset($this->config[$key])) {
                     $this->config[$key] = array_merge($this->config[$key], $val);
                 } elseif ('preferred-install' === $key && isset($this->config[$key])) {
                     if (is_array($val) || is_array($this->config[$key])) {
@@ -215,7 +220,7 @@ class Config
                 $env = 'COMPOSER_' . strtoupper(strtr($key, '-', '_'));
 
                 $val = $this->getComposerEnv($env);
-                $val = rtrim($this->process(false !== $val ? $val : $this->config[$key], $flags), '/\\');
+                $val = rtrim((string) $this->process(false !== $val ? $val : $this->config[$key], $flags), '/\\');
                 $val = Platform::expandPath($val);
 
                 if (substr($key, -4) !== '-dir') {
@@ -223,6 +228,13 @@ class Config
                 }
 
                 return (($flags & self::RELATIVE_PATHS) == self::RELATIVE_PATHS) ? $val : $this->realpath($val);
+
+            case 'htaccess-protect':
+                $value = $this->getComposerEnv('COMPOSER_HTACCESS_PROTECT');
+                if (false === $value) {
+                    $value = $this->config[$key];
+                }
+                return $value !== 'false' && (bool) $value;
 
             case 'cache-ttl':
                 return (int) $this->config[$key];
@@ -239,9 +251,11 @@ class Config
                         case 'g':
                             $size *= 1024;
                             // intentional fallthrough
+                            // no break
                         case 'm':
                             $size *= 1024;
                             // intentional fallthrough
+                            // no break
                         case 'k':
                             $size *= 1024;
                             break;
@@ -356,9 +370,9 @@ class Config
     /**
      * Replaces {$refs} inside a config string
      *
-     * @param  string $value a config string that can contain {$refs-to-other-config}
-     * @param  int    $flags Options (see class constants)
-     * @return string
+     * @param  string|int|null $value a config string that can contain {$refs-to-other-config}
+     * @param  int             $flags Options (see class constants)
+     * @return string|int|null
      */
     private function process($value, $flags)
     {
@@ -412,7 +426,7 @@ class Config
     {
         if (isset($this->repositories[$name])) {
             unset($this->repositories[$name]);
-        } else if ($name === 'packagist') { // BC support for default "packagist" named repo
+        } elseif ($name === 'packagist') { // BC support for default "packagist" named repo
             unset($this->repositories['packagist.org']);
         }
     }

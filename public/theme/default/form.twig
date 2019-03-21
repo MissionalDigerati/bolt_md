@@ -1,0 +1,52 @@
+{% include '_header.twig' %}
+
+<body class="full-layout">
+<div class="body-wrapper">
+
+  {% include '_nav.twig' %}
+
+  <div class="offset"></div>
+
+  <div class="light-wrapper page-title">
+    <div class="container inner">
+      <h1>{{ page.title }}</h1>
+    </div>
+  </div>
+
+  <div class="dark-wrapper">
+    <div class="container inner">
+      {% include "_main_image.twig" %}
+      <div class="section-title text-center">
+        <h2>{{ page.tagline }}</h2>
+        <span class="icon"><i class="icon-picons-{{ page.tagline_icon }}"></i></span>
+      </div>
+        {{ page.body_header }}
+        {{ boltforms(page.slug|replace('-', '_')) }}
+        {% if page.body_footer != '' %}
+          {{ page.body_footer }}
+        {% endif %}
+    </div>
+  </div>
+
+{% include '_footer.twig' %}
+
+</div>
+<!-- /.body-wrapper -->
+
+{% include '_scripts.twig' %}
+{% if page.slug == 'host-a-class' %}
+{% setcontent curriculum = 'curriculum' %}
+{% set selected = app.request.get('curriculum') %}
+  <script type="text/javascript">
+    $(function() {
+      {% for class in curriculum %};
+        {% if class.slug == selected %}
+          $('#host_a_class_curriculum').val("{{ class.title }}");
+        {% endif %}
+      {% endfor %}
+    });
+  </script>
+{% endif %}
+
+</body>
+</html>

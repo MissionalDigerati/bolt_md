@@ -3,19 +3,23 @@
          convertErrorsToExceptions="true"
          convertWarningsToExceptions="true"
          convertNoticesToExceptions="true"
-         mapTestClassNameToCoveredClassName="true"
          bootstrap="vendor/autoload.php"
          verbose="true"
-         colors="true"
-         strict="true">
+         colors="true">
+    <php>
+        <ini name="error_reporting" value="-1"/>
+        <ini name="memory_limit" value="3G"/>
+    </php>
 
     <testsuites>
         <testsuite name="ua-parser">
             <directory>./tests</directory>
         </testsuite>
     </testsuites>
-    <php>
-        <ini name="error_reporting" value="-1"/>
-        <ini name="memory_limit" value="3G"/>
-    </php>
+
+    <filter>
+        <whitelist>
+            <directory>./src/</directory>
+        </whitelist>
+    </filter>
 </phpunit>

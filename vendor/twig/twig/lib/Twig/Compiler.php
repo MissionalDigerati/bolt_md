@@ -3,8 +3,8 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
- * (c) 2009 Armin Ronacher
+ * (c) Fabien Potencier
+ * (c) Armin Ronacher
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,10 +21,11 @@ class Twig_Compiler implements Twig_CompilerInterface
     protected $source;
     protected $indentation;
     protected $env;
-    protected $debugInfo = array();
+    protected $debugInfo = [];
     protected $sourceOffset;
     protected $sourceLine;
     protected $filename;
+    private $varNameSalt = 0;
 
     public function __construct(Twig_Environment $env)
     {
@@ -73,11 +74,12 @@ class Twig_Compiler implements Twig_CompilerInterface
     {
         $this->lastLine = null;
         $this->source = '';
-        $this->debugInfo = array();
+        $this->debugInfo = [];
         $this->sourceOffset = 0;
         // source code starts at 1 (as we then increment it when we encounter new lines)
         $this->sourceLine = 1;
         $this->indentation = $indentation;
+        $this->varNameSalt = 0;
 
         if ($node instanceof Twig_Node_Module) {
             // to be removed in 2.0
@@ -169,11 +171,11 @@ class Twig_Compiler implements Twig_CompilerInterface
     public function repr($value)
     {
         if (is_int($value) || is_float($value)) {
-            if (false !== $locale = setlocale(LC_NUMERIC, 0)) {
+            if (false !== $locale = setlocale(LC_NUMERIC, '0')) {
                 setlocale(LC_NUMERIC, 'C');
             }
 
-            $this->raw($value);
+            $this->raw(var_export($value, true));
 
             if (false !== $locale) {
                 setlocale(LC_NUMERIC, $locale);
@@ -183,7 +185,7 @@ class Twig_Compiler implements Twig_CompilerInterface
         } elseif (is_bool($value)) {
             $this->raw($value ? 'true' : 'false');
         } elseif (is_array($value)) {
-            $this->raw('array(');
+            $this->raw('[');
             $first = true;
             foreach ($value as $key => $v) {
                 if (!$first) {
@@ -194,7 +196,7 @@ class Twig_Compiler implements Twig_CompilerInterface
                 $this->raw(' => ');
                 $this->repr($v);
             }
-            $this->raw(')');
+            $this->raw(']');
         } else {
             $this->string($value);
         }
@@ -276,6 +278,9 @@ class Twig_Compiler implements Twig_CompilerInterface
 
     public function getVarName()
     {
-        return sprintf('__internal_%s', hash('sha256', uniqid(mt_rand(), true), false));
+        return sprintf('__internal_%s', hash('sha256', __METHOD__.$this->varNameSalt++));
     }
 }
+
+class_alias('Twig_Compiler', 'Twig\Compiler', false);
+class_exists('Twig_Node');

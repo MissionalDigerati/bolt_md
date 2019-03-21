@@ -3,8 +3,8 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
- * (c) 2009 Armin Ronacher
+ * (c) Fabien Potencier
+ * (c) Armin Ronacher
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -28,12 +28,12 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
             $template = null;
         }
 
-        $nodes = array('name' => $name);
+        $nodes = ['name' => $name];
         if (null !== $template) {
             $nodes['template'] = $template;
         }
 
-        parent::__construct($nodes, array('is_defined_test' => false, 'output' => false), $lineno, $tag);
+        parent::__construct($nodes, ['is_defined_test' => false, 'output' => false], $lineno, $tag);
     }
 
     public function compile(Twig_Compiler $compiler)
@@ -89,3 +89,5 @@ class Twig_Node_Expression_BlockReference extends Twig_Node_Expression
         return $compiler->raw(')');
     }
 }
+
+class_alias('Twig_Node_Expression_BlockReference', 'Twig\Node\Expression\BlockReferenceExpression', false);

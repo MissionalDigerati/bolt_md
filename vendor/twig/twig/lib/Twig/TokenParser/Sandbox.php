@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2010 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,7 +18,7 @@
  * {% endsandbox %}
  * </pre>
  *
- * @see http://www.twig-project.org/doc/api.html#sandbox-extension for details
+ * @see https://twig.symfony.com/doc/api.html#sandbox-extension for details
  *
  * @final
  */
@@ -28,7 +28,7 @@ class Twig_TokenParser_Sandbox extends Twig_TokenParser
     {
         $stream = $this->parser->getStream();
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
-        $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
+        $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
         // in a sandbox tag, only include tags are allowed
@@ -57,3 +57,5 @@ class Twig_TokenParser_Sandbox extends Twig_TokenParser
         return 'sandbox';
     }
 }
+
+class_alias('Twig_TokenParser_Sandbox', 'Twig\TokenParser\SandboxTokenParser', false);

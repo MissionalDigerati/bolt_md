@@ -16,9 +16,11 @@ use Composer\Composer;
 use Composer\Factory;
 use Composer\Config;
 use Composer\Downloader\TransportException;
+use Composer\Repository\PlatformRepository;
 use Composer\Plugin\CommandEvent;
 use Composer\Plugin\PluginEvents;
 use Composer\Util\ConfigValidator;
+use Composer\Util\IniHelper;
 use Composer\Util\ProcessExecutor;
 use Composer\Util\RemoteFilesystem;
 use Composer\Util\StreamContextFactory;
@@ -33,7 +35,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DiagnoseCommand extends BaseCommand
 {
-    /** @var RemoteFileSystem */
+    /** @var RemoteFilesystem */
     protected $rfs;
 
     /** @var ProcessExecutor */
@@ -47,7 +49,8 @@ class DiagnoseCommand extends BaseCommand
         $this
             ->setName('diagnose')
             ->setDescription('Diagnoses the system to identify common errors.')
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 The <info>diagnose</info> command checks common errors to help debugging problems.
 
 The process exit code will be 1 in case of warnings and 2 for errors.
@@ -80,7 +83,7 @@ EOT
         }
 
         $config->merge(array('config' => array('secure-http' => false)));
-        $config->prohibitUrlByConfig('http://packagist.org', new NullIO);
+        $config->prohibitUrlByConfig('http://repo.packagist.org', new NullIO);
 
         $this->rfs = Factory::createRemoteFilesystem($io, $config);
         $this->process = new ProcessExecutor($io);
@@ -116,8 +119,9 @@ EOT
             $io->write('Checking github.com rate limit: ', false);
             try {
                 $rate = $this->getGithubRateLimit('github.com');
-                $this->outputResult(true);
-                if (10 > $rate['remaining']) {
+                if (!is_array($rate)) {
+                    $this->outputResult($rate);
+                } elseif (10 > $rate['remaining']) {
                     $io->write('<warning>WARNING</warning>');
                     $io->write(sprintf(
                         '<comment>Github has a rate limit on their API. '
@@ -128,6 +132,8 @@ EOT
                         $rate['remaining'],
                         $rate['limit']
                     ));
+                } else {
+                    $this->outputResult(true);
                 }
             } catch (\Exception $e) {
                 if ($e instanceof TransportException && $e->getCode() === 401) {
@@ -149,6 +155,22 @@ EOT
             $this->outputResult($this->checkVersion($config));
         }
 
+        $io->write(sprintf('Composer version: <comment>%s</comment>', Composer::VERSION));
+
+        $platformOverrides = $config->get('platform') ?: array();
+        $platformRepo = new PlatformRepository(array(), $platformOverrides);
+        $phpPkg = $platformRepo->findPackage('php', '*');
+        $phpVersion = $phpPkg->getPrettyVersion();
+        if (false !== strpos($phpPkg->getDescription(), 'overridden')) {
+            $phpVersion .= ' - ' . $phpPkg->getDescription();
+        }
+
+        $io->write(sprintf('PHP version: <comment>%s</comment>', $phpVersion));
+
+        if (defined('PHP_BINARY')) {
+            $io->write(sprintf('PHP binary path: <comment>%s</comment>', PHP_BINARY));
+        }
+
         return $this->exitCode;
     }
 
@@ -166,7 +188,7 @@ EOT
             $output = '';
             foreach ($messages as $style => $msgs) {
                 foreach ($msgs as $msg) {
-                    $output .=  '<' . $style . '>' . $msg . '</' . $style . '>' . PHP_EOL;
+                    $output .= '<' . $style . '>' . $msg . '</' . $style . '>' . PHP_EOL;
                 }
             }
 
@@ -188,6 +210,11 @@ EOT
 
     private function checkHttp($proto, Config $config)
     {
+        $result = $this->checkConnectivity();
+        if ($result !== true) {
+            return $result;
+        }
+
         $disableTls = false;
         $result = array();
         if ($proto === 'https' && $config->get('disable-tls') === true) {
@@ -199,7 +226,7 @@ EOT
         }
 
         try {
-            $this->rfs->getContents('packagist.org', $proto . '://packagist.org/packages.json', false);
+            $this->rfs->getContents('packagist.org', $proto . '://repo.packagist.org/packages.json', false);
         } catch (TransportException $e) {
             if (false !== strpos($e->getMessage(), 'cafile')) {
                 $result[] = '<error>[' . get_class($e) . '] ' . $e->getMessage() . '</error>';
@@ -219,13 +246,18 @@ EOT
 
     private function checkHttpProxy()
     {
+        $result = $this->checkConnectivity();
+        if ($result !== true) {
+            return $result;
+        }
+
         $protocol = extension_loaded('openssl') ? 'https' : 'http';
         try {
-            $json = json_decode($this->rfs->getContents('packagist.org', $protocol . '://packagist.org/packages.json', false), true);
+            $json = json_decode($this->rfs->getContents('packagist.org', $protocol . '://repo.packagist.org/packages.json', false), true);
             $hash = reset($json['provider-includes']);
             $hash = $hash['sha256'];
             $path = str_replace('%hash%', $hash, key($json['provider-includes']));
-            $provider = $this->rfs->getContents('packagist.org', $protocol . '://packagist.org/'.$path, false);
+            $provider = $this->rfs->getContents('packagist.org', $protocol . '://repo.packagist.org/'.$path, false);
 
             if (hash('sha256', $provider) !== $hash) {
                 return 'It seems that your proxy is modifying http traffic on the fly';
@@ -246,7 +278,12 @@ EOT
      */
     private function checkHttpProxyFullUriRequestParam()
     {
-        $url = 'http://packagist.org/packages.json';
+        $result = $this->checkConnectivity();
+        if ($result !== true) {
+            return $result;
+        }
+
+        $url = 'http://repo.packagist.org/packages.json';
         try {
             $this->rfs->getContents('packagist.org', $url, false);
         } catch (TransportException $e) {
@@ -271,6 +308,11 @@ EOT
      */
     private function checkHttpsProxyFullUriRequestParam()
     {
+        $result = $this->checkConnectivity();
+        if ($result !== true) {
+            return $result;
+        }
+
         if (!extension_loaded('openssl')) {
             return 'You need the openssl extension installed for this check';
         }
@@ -293,6 +335,11 @@ EOT
 
     private function checkGithubOauth($domain, $token)
     {
+        $result = $this->checkConnectivity();
+        if ($result !== true) {
+            return $result;
+        }
+
         $this->getIO()->setAuthentication($domain, $token, 'x-oauth-basic');
         try {
             $url = $domain === 'github.com' ? 'https://api.'.$domain.'/' : 'https://'.$domain.'/api/v3/';
@@ -313,10 +360,15 @@ EOT
      * @param  string             $domain
      * @param  string             $token
      * @throws TransportException
-     * @return array
+     * @return array|string
      */
     private function getGithubRateLimit($domain, $token = null)
     {
+        $result = $this->checkConnectivity();
+        if ($result !== true) {
+            return $result;
+        }
+
         if ($token) {
             $this->getIO()->setAuthentication($domain, $token, 'x-oauth-basic');
         }
@@ -371,6 +423,11 @@ EOT
 
     private function checkVersion($config)
     {
+        $result = $this->checkConnectivity();
+        if ($result !== true) {
+            return $result;
+        }
+
         $versionsUtil = new Versions($config, $this->rfs);
         $latest = $versionsUtil->getLatest();
 
@@ -389,10 +446,12 @@ EOT
         $io = $this->getIO();
         if (true === $result) {
             $io->write('<info>OK</info>');
+
             return;
         }
 
         $hadError = false;
+        $hadWarning = false;
         if ($result instanceof \Exception) {
             $result = '<error>['.get_class($result).'] '.$result->getMessage().'</error>';
         }
@@ -407,16 +466,18 @@ EOT
             foreach ($result as $message) {
                 if (false !== strpos($message, '<error>')) {
                     $hadError = true;
+                } elseif (false !== strpos($message, '<warning>')) {
+                    $hadWarning = true;
                 }
             }
         }
 
         if ($hadError) {
             $io->write('<error>FAIL</error>');
-            $this->exitCode = 2;
-        } else {
+            $this->exitCode = max($this->exitCode, 2);
+        } elseif ($hadWarning) {
             $io->write('<warning>WARNING</warning>');
-            $this->exitCode = 1;
+            $this->exitCode = max($this->exitCode, 1);
         }
 
         if ($result) {
@@ -436,14 +497,9 @@ EOT
         // code below taken from getcomposer.org/installer, any changes should be made there and replicated here
         $errors = array();
         $warnings = array();
-
-        $iniPath = php_ini_loaded_file();
         $displayIniMessage = false;
-        if ($iniPath) {
-            $iniMessage = PHP_EOL.PHP_EOL.'The php.ini used by your command-line PHP is: ' . $iniPath;
-        } else {
-            $iniMessage = PHP_EOL.PHP_EOL.'A php.ini file does not exist. You will have to create one.';
-        }
+
+        $iniMessage = PHP_EOL.PHP_EOL.IniHelper::getMessage();
         $iniMessage .= PHP_EOL.'If you can not modify the ini file, you can also run `php -d option=value` to modify ini values on the fly. You can use -d multiple times.';
 
         if (!function_exists('json_decode')) {
@@ -466,7 +522,7 @@ EOT
             $errors['iconv_mbstring'] = true;
         }
 
-        if (!ini_get('allow_url_fopen')) {
+        if (!filter_var(ini_get('allow_url_fopen'), FILTER_VALIDATE_BOOLEAN)) {
             $errors['allow_url_fopen'] = true;
         }
 
@@ -490,8 +546,12 @@ EOT
             $warnings['openssl_version'] = true;
         }
 
-        if (!defined('HHVM_VERSION') && !extension_loaded('apcu') && ini_get('apc.enable_cli')) {
+        if (!defined('HHVM_VERSION') && !extension_loaded('apcu') && filter_var(ini_get('apc.enable_cli'), FILTER_VALIDATE_BOOLEAN)) {
             $warnings['apc_cli'] = true;
+        }
+
+        if (!extension_loaded('zlib')) {
+            $warnings['zlib'] = true;
         }
 
         ob_start();
@@ -509,7 +569,7 @@ EOT
             }
         }
 
-        if (ini_get('xdebug.profiler_enabled')) {
+        if (filter_var(ini_get('xdebug.profiler_enabled'), FILTER_VALIDATE_BOOLEAN)) {
             $warnings['xdebug_profile'] = true;
         } elseif (extension_loaded('xdebug')) {
             $warnings['xdebug_loaded'] = true;
@@ -590,25 +650,31 @@ EOT
             foreach ($warnings as $warning => $current) {
                 switch ($warning) {
                     case 'apc_cli':
-                        $text  = "The apc.enable_cli setting is incorrect.".PHP_EOL;
+                        $text = "The apc.enable_cli setting is incorrect.".PHP_EOL;
                         $text .= "Add the following to the end of your `php.ini`:".PHP_EOL;
                         $text .= "  apc.enable_cli = Off";
                         $displayIniMessage = true;
                         break;
 
+                    case 'zlib':
+                        $text = 'The zlib extension is not loaded, this can slow down Composer a lot.'.PHP_EOL;
+                        $text .= 'If possible, enable it or recompile php with --with-zlib'.PHP_EOL;
+                        $displayIniMessage = true;
+                        break;
+
                     case 'sigchild':
-                        $text  = "PHP was compiled with --enable-sigchild which can cause issues on some platforms.".PHP_EOL;
+                        $text = "PHP was compiled with --enable-sigchild which can cause issues on some platforms.".PHP_EOL;
                         $text .= "Recompile it without this flag if possible, see also:".PHP_EOL;
                         $text .= "  https://bugs.php.net/bug.php?id=22999";
                         break;
 
                     case 'curlwrappers':
-                        $text  = "PHP was compiled with --with-curlwrappers which will cause issues with HTTP authentication and GitHub.".PHP_EOL;
+                        $text = "PHP was compiled with --with-curlwrappers which will cause issues with HTTP authentication and GitHub.".PHP_EOL;
                         $text .= " Recompile it without this flag if possible";
                         break;
 
                     case 'php':
-                        $text  = "Your PHP ({$current}) is quite old, upgrading to PHP 5.3.4 or higher is recommended.".PHP_EOL;
+                        $text = "Your PHP ({$current}) is quite old, upgrading to PHP 5.3.4 or higher is recommended.".PHP_EOL;
                         $text .= " Composer works with 5.3.2+ for most people, but there might be edge case issues.";
                         break;
 
@@ -622,12 +688,12 @@ EOT
                         break;
 
                     case 'xdebug_loaded':
-                        $text  = "The xdebug extension is loaded, this can slow down Composer a little.".PHP_EOL;
+                        $text = "The xdebug extension is loaded, this can slow down Composer a little.".PHP_EOL;
                         $text .= " Disabling it when using Composer is recommended.";
                         break;
 
                     case 'xdebug_profile':
-                        $text  = "The xdebug.profiler_enabled setting is enabled, this can slow down Composer a lot.".PHP_EOL;
+                        $text = "The xdebug.profiler_enabled setting is enabled, this can slow down Composer a lot.".PHP_EOL;
                         $text .= "Add the following to the end of your `php.ini` to disable it:".PHP_EOL;
                         $text .= "  xdebug.profiler_enabled = 0";
                         $displayIniMessage = true;
@@ -642,5 +708,21 @@ EOT
         }
 
         return !$warnings && !$errors ? true : $output;
+    }
+
+
+    /**
+     * Check if allow_url_fopen is ON
+     *
+     * @return bool|string
+     */
+    private function checkConnectivity()
+    {
+        if (!ini_get('allow_url_fopen')) {
+            $result = '<info>Skipped because allow_url_fopen is missing.</info>';
+            return $result;
+        }
+
+        return true;
     }
 }

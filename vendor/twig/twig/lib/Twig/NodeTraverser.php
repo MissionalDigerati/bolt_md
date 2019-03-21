@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,13 +21,13 @@
 class Twig_NodeTraverser
 {
     protected $env;
-    protected $visitors = array();
+    protected $visitors = [];
 
     /**
      * @param Twig_Environment            $env
      * @param Twig_NodeVisitorInterface[] $visitors
      */
-    public function __construct(Twig_Environment $env, array $visitors = array())
+    public function __construct(Twig_Environment $env, array $visitors = [])
     {
         $this->env = $env;
         foreach ($visitors as $visitor) {
@@ -38,7 +38,7 @@ class Twig_NodeTraverser
     public function addVisitor(Twig_NodeVisitorInterface $visitor)
     {
         if (!isset($this->visitors[$visitor->getPriority()])) {
-            $this->visitors[$visitor->getPriority()] = array();
+            $this->visitors[$visitor->getPriority()] = [];
         }
 
         $this->visitors[$visitor->getPriority()][] = $visitor;
@@ -70,8 +70,10 @@ class Twig_NodeTraverser
         $node = $visitor->enterNode($node, $this->env);
 
         foreach ($node as $k => $n) {
-            if (false !== $n = $this->traverseForVisitor($visitor, $n)) {
-                $node->setNode($k, $n);
+            if (false !== $m = $this->traverseForVisitor($visitor, $n)) {
+                if ($m !== $n) {
+                    $node->setNode($k, $m);
+                }
             } else {
                 $node->removeNode($k);
             }
@@ -80,3 +82,5 @@ class Twig_NodeTraverser
         return $visitor->leaveNode($node, $this->env);
     }
 }
+
+class_alias('Twig_NodeTraverser', 'Twig\NodeTraverser', false);

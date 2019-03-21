@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [master]
+
+  * ...
+
+## [1.5.0] 2018-11-01
+
+  * Changed: updated licenses list (SPDX 3.3)
+
+## [1.4.0] 2018-05-04
+
+  * Changed: updated licenses list (SPDX 3.1)
+
+## [1.3.0] 2018-01-31
+
+  * Added: `SpdxLicenses::getLicenses` to get the whole list of methods.
+  * Changed: license identifiers are now case insensitive.
+
+## [1.2.0] 2018-01-03
+
+  * Added: deprecation status for all licenses and a `SpdxLicenses::isDeprecatedByIdentifier` method.
+  * Changed: updated licenses list to SPDX 3.0.
+
+## [1.1.6] 2017-04-03
+
+  * Changed: updated licenses list.
+
 ## [1.1.5] 2016-09-28
 
   * Changed: updated licenses list.
@@ -43,6 +69,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
     - Classname: `Updater` -> `SpdxLicensesUpdater`
   * Changed: validation via regex implementation instead of lexer.
 
+[master]: https://github.com/composer/spdx-licenses/compare/1.5.0...master
+[1.5.0]: https://github.com/composer/spdx-licenses/compare/1.4.0...1.5.0
+[1.4.0]: https://github.com/composer/spdx-licenses/compare/1.3.0...1.4.0
+[1.3.0]: https://github.com/composer/spdx-licenses/compare/1.2.0...1.3.0
+[1.2.0]: https://github.com/composer/spdx-licenses/compare/1.1.6...1.2.0
+[1.1.6]: https://github.com/composer/spdx-licenses/compare/1.1.5...1.1.6
 [1.1.5]: https://github.com/composer/spdx-licenses/compare/1.1.4...1.1.5
 [1.1.4]: https://github.com/composer/spdx-licenses/compare/1.1.3...1.1.4
 [1.1.3]: https://github.com/composer/spdx-licenses/compare/1.1.2...1.1.3

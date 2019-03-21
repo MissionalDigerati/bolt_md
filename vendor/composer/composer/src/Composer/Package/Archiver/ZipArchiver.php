@@ -27,7 +27,7 @@ class ZipArchiver implements ArchiverInterface
     /**
      * {@inheritdoc}
      */
-    public function archive($sources, $target, $format, array $excludes = array())
+    public function archive($sources, $target, $format, array $excludes = array(), $ignoreFilters = false)
     {
         $fs = new Filesystem();
         $sources = $fs->normalizePath($sources);
@@ -35,9 +35,9 @@ class ZipArchiver implements ArchiverInterface
         $zip = new ZipArchive();
         $res = $zip->open($target, ZipArchive::CREATE);
         if ($res === true) {
-            $files = new ArchivableFilesFinder($sources, $excludes);
+            $files = new ArchivableFilesFinder($sources, $excludes, $ignoreFilters);
             foreach ($files as $file) {
-                /** @var $file \SplFileInfo */
+                /** @var \SplFileInfo $file */
                 $filepath = strtr($file->getPath()."/".$file->getFilename(), '\\', '/');
                 $localname = str_replace($sources.'/', '', $filepath);
                 if ($file->isDir()) {
@@ -50,7 +50,8 @@ class ZipArchiver implements ArchiverInterface
                 return $target;
             }
         }
-        $message = sprintf("Could not create archive '%s' from '%s': %s",
+        $message = sprintf(
+            "Could not create archive '%s' from '%s': %s",
             $target,
             $sources,
             $zip->getStatusString()

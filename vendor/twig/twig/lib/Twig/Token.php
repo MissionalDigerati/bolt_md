@@ -3,8 +3,8 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
- * (c) 2009 Armin Ronacher
+ * (c) Fabien Potencier
+ * (c) Armin Ronacher
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -62,7 +62,7 @@ class Twig_Token
      *  * type and value (or array of possible values)
      *  * just value (or array of possible values) (NAME_TYPE is used as type)
      *
-     * @param array|int         $type   The type to test
+     * @param array|string|int  $type   The type to test
      * @param array|string|null $values The token value
      *
      * @return bool
@@ -203,3 +203,5 @@ class Twig_Token
         }
     }
 }
+
+class_alias('Twig_Token', 'Twig\Token', false);

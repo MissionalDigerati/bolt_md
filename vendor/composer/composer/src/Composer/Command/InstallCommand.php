@@ -32,6 +32,7 @@ class InstallCommand extends BaseCommand
     {
         $this
             ->setName('install')
+            ->setAliases(array('i'))
             ->setDescription('Installs the project dependencies from the composer.lock file if present, or falls back on the composer.json.')
             ->setDefinition(array(
                 new InputOption('prefer-source', null, InputOption::VALUE_NONE, 'Forces installation from package sources when possible, including VCS information.'),
@@ -47,10 +48,12 @@ class InstallCommand extends BaseCommand
                 new InputOption('verbose', 'v|vv|vvv', InputOption::VALUE_NONE, 'Shows more details including new commits pulled in when updating packages.'),
                 new InputOption('optimize-autoloader', 'o', InputOption::VALUE_NONE, 'Optimize autoloader during autoloader dump'),
                 new InputOption('classmap-authoritative', 'a', InputOption::VALUE_NONE, 'Autoload classes from the classmap only. Implicitly enables `--optimize-autoloader`.'),
+                new InputOption('apcu-autoloader', null, InputOption::VALUE_NONE, 'Use APCu to cache found/not-found classes.'),
                 new InputOption('ignore-platform-reqs', null, InputOption::VALUE_NONE, 'Ignore platform requirements (php & ext- packages).'),
                 new InputArgument('packages', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Should not be provided, use composer require instead to add a given package to composer.json.'),
             ))
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 The <info>install</info> command reads the composer.lock file from
 the current directory, processes it, and downloads and installs all the
 libraries and dependencies outlined in that file. If the file does not
@@ -89,30 +92,12 @@ EOT
 
         $install = Installer::create($io, $composer);
 
-        $preferSource = false;
-        $preferDist = false;
-
         $config = $composer->getConfig();
-
-        switch ($config->get('preferred-install')) {
-            case 'source':
-                $preferSource = true;
-                break;
-            case 'dist':
-                $preferDist = true;
-                break;
-            case 'auto':
-            default:
-                // noop
-                break;
-        }
-        if ($input->getOption('prefer-source') || $input->getOption('prefer-dist')) {
-            $preferSource = $input->getOption('prefer-source');
-            $preferDist = $input->getOption('prefer-dist');
-        }
+        list($preferSource, $preferDist) = $this->getPreferredInstallOptions($config, $input);
 
         $optimize = $input->getOption('optimize-autoloader') || $config->get('optimize-autoloader');
         $authoritative = $input->getOption('classmap-authoritative') || $config->get('classmap-authoritative');
+        $apcu = $input->getOption('apcu-autoloader') || $config->get('apcu-autoloader');
 
         $install
             ->setDryRun($input->getOption('dry-run'))
@@ -125,6 +110,7 @@ EOT
             ->setSkipSuggest($input->getOption('no-suggest'))
             ->setOptimizeAutoloader($optimize)
             ->setClassMapAuthoritative($authoritative)
+            ->setApcuAutoloader($apcu)
             ->setIgnorePlatformRequirements($input->getOption('ignore-platform-reqs'))
         ;
 
