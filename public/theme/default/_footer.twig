@@ -1,20 +1,7 @@
 <footer class="black-wrapper">
   <div class="container inner">
     <div class="row">
-      <div class="col-sm-3">
-        <div class="widget"> <img src="{{ paths.theme }}images/logo.png" data-at2x="{{ paths.theme }}images/logo@2x.png" alt="" />
-          <div class="divide20"></div>
-          <p>Missional Digerati is a Christian non-profit mobile and web app development team dedicated to leveraging technology for the purpose of delivering the Gospel to every nation.</p>
-          <div class="divide5"></div>
-          <ul class="social">
-            {{ menu('social', '_menu_social.twig') }}
-          </ul>
-        </div>
-        <!-- /.widget --> 
-      </div>
-      <!-- /col -->
-
-      <div class="col-sm-6">
+      <div class="col-sm-8">
         <div class="widget">
             <div id="core-values" class="tab-container">
                 <div class="panel-container">
@@ -39,22 +26,26 @@
                 </ul>
               </div>
         </div>
-        <!-- /.widget --> 
+        <!-- /.widget -->
       </div>
       <!-- /col -->
-      
-      <div class="col-sm-3">
-        <div class="widget">
-          {% include '_upcoming_class_widget.twig' %}
+      <div class="col-sm-4">
+        <div class="widget"> <img src="{{ paths.theme }}images/logo.png" data-at2x="{{ paths.theme }}images/logo@2x.png" alt="" />
+          <div class="divide20"></div>
+          <p>Missional Digerati is a Christian non-profit mobile and web app development team dedicated to leveraging technology for the purpose of delivering the Gospel to every nation.</p>
+          <div class="divide5"></div>
+          <ul class="social">
+            {{ menu('social', '_menu_social.twig') }}
+          </ul>
         </div>
-        <!-- /.widget --> 
+        <!-- /.widget -->
       </div>
       <!-- /col -->
     </div>
-    <!-- /.row --> 
+    <!-- /.row -->
   </div>
   <!-- .container -->
-  
+
   <div class="sub-footer">
     <div class="container">
       <p class="pull-left">© 2014 Missional Digerati. All rights reserved. Theme by <a href="http://elemisfreebies.com">elemis</a>.</p>
@@ -67,17 +58,17 @@
 </footer>
 <!-- /footer -->
 {% if share_description is defined and share_description is not empty %}
-    {% set share_description_text = share_description|url_encode %} 
+    {% set share_description_text = share_description|url_encode %}
 {% else %}
     {% set share_description_text = 'Missional Digerati is a Christian mobile & web app dev team serving the missional community.'|url_encode %}
 {% endif %}
 {% if share_title is defined and share_title is not empty %}
-    {% set share_title_text = share_title|url_encode %} 
+    {% set share_title_text = share_title|url_encode %}
 {% else %}
     {% set share_title_text = 'Missional Digerati'|url_encode %}
 {% endif %}
 {% if ogg_image is defined and ogg_image is not empty %}
-    {% set ogg_image_file = ogg_image %} 
+    {% set ogg_image_file = ogg_image %}
 {% else %}
     {% set ogg_image_file = "share_logo.png" %}
 {% endif %}

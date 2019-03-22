@@ -26,6 +26,11 @@ Redirect 301 /projects/seven-nine-online http://www.missionaldigerati.org/projec
 Redirect 301 /submit-an-idea http://www.missionaldigerati.org/participate/submit-an-idea
 Redirect 301 /contribute http://www.missionaldigerati.org/participate/donate
 Redirect 301 /donate https://cten.org/johnathanpulos/
+Redirect 301 /training/digerati-101 http://www.missionaldigerati.org/about-us/our-services
+Redirect 301 /training/faith-and-tech http://www.missionaldigerati.org/about-us/our-services
+Redirect 301 /training http://www.missionaldigerati.org/about-us/our-services
+Redirect 301 /host-a-class http://www.missionaldigerati.org/about-us/our-services
+Redirect 301 /digital-quiet-time http://www.missionaldigerati.org/about-us/our-services
 
 <IfModule mod_rewrite.c>
   RewriteEngine on
