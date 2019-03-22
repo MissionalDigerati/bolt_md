@@ -1,5 +1,5 @@
-SessionServiceProvider
-======================
+Session
+=======
 
 The *SessionServiceProvider* provides a service for storing data persistently
 between requests.
@@ -38,7 +38,7 @@ Parameters
 Services
 --------
 
-* **session**: An instance of Symfony2's `Session
+* **session**: An instance of Symfony's `Session
   <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Session.html>`_.
 
 * **session.storage**: A service that is used for persistence of the session

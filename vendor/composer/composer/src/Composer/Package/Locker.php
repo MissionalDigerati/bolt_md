@@ -19,9 +19,9 @@ use Composer\Util\ProcessExecutor;
 use Composer\Repository\ArrayRepository;
 use Composer\Package\Dumper\ArrayDumper;
 use Composer\Package\Loader\ArrayLoader;
-use Composer\Package\Version\VersionParser;
 use Composer\Util\Git as GitUtil;
 use Composer\IO\IOInterface;
+use Seld\JsonLint\ParsingException;
 
 /**
  * Reads/writes project lockfile (composer.lock).
@@ -35,6 +35,7 @@ class Locker
     private $repositoryManager;
     private $installationManager;
     private $hash;
+    private $contentHash;
     private $loader;
     private $dumper;
     private $process;
@@ -44,24 +45,64 @@ class Locker
      * Initializes packages locker.
      *
      * @param IOInterface         $io
-     * @param JsonFile            $lockFile            lockfile loader
-     * @param RepositoryManager   $repositoryManager   repository manager instance
-     * @param InstallationManager $installationManager installation manager instance
-     * @param string              $hash                unique hash of the current composer configuration
+     * @param JsonFile            $lockFile             lockfile loader
+     * @param RepositoryManager   $repositoryManager    repository manager instance
+     * @param InstallationManager $installationManager  installation manager instance
+     * @param string              $composerFileContents The contents of the composer file
      */
-    public function __construct(IOInterface $io, JsonFile $lockFile, RepositoryManager $repositoryManager, InstallationManager $installationManager, $hash)
+    public function __construct(IOInterface $io, JsonFile $lockFile, RepositoryManager $repositoryManager, InstallationManager $installationManager, $composerFileContents)
     {
         $this->lockFile = $lockFile;
         $this->repositoryManager = $repositoryManager;
         $this->installationManager = $installationManager;
-        $this->hash = $hash;
+        $this->hash = md5($composerFileContents);
+        $this->contentHash = self::getContentHash($composerFileContents);
         $this->loader = new ArrayLoader(null, true);
         $this->dumper = new ArrayDumper();
         $this->process = new ProcessExecutor($io);
     }
 
     /**
-     * Checks whether locker were been locked (lockfile found).
+     * Returns the md5 hash of the sorted content of the composer file.
+     *
+     * @param string $composerFileContents The contents of the composer file.
+     *
+     * @return string
+     */
+    public static function getContentHash($composerFileContents)
+    {
+        $content = json_decode($composerFileContents, true);
+
+        $relevantKeys = array(
+            'name',
+            'version',
+            'require',
+            'require-dev',
+            'conflict',
+            'replace',
+            'provide',
+            'minimum-stability',
+            'prefer-stable',
+            'repositories',
+            'extra',
+        );
+
+        $relevantContent = array();
+
+        foreach (array_intersect($relevantKeys, array_keys($content)) as $key) {
+            $relevantContent[$key] = $content[$key];
+        }
+        if (isset($content['config']['platform'])) {
+            $relevantContent['config']['platform'] = $content['config']['platform'];
+        }
+
+        ksort($relevantContent);
+
+        return md5(json_encode($relevantContent));
+    }
+
+    /**
+     * Checks whether locker has been locked (lockfile found).
      *
      * @return bool
      */
@@ -85,7 +126,18 @@ class Locker
     {
         $lock = $this->lockFile->read();
 
-        return $this->hash === $lock['hash'];
+        if (!empty($lock['content-hash'])) {
+            // There is a content hash key, use that instead of the file hash
+            return $this->contentHash === $lock['content-hash'];
+        }
+
+        // BC support for old lock files without content-hash
+        if (!empty($lock['hash'])) {
+            return $this->hash === $lock['hash'];
+        }
+
+        // should not be reached unless the lock file is corrupted, so assume it's out of date
+        return false;
     }
 
     /**
@@ -133,11 +185,10 @@ class Locker
     public function getPlatformRequirements($withDevReqs = false)
     {
         $lockData = $this->getLockData();
-        $versionParser = new VersionParser();
         $requirements = array();
 
         if (!empty($lockData['platform'])) {
-            $requirements = $versionParser->parseLinks(
+            $requirements = $this->loader->parseLinks(
                 '__ROOT__',
                 '1.0.0',
                 'requires',
@@ -146,7 +197,7 @@ class Locker
         }
 
         if ($withDevReqs && !empty($lockData['platform-dev'])) {
-            $devRequirements = $versionParser->parseLinks(
+            $devRequirements = $this->loader->parseLinks(
                 '__ROOT__',
                 '1.0.0',
                 'requires',
@@ -238,9 +289,9 @@ class Locker
     {
         $lock = array(
             '_readme' => array('This file locks the dependencies of your project to a known state',
-                               'Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file',
-                               'This file is @gener'.'ated automatically'),
-            'hash' => $this->hash,
+                               'Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies',
+                               'This file is @gener'.'ated automatically', ),
+            'content-hash' => $this->contentHash,
             'packages' => null,
             'packages-dev' => null,
             'aliases' => array(),
@@ -280,7 +331,12 @@ class Locker
             return false;
         }
 
-        if (!$this->isLocked() || $lock !== $this->getLockData()) {
+        try {
+            $isLocked = $this->isLocked();
+        } catch (ParsingException $e) {
+            $isLocked = false;
+        }
+        if (!$isLocked || $lock !== $this->getLockData()) {
             $this->lockFile->write($lock);
             $this->lockDataCache = null;
 
@@ -299,12 +355,13 @@ class Locker
                 continue;
             }
 
-            $name    = $package->getPrettyName();
+            $name = $package->getPrettyName();
             $version = $package->getPrettyVersion();
 
             if (!$name || !$version) {
                 throw new \LogicException(sprintf(
-                    'Package "%s" has no version or name and can not be locked', $package
+                    'Package "%s" has no version or name and can not be locked',
+                    $package
                 ));
             }
 
@@ -376,6 +433,6 @@ class Locker
             }
         }
 
-        return $datetime ? $datetime->format('Y-m-d H:i:s') : null;
+        return $datetime ? $datetime->format(DATE_RFC3339) : null;
     }
 }

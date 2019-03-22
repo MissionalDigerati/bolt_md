@@ -1,0 +1,33 @@
+{% include '_header.twig' %}
+
+<body class="full-layout">
+<div class="body-wrapper">
+
+  {% include '_nav.twig' %}
+
+  <div class="offset"></div>
+
+  {% include '_slider_index.twig' %}
+
+  <div class="dark-wrapper">
+    <div class="container inner">
+      <div class="section-title text-center">
+        <h2>{{ page.tagline }}</h2>
+        <span class="icon"><i class="icon-picons-{{ page.tagline_icon }}"></i></span>
+      </div>
+        {{ page.body_header }}
+        {% if page.body_footer != '' %}
+          {{ page.body_footer }}
+        {% endif %}
+    </div>
+  </div>
+
+{% include '_footer.twig' %}
+
+</div>
+<!-- /.body-wrapper -->
+
+{% include '_scripts.twig' %}
+
+</body>
+</html>

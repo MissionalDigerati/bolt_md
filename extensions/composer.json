@@ -1,34 +1,49 @@
 {
-    "repositories": {
-        "packagist": false,
-        "bolt": {
-            "type": "composer",
-            "url": "https://extensions.bolt.cm/satis/"
+    "autoload": {
+        "psr-4": {
+            "Bolt\\Composer\\EventListener\\": "../vendor/bolt/bolt/src/Composer/EventListener"
         }
     },
-    "minimum-stability": "stable",
-    "prefer-stable": true,
     "config": {
         "discard-changes": true,
         "preferred-install": "dist"
     },
-    "provide": {
-        "bolt/bolt": "2.1.8"
-    },
+    "description": "Bolt extension installation interface",
     "extra": {
-        "bolt-web-path": ".././"
+        "bolt-web-path": "../public",
+        "bolt-root-path": ".."
     },
-    "autoload": {
-        "psr-4": {
-            "Bolt\\Composer\\": ""
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "name": "bolt/extensions",
+    "prefer-stable": true,
+    "provide": {
+        "bolt/bolt": "3.6.6"
+    },
+    "repositories": {
+        "packagist": false,
+        "bolt": {
+            "type": "composer",
+            "url": "https://market.bolt.cm/satis/"
+        },
+        "boltpiconselector": {
+          "type": "vcs",
+          "url":  "https://github.com/MissionalDigerati/BoltPiconSelector.git"
+        },
+        "boltutilitybox": {
+          "type": "vcs",
+          "url":  "https://github.com/MissionalDigerati/BoltUtilityBox.git"
         }
     },
     "scripts": {
-        "post-package-install": "Bolt\\Composer\\ExtensionInstaller::handle",
-        "post-package-update": "Bolt\\Composer\\ExtensionInstaller::handle"
+        "post-autoload-dump": "Bolt\\Composer\\EventListener\\PackageEventListener::dump",
+        "post-package-install": "Bolt\\Composer\\EventListener\\PackageEventListener::handle",
+        "post-package-update": "Bolt\\Composer\\EventListener\\PackageEventListener::handle"
     },
     "require": {
-        "bolt/googleanalytics": "^1.0",
-        "bolt/simpleforms": "^1.3"
+        "bolt/boltforms": "^4.2",
+        "bolt/googleanalytics": "^2.1",
+        "missionaldigerati/boltpiconselector": "^3.0",
+        "missionaldigerati/boltutilitybox": "^3.0"
     }
 }

@@ -1,0 +1,51 @@
+{% include '_header.twig' %}
+
+<body class="full-layout">
+<div class="body-wrapper">
+
+  {% include '_nav.twig' %}
+
+  <div class="offset"></div>
+
+  <div class="light-wrapper page-title">
+    <div class="container inner">
+      <h1>{{ page.title }}</h1>
+    </div>
+  </div>
+
+  <div class="dark-wrapper">
+    <div class="container inner">
+      {% include "_main_image.twig" %}
+      <div class="section-title text-center">
+        <h2>{{ page.tagline }}</h2>
+        <span class="icon"><i class="icon-picons-{{ page.tagline_icon }}"></i></span>
+      </div>
+        {{ page.body_header }}
+        {% if page.slug == 'training' %}
+          {% include '_training_types.twig' %}
+        {% endif %}
+        {% if page.body_footer != '' %}
+          {{ page.body_footer }}
+        {% endif %}
+    </div>
+  </div>
+
+  {% if page.slug == 'donate' %}
+    <div class="light-wrapper page-title">
+      <div class="container inner cten_logos">
+        <a href="http://www.cten.org" target="_blank"><img src="{{ paths.theme }}images/cten.jpg" title="Commission to Every Nation Logo"></a>
+        <a href="http://www.ecfa.org/MemberProfile.aspx?ID=7491" target="_blank" class="pull-right"><img src="{{ paths.theme }}images/efca.jpg" title="EFCA Logo"></a>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  {% endif %}
+
+{% include '_footer.twig' %}
+
+</div>
+<!-- /.body-wrapper -->
+
+{% include '_scripts.twig' %}
+
+</body>
+</html>
