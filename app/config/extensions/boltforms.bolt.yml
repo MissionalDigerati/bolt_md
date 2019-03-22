@@ -25,6 +25,8 @@ submit_an_idea:
     enabled: true
     to_email: forms@missionaldigerati.info
     to_name: 'Missional Digerati'
+    from_name: 'Zombies on Rails'
+    from_email: zombie.on.rails@gmail.com
     subject: "[MD] Submit an Idea"
   feedback:
       success: Thank you for the great idea!
@@ -77,6 +79,8 @@ contact_us:
     enabled: true
     to_email: forms@missionaldigerati.info
     to_name: 'Missional Digerati'
+    from_name: 'Zombies on Rails'
+    from_email: zombie.on.rails@gmail.com
     subject: "[MD] Contact Us"
   feedback:
       success: Thank you for your message!
@@ -129,6 +133,8 @@ join_volunteer:
     enabled: true
     to_email: forms@missionaldigerati.info
     to_name: 'Missional Digerati'
+    from_name: 'Zombies on Rails'
+    from_email: zombie.on.rails@gmail.com
     subject: "[MD] Join/Volunteer"
   feedback:
       success: Thank you for your message!
