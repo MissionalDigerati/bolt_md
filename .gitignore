@@ -55,6 +55,7 @@ composer.lock
 .rvmrc
 app/config/config.yml
 app/config/config.live.yml
+app/config/extensions/boltforms.golt.yml
 app/config/extensions/googleanalytics.bolt.yml
 app/config/extensions/analytics-key.p12
 app/database/*
