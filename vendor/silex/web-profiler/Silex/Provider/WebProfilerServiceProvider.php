@@ -11,6 +11,8 @@
 
 namespace Silex\Provider;
 
+use Symfony\Bridge\Twig\DataCollector\TwigDataCollector;
+use Symfony\Bridge\Twig\Extension\ProfilerExtension;
 use Symfony\Bundle\WebProfilerBundle\Controller\ExceptionController;
 use Symfony\Bundle\WebProfilerBundle\Controller\RouterController;
 use Symfony\Bundle\WebProfilerBundle\Controller\ProfilerController;
@@ -20,6 +22,7 @@ use Symfony\Component\Form\Extension\DataCollector\FormDataCollector;
 use Symfony\Component\Form\Extension\DataCollector\FormDataExtractor;
 use Symfony\Component\Form\Extension\DataCollector\Proxy\ResolvedTypeFactoryDataCollectorProxy;
 use Symfony\Component\Form\Extension\DataCollector\Type\DataCollectorTypeExtension;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
 use Symfony\Component\HttpKernel\EventListener\ProfilerListener;
 use Symfony\Component\HttpKernel\Profiler\FileProfilerStorage;
@@ -53,28 +56,35 @@ class WebProfilerServiceProvider implements ServiceProviderInterface, Controller
             return new TraceableEventDispatcher($dispatcher, $app['stopwatch'], $app['logger']);
         }));
 
-        $app['data_collector.templates'] = array(
-            array('config',    '@WebProfiler/Collector/config.html.twig'),
-            array('request',   '@WebProfiler/Collector/request.html.twig'),
-            array('exception', '@WebProfiler/Collector/exception.html.twig'),
-            array('events',    '@WebProfiler/Collector/events.html.twig'),
-            array('logger',    '@WebProfiler/Collector/logger.html.twig'),
-            array('time',      '@WebProfiler/Collector/time.html.twig'),
-            array('router',    '@WebProfiler/Collector/router.html.twig'),
-            array('memory',    '@WebProfiler/Collector/memory.html.twig'),
-            array('form',      '@WebProfiler/Collector/form.html.twig'),
-        );
+        $app['data_collector.templates'] = $app->share(function () {
+            $templates = array(
+                array('config',    '@WebProfiler/Collector/config.html.twig'),
+                array('request',   '@WebProfiler/Collector/request.html.twig'),
+                array('exception', '@WebProfiler/Collector/exception.html.twig'),
+                array('events',    '@WebProfiler/Collector/events.html.twig'),
+                array('logger',    '@WebProfiler/Collector/logger.html.twig'),
+                array('time',      '@WebProfiler/Collector/time.html.twig'),
+                array('router',    '@WebProfiler/Collector/router.html.twig'),
+                array('memory',    '@WebProfiler/Collector/memory.html.twig'),
+                array('form',      '@WebProfiler/Collector/form.html.twig'),
+            );
+            if (class_exists('Symfony\Bridge\Twig\Extension\ProfilerExtension')) {
+                $templates[] = array('twig', '@WebProfiler/Collector/twig.html.twig');
+            }
+
+            return $templates;
+        });
 
         $app['data_collectors'] = $app->share(function ($app) {
             return array(
-                'config'    => $app->share(function ($app) { return new ConfigDataCollector(); }),
-                'request'   => $app->share(function ($app) { return new RequestDataCollector(); }),
+                'config' => $app->share(function ($app) { return new ConfigDataCollector(); }),
+                'request' => $app->share(function ($app) { return new RequestDataCollector(); }),
                 'exception' => $app->share(function ($app) { return new ExceptionDataCollector(); }),
-                'events'    => $app->share(function ($app) { return new EventDataCollector($app['dispatcher']); }),
-                'logger'    => $app->share(function ($app) { return new LoggerDataCollector($app['logger']); }),
-                'time'      => $app->share(function ($app) { return new TimeDataCollector(null, $app['stopwatch']); }),
-                'router'    => $app->share(function ($app) { return new RouterDataCollector(); }),
-                'memory'    => $app->share(function ($app) { return new MemoryDataCollector(); }),
+                'events' => $app->share(function ($app) { return new EventDataCollector($app['dispatcher']); }),
+                'logger' => $app->share(function ($app) { return new LoggerDataCollector($app['logger']); }),
+                'time' => $app->share(function ($app) { return new TimeDataCollector(null, $app['stopwatch']); }),
+                'router' => $app->share(function ($app) { return new RouterDataCollector(); }),
+                'memory' => $app->share(function ($app) { return new MemoryDataCollector(); }),
             );
         });
 
@@ -96,6 +106,20 @@ class WebProfilerServiceProvider implements ServiceProviderInterface, Controller
 
                 return $extensions;
             }));
+        }
+
+        if (class_exists('Symfony\Bridge\Twig\Extension\ProfilerExtension')) {
+            $app['data_collectors'] = $app->share($app->extend('data_collectors', function ($collectors, $app) {
+                $collectors['twig'] = $app->share(function ($app) {
+                    return new TwigDataCollector($app['twig.profiler.profile']);
+                });
+
+                return $collectors;
+            }));
+
+            $app['twig.profiler.profile'] = $app->share(function () {
+                return new \Twig_Profiler_Profile();
+            });
         }
 
         $app['web_profiler.controller.profiler'] = $app->share(function ($app) {
@@ -136,12 +160,11 @@ class WebProfilerServiceProvider implements ServiceProviderInterface, Controller
         $app['web_profiler.debug_toolbar.intercept_redirects'] = false;
 
         $app['profiler.listener'] = $app->share(function ($app) {
-            return new ProfilerListener(
-                $app['profiler'],
-                $app['profiler.request_matcher'],
-                $app['profiler.only_exceptions'],
-                $app['profiler.only_master_requests']
-            );
+            if (Kernel::VERSION_ID >= 20800) {
+                return new ProfilerListener($app['profiler'], $app['request_stack'], $app['profiler.request_matcher'], $app['profiler.only_exceptions'], $app['profiler.only_master_requests']);
+            } else {
+                return new ProfilerListener($app['profiler'], $app['profiler.request_matcher'], $app['profiler.only_exceptions'], $app['profiler.only_master_requests'], $app['request_stack']);
+            }
         });
 
         $app['stopwatch'] = $app->share(function () {
@@ -155,6 +178,10 @@ class WebProfilerServiceProvider implements ServiceProviderInterface, Controller
 
             if (class_exists('\Symfony\Bundle\WebProfilerBundle\Twig\WebProfilerExtension')) {
                 $twig->addExtension(new WebProfilerExtension());
+            }
+
+            if (class_exists('Symfony\Bridge\Twig\Extension\ProfilerExtension')) {
+                $twig->addExtension(new ProfilerExtension($app['twig.profiler.profile'], $app['stopwatch']));
             }
 
             return $twig;

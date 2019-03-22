@@ -1,0 +1,112 @@
+<footer class="black-wrapper">
+  <div class="container inner">
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="widget">
+            <div id="core-values" class="tab-container">
+                <div class="panel-container">
+                  <div id="panel-technology-driven">
+                    <p>At our core, we want to discover new ways to redeem technology for kingdom purposes. As a <strong><span class="colored">technology driven</span></strong> ministry we strive to learn the newest technologies, and discover new ways to use these technologies in fulfilling the Great Commission.</p>
+                  </div>
+                  <div id="panel-mission-minded">
+                    <p>We are a <strong><span class="colored">mission minded</span></strong> organization that is committed to the fulfillment of the Great Commission in the hardest to reach areas of the globe.</p>
+                  </div>
+                  <div id="panel-community-focused">
+                    <p>We are a <strong><span class="colored">community focused</span></strong> ministry, looking at the needs of the missional community over the needs of an individual agency.</p>
+                  </div>
+                  <div id="panel-donor-supported">
+                    <p>As a <strong><span class="colored">donor supported</span></strong> ministry, we depend on the generous donations of friends, family and mission agencies to meet our financial needs.  We are so thankful for the dedication of these individuals who equip us to do the work that we do.</p>
+                  </div>
+                </div>
+                <ul class="etabs">
+                  <li class="tab"><a href="#panel-technology-driven">1</a></li>
+                  <li class="tab"><a href="#panel-mission-minded">2</a></li>
+                  <li class="tab"><a href="#panel-community-focused">3</a></li>
+                  <li class="tab"><a href="#panel-donor-supported">4</a></li>
+                </ul>
+              </div>
+        </div>
+        <!-- /.widget -->
+      </div>
+      <!-- /col -->
+      <div class="col-sm-4">
+        <div class="widget"> <img src="{{ paths.theme }}images/logo.png" data-at2x="{{ paths.theme }}images/logo@2x.png" alt="" />
+          <div class="divide20"></div>
+          <p>Missional Digerati is a Christian non-profit mobile and web app development team dedicated to leveraging technology for the purpose of delivering the Gospel to every nation.</p>
+          <div class="divide5"></div>
+          <ul class="social">
+            {{ menu('social', '_menu_social.twig') }}
+          </ul>
+        </div>
+        <!-- /.widget -->
+      </div>
+      <!-- /col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- .container -->
+
+  <div class="sub-footer">
+    <div class="container">
+      <p class="pull-left">© 2014 Missional Digerati. All rights reserved. Theme by <a href="http://elemisfreebies.com">elemis</a>.</p>
+      <ul class="footer-menu pull-right">
+        {{ menu('footer', '_menu_footer.twig') }}
+      </ul>
+    </div>
+  </div>
+  <div class="visible-xs visible-sm visible-md footer-padding"></div>
+</footer>
+<!-- /footer -->
+{% if share_description is defined and share_description is not empty %}
+    {% set share_description_text = share_description|url_encode %}
+{% else %}
+    {% set share_description_text = 'Missional Digerati is a Christian mobile & web app dev team serving the missional community.'|url_encode %}
+{% endif %}
+{% if share_title is defined and share_title is not empty %}
+    {% set share_title_text = share_title|url_encode %}
+{% else %}
+    {% set share_title_text = 'Missional Digerati'|url_encode %}
+{% endif %}
+{% if ogg_image is defined and ogg_image is not empty %}
+    {% set ogg_image_file = ogg_image %}
+{% else %}
+    {% set ogg_image_file = "share_logo.png" %}
+{% endif %}
+<div id="share-bottom-panel">
+  <div id="slideup-share-panel">
+    <div class="row">
+      <div class="col-xs-4 twitter-trigger twitter-share-link">
+        <a href="https://twitter.com/intent/tweet?url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&text={{share_description_text}}&via=M_Digerati">
+          <div class="twitter-small-icon mobile-share-icon"></div> Twitter
+        </a>
+      </div>
+      <div class="col-xs-4 facebook-share-link facebook-trigger">
+        <a href="">
+          <div class="facebook-small-icon mobile-share-icon"></div> Facebook
+        </a>
+      </div>
+      <div class="col-xs-4 social-share-trigger-same-window google-share-link">
+        <a href="https://plus.google.com/share?url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}" target="_blank">
+          <div class="google-small-icon mobile-share-icon"></div> Google +
+        </a>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div class="row">
+      <div class="col-xs-4 social-share-trigger-same-window pinterest-share-link">
+        <a href="http://pinterest.com/pin/create/button/?url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&media=http%3A%2F%2Fmissionaldigerati.org{{ paths.theme|url_encode }}images%2F{{ogg_image_file}}&description={{share_description_text}}" target="_blank">
+          <div class="pinterest-small-icon mobile-share-icon"></div> Pinterest
+        </a>
+      </div>
+      <div class="col-xs-4 social-share-trigger-same-window linkedin-share-link">
+        <a href="http://www.linkedin.com/shareArticle?mini=true&url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&title={{share_title_text}}&summary={{share_description_text}}&source={{'Missional Digerati'|url_encode}}" target="_blank">
+          <div class="linkedin-small-icon mobile-share-icon"></div> LinkedIn
+        </a>
+      </div>
+      <div class="col-xs-4">&nbsp;</div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+  <div id="trigger-sldeup-panel" class="toggle-slideup-panel"><i class="icon-picons-like"></i> Share</div>
+  <div class="clearfix"></div>
+</div>

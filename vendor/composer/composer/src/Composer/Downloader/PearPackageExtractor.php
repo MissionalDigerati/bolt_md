@@ -48,7 +48,6 @@ class PearPackageExtractor
      * @param  array                     $vars   used for replacement tasks
      * @throws \RuntimeException
      * @throws \UnexpectedValueException
-     *
      */
     public function extractTo($target, array $roles = array('php' => '/', 'script' => '/bin'), $vars = array())
     {
@@ -74,8 +73,8 @@ class PearPackageExtractor
      * Perform copy actions on files
      *
      * @param array $files array of copy actions ('from', 'to') with relative paths
-     * @param $source string path to source dir.
-     * @param $target string path to destination dir
+     * @param string $source path to source dir.
+     * @param string $target path to destination dir
      * @param array $roles array [role => roleRoot] relative root for files having that role
      * @param array $vars  list of values can be used for replacement tasks
      */
@@ -130,14 +129,14 @@ class PearPackageExtractor
      * @param  string            $source string path to extracted files
      * @param  array             $roles  array [role => roleRoot] relative root for files having that role
      * @param  array             $vars   list of values can be used for replacement tasks
+     * @throws \RuntimeException
      * @return array             array of 'source' => 'target', where source is location of file in the tarball (relative to source
      *                                  path, and target is destination of file (also relative to $source path)
-     * @throws \RuntimeException
      */
     private function buildCopyActions($source, array $roles, $vars)
     {
-        /** @var $package \SimpleXmlElement */
-        $package = simplexml_load_file($this->combine($source, 'package.xml'));
+        /** @var \SimpleXmlElement $package */
+        $package = simplexml_load_string(file_get_contents($this->combine($source, 'package.xml')));
         if (false === $package) {
             throw new \RuntimeException('Package definition file is not valid.');
         }

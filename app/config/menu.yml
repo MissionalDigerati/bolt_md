@@ -35,10 +35,6 @@ main:
     title: Discover Some of Our Projects
     path:  /projects
     class: projects
-  - label: Training
-    title: Check Out Our Classes
-    path:  /training
-    class: training
   - label: Participate
     title: Learn How You Can Help
     path:  /donate

@@ -1,8 +1,8 @@
-FormServiceProvider
-===================
+Form
+====
 
 The *FormServiceProvider* provides a service for building forms in
-your application with the Symfony2 Form component.
+your application with the Symfony Form component.
 
 Parameters
 ----------
@@ -17,13 +17,12 @@ Services
 
 * **form.factory**: An instance of `FormFactory
   <http://api.symfony.com/master/Symfony/Component/Form/FormFactory.html>`_,
-  that is used for build a form.
+  that is used to build a form.
 
-* **form.csrf_provider**: An instance of an implementation of the
+* **form.csrf_provider**: An instance of an implementation of
   `CsrfProviderInterface
-  <http://api.symfony.com/master/Symfony/Component/Form/Extension/Csrf/CsrfProvider/CsrfProviderInterface.html>`_,
-  defaults to a `DefaultCsrfProvider
-  <http://api.symfony.com/master/Symfony/Component/Form/Extension/Csrf/CsrfProvider/DefaultCsrfProvider.html>`_.
+  <http://api.symfony.com/2.3/Symfony/Component/Form/Extension/Csrf/CsrfProvider/CsrfProviderInterface.html>`_ for Symfony 2.3 or
+  `CsrfTokenManagerInterface <http://api.symfony.com/2.7/Symfony/Component/Security/Csrf/CsrfTokenManagerInterface.html>`_ for Symfony 2.4+.
 
 Registering
 -----------
@@ -61,7 +60,8 @@ Registering
 
         composer require symfony/validator symfony/config symfony/translation
         
-    The Symfony Security CSRF component is used to protect forms against CSRF attacks:
+    The Symfony Security CSRF component is used to protect forms against CSRF
+    attacks (as of Symfony 2.4+):
 
     .. code-block:: bash
     
@@ -73,7 +73,7 @@ Registering
 
     .. code-block:: bash
 
-        composer require symfony/twig-bridge symfony/translation
+        composer require symfony/twig-bridge symfony/config symfony/translation
 
 Usage
 -----
@@ -91,8 +91,8 @@ example::
         $form = $app['form.factory']->createBuilder('form', $data)
             ->add('name')
             ->add('email')
-            ->add('gender', 'choice', array(
-                'choices' => array(1 => 'male', 2 => 'female'),
+            ->add('billing_plan', 'choice', array(
+                'choices' => array(1 => 'free', 2 => 'small_business', 3 => 'corporate'),
                 'expanded' => true,
             ))
             ->getForm();
@@ -139,10 +139,10 @@ form by adding constraints on the fields::
         ->add('email', 'text', array(
             'constraints' => new Assert\Email()
         ))
-        ->add('gender', 'choice', array(
-            'choices' => array(1 => 'male', 2 => 'female'),
+        ->add('billing_plan', 'choice', array(
+            'choices' => array(1 => 'free', 2 => 'small_business', 3 => 'corporate'),
             'expanded' => true,
-            'constraints' => new Assert\Choice(array(1, 2)),
+            'constraints' => new Assert\Choice(array(1, 2, 3)),
         ))
         ->getForm();
 
@@ -190,5 +190,5 @@ Traits
 
     $app->form($data);
 
-For more information, consult the `Symfony2 Forms documentation
+For more information, consult the `Symfony Forms documentation
 <http://symfony.com/doc/2.3/book/forms.html>`_.
