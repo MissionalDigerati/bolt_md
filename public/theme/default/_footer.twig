@@ -75,35 +75,29 @@
 <div id="share-bottom-panel">
   <div id="slideup-share-panel">
     <div class="row">
-      <div class="col-xs-4 twitter-trigger twitter-share-link">
-        <a href="https://twitter.com/intent/tweet?url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&text={{share_description_text}}&via=M_Digerati">
+      <div class="col-xs-6 twitter-trigger twitter-share-link">
+        <a href="https://twitter.com/intent/tweet?url={{ 'https://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&text={{share_description_text}}&via=M_Digerati">
           <div class="twitter-small-icon mobile-share-icon"></div> Twitter
         </a>
       </div>
-      <div class="col-xs-4 facebook-share-link facebook-trigger">
+      <div class="col-xs-6 facebook-share-link facebook-trigger">
         <a href="">
           <div class="facebook-small-icon mobile-share-icon"></div> Facebook
-        </a>
-      </div>
-      <div class="col-xs-4 social-share-trigger-same-window google-share-link">
-        <a href="https://plus.google.com/share?url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}" target="_blank">
-          <div class="google-small-icon mobile-share-icon"></div> Google +
         </a>
       </div>
       <div class="clearfix"></div>
     </div>
     <div class="row">
-      <div class="col-xs-4 social-share-trigger-same-window pinterest-share-link">
-        <a href="http://pinterest.com/pin/create/button/?url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&media=http%3A%2F%2Fmissionaldigerati.org{{ paths.theme|url_encode }}images%2F{{ogg_image_file}}&description={{share_description_text}}" target="_blank">
+      <div class="col-xs-6 social-share-trigger-same-window pinterest-share-link">
+        <a href="https://pinterest.com/pin/create/button/?url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&media=http%3A%2F%2Fmissionaldigerati.org{{ paths.theme|url_encode }}images%2F{{ogg_image_file}}&description={{share_description_text}}" target="_blank">
           <div class="pinterest-small-icon mobile-share-icon"></div> Pinterest
         </a>
       </div>
-      <div class="col-xs-4 social-share-trigger-same-window linkedin-share-link">
-        <a href="http://www.linkedin.com/shareArticle?mini=true&url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&title={{share_title_text}}&summary={{share_description_text}}&source={{'Missional Digerati'|url_encode}}" target="_blank">
+      <div class="col-xs-6 social-share-trigger-same-window linkedin-share-link">
+        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&title={{share_title_text}}&summary={{share_description_text}}&source={{'Missional Digerati'|url_encode}}" target="_blank">
           <div class="linkedin-small-icon mobile-share-icon"></div> LinkedIn
         </a>
       </div>
-      <div class="col-xs-4">&nbsp;</div>
       <div class="clearfix"></div>
     </div>
   </div>
