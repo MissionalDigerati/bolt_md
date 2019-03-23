@@ -1,15 +1,15 @@
 {% if share_description is defined and share_description is not empty %}
-    {% set share_description_text = share_description|url_encode %} 
+    {% set share_description_text = share_description|url_encode %}
 {% else %}
     {% set share_description_text = 'Missional Digerati: App developers serving the missional community!'|url_encode %}
 {% endif %}
 {% if share_title is defined and share_title is not empty %}
-    {% set share_title_text = share_title|url_encode %} 
+    {% set share_title_text = share_title|url_encode %}
 {% else %}
     {% set share_title_text = 'Missional Digerati'|url_encode %}
 {% endif %}
 {% if ogg_image is defined and ogg_image is not empty %}
-    {% set ogg_image_file = ogg_image %} 
+    {% set ogg_image_file = ogg_image %}
 {% else %}
     {% set ogg_image_file = "share_logo.png" %}
 {% endif %}
@@ -24,13 +24,12 @@
       </div>
     </div>
   </div>
-  <!--/.nav-collapse --> 
+  <!--/.nav-collapse -->
 </div>
 <!--/.navbar -->
 <ul id="social-share-nav" class="social-sharing-widget hidden-print">
-  <li class="twitter-trigger twitter-share-link"><a href="https://twitter.com/intent/tweet?url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&text={{share_description_text}}&via=M_Digerati"></a></li>
+  <li class="twitter-trigger twitter-share-link"><a href="https://twitter.com/intent/tweet?url={{ 'https://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&text={{share_description_text}}&via=M_Digerati"></a></li>
   <li class="facebook-trigger facebook-share-link"><a href=""></a></li>
-  <li class="social-share-trigger-new-window google-share-link"><a href="https://plus.google.com/share?url={{ 'http://missionaldigerati.org'|url_encode|url_encode ~ app.request.pathinfo|url_encode }}"></a></li>
-  <li class="social-share-trigger-new-window pinterest-share-link"><a href="http://pinterest.com/pin/create/button/?url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&media=http%3A%2F%2Fmissionaldigerati.org{{ paths.theme|url_encode }}images%2F{{ogg_image_file}}&description={{share_description_text}}"></a></li>
-  <li class="social-share-trigger-new-window linkedin-share-link"><a href="http://www.linkedin.com/shareArticle?mini=true&url={{ 'http://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&title={{share_title_text}}&summary={{share_description_text}}&source={{'Missional Digerati'|url_encode}}"></a></li>
+  <li class="social-share-trigger-new-window pinterest-share-link"><a href="https://pinterest.com/pin/create/button/?url={{ 'https://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&media=http%3A%2F%2Fmissionaldigerati.org{{ paths.theme|url_encode }}images%2F{{ogg_image_file}}&description={{share_description_text}}"></a></li>
+  <li class="social-share-trigger-new-window linkedin-share-link"><a href="https://www.linkedin.com/shareArticle?mini=true&url={{ 'https://missionaldigerati.org'|url_encode ~ app.request.pathinfo|url_encode }}&title={{share_title_text}}&summary={{share_description_text}}&source={{'Missional Digerati'|url_encode}}"></a></li>
 </ul>
