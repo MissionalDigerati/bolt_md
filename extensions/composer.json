@@ -18,7 +18,7 @@
     "name": "bolt/extensions",
     "prefer-stable": true,
     "provide": {
-        "bolt/bolt": "3.6.6"
+        "bolt/bolt": "3.6.11"
     },
     "repositories": {
         "packagist": false,
@@ -27,23 +27,23 @@
             "url": "https://market.bolt.cm/satis/"
         },
         "boltpiconselector": {
-          "type": "vcs",
-          "url":  "https://github.com/MissionalDigerati/BoltPiconSelector.git"
+            "type": "vcs",
+            "url": "https://github.com/MissionalDigerati/BoltPiconSelector.git"
         },
         "boltutilitybox": {
-          "type": "vcs",
-          "url":  "https://github.com/MissionalDigerati/BoltUtilityBox.git"
+            "type": "vcs",
+            "url": "https://github.com/MissionalDigerati/BoltUtilityBox.git"
         }
-    },
-    "scripts": {
-        "post-autoload-dump": "Bolt\\Composer\\EventListener\\PackageEventListener::dump",
-        "post-package-install": "Bolt\\Composer\\EventListener\\PackageEventListener::handle",
-        "post-package-update": "Bolt\\Composer\\EventListener\\PackageEventListener::handle"
     },
     "require": {
         "bolt/boltforms": "^4.2",
         "bolt/googleanalytics": "^2.1",
         "missionaldigerati/boltpiconselector": "^3.0",
         "missionaldigerati/boltutilitybox": "^3.0"
+    },
+    "scripts": {
+        "post-autoload-dump": "Bolt\\Composer\\EventListener\\PackageEventListener::dump",
+        "post-package-install": "Bolt\\Composer\\EventListener\\PackageEventListener::handle",
+        "post-package-update": "Bolt\\Composer\\EventListener\\PackageEventListener::handle"
     }
 }
