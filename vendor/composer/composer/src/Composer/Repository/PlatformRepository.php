@@ -12,6 +12,7 @@
 
 namespace Composer\Repository;
 
+use Composer\Composer;
 use Composer\Package\CompletePackage;
 use Composer\Package\PackageInterface;
 use Composer\Package\Version\VersionParser;
@@ -27,7 +28,7 @@ use Symfony\Component\Process\ExecutableFinder;
  */
 class PlatformRepository extends ArrayRepository
 {
-    const PLATFORM_PACKAGE_REGEX = '{^(?:php(?:-64bit|-ipv6|-zts|-debug)?|hhvm|(?:ext|lib)-[a-z0-9](?:[_.-]?[a-z0-9]+)*|composer-plugin-api)$}iD';
+    const PLATFORM_PACKAGE_REGEX = '{^(?:php(?:-64bit|-ipv6|-zts|-debug)?|hhvm|(?:ext|lib)-[a-z0-9](?:[_.-]?[a-z0-9]+)*|composer-(?:plugin|runtime)-api)$}iD';
 
     private $versionParser;
 
@@ -73,6 +74,12 @@ class PlatformRepository extends ArrayRepository
         $composerPluginApi = new CompletePackage('composer-plugin-api', $version, $prettyVersion);
         $composerPluginApi->setDescription('The Composer Plugin API');
         $this->addPackage($composerPluginApi);
+
+        $prettyVersion = Composer::RUNTIME_API_VERSION;
+        $version = $this->versionParser->normalize($prettyVersion);
+        $composerRuntimeApi = new CompletePackage('composer-runtime-api', $version, $prettyVersion);
+        $composerRuntimeApi->setDescription('The Composer Runtime API');
+        $this->addPackage($composerRuntimeApi);
 
         try {
             $prettyVersion = PHP_VERSION;
@@ -125,7 +132,7 @@ class PlatformRepository extends ArrayRepository
             $this->addExtension($name, $prettyVersion);
         }
 
-        // Check for xdebug in a restarted process
+        // Check for Xdebug in a restarted process
         if (!in_array('xdebug', $loadedExtensions, true) && ($prettyVersion = XdebugHandler::getSkippedVersion())) {
             $this->addExtension('xdebug', $prettyVersion);
         }
@@ -166,8 +173,14 @@ class PlatformRepository extends ArrayRepository
                 case 'imagick':
                     $imagick = new \Imagick();
                     $imageMagickVersion = $imagick->getVersion();
-                    preg_match('/^ImageMagick ([\d.]+)-(\d+)/', $imageMagickVersion['versionString'], $matches);
-                    $prettyVersion = "{$matches[1]}.{$matches[2]}";
+                    // 6.x: ImageMagick 6.2.9 08/24/06 Q16 http://www.imagemagick.org
+                    // 7.x: ImageMagick 7.0.8-34 Q16 x86_64 2019-03-23 https://imagemagick.org
+                    preg_match('/^ImageMagick ([\d.]+)(?:-(\d+))?/', $imageMagickVersion['versionString'], $matches);
+                    if (isset($matches[2])) {
+                        $prettyVersion = "{$matches[1]}.{$matches[2]}";
+                    } else {
+                        $prettyVersion = $matches[1];
+                    }
                     break;
 
                 case 'libxml':
