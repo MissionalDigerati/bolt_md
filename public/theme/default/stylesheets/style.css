@@ -3223,12 +3223,6 @@ form.simpleform a.learn_more:hover {
 .parallax.mobile {
     background-attachment: scroll !important
 }
-.parallax.contact {
-    background-image: url(../images/art/parallax1.jpg)
-}
-.parallax.testimonials {
-    background-image: url(../images/art/parallax2.jpg)
-}
 .contact-info {
     margin: 0;
     padding: 0;
