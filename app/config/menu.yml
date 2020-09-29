@@ -19,10 +19,6 @@ main:
         title: Learn More About What We Do
         path:  /about-us/our-services
         class: about-us-our-services
-      - label: Our Coding Practices
-        title: Learn More About How We Code
-        path:  /about-us/our-coding-practices
-        class: about-us-our-coding-practices
       - label: Our Digeratis
         title: Learn More About Our Team
         path:  /about-us/our-digeratis
@@ -40,11 +36,15 @@ main:
     path:  /donate
     class: participate
     submenu:
+      - label: Contribute to a Project
+        title: Contribute to Our Open Source Projects
+        path:  https://contribute.missionaldigerati.org
+        class: contribute
       - label: Donate
         title: Join Our Financial Partners
         path:  /participate/donate
         class: donate
-      - label: Join/Volunteer
+      - label: Join Our Team
         title: Become a Part of Our Team
         path:  /participate/join-volunteer
         class: join-or-volunteer
