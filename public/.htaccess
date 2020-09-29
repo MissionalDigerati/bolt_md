@@ -20,17 +20,18 @@ Options -Indexes
 </FilesMatch>
 
 # 301 redirects
-Redirect 301 /projects/open-bible-stories http://missionaldigerati.org/project/video-translation-platform
-Redirect 301 /projects/jp-mobile http://missionaldigerati.org/project/jp-mobile
-Redirect 301 /projects/seven-nine-online http://missionaldigerati.org/project/seven-nine-online
-Redirect 301 /submit-an-idea http://missionaldigerati.org/participate/submit-an-idea
-Redirect 301 /contribute http://missionaldigerati.org/participate/donate
+Redirect 301 /projects/open-bible-stories https://missionaldigerati.org/project/video-translation-platform
+Redirect 301 /projects/jp-mobile https://missionaldigerati.org/project/jp-mobile
+Redirect 301 /projects/seven-nine-online https://missionaldigerati.org/project/seven-nine-online
+Redirect 301 /submit-an-idea https://missionaldigerati.org/participate/submit-an-idea
+Redirect 301 /contribute https://missionaldigerati.org/participate/donate
 Redirect 301 /donate https://cten.org/johnathanpulos/
-Redirect 301 /training/digerati-101 http://missionaldigerati.org/about-us/our-services
-Redirect 301 /training/faith-and-tech http://missionaldigerati.org/about-us/our-services
-Redirect 301 /training http://missionaldigerati.org/about-us/our-services
-Redirect 301 /host-a-class http://missionaldigerati.org/about-us/our-services
-Redirect 301 /digital-quiet-time http://missionaldigerati.org/about-us/our-services
+Redirect 301 /training/digerati-101 https://missionaldigerati.org/about-us/our-services
+Redirect 301 /training/faith-and-tech https://missionaldigerati.org/about-us/our-services
+Redirect 301 /training https://missionaldigerati.org/about-us/our-services
+Redirect 301 /host-a-class https://missionaldigerati.org/about-us/our-services
+Redirect 301 /digital-quiet-time https://missionaldigerati.org/about-us/our-services
+Redirect 301 /about-us/our-coding-practices https://contribute.missionaldigerati.org
 
 <IfModule mod_rewrite.c>
   RewriteEngine on
