@@ -32,6 +32,7 @@ Redirect 301 /training https://missionaldigerati.org/about-us/our-services
 Redirect 301 /host-a-class https://missionaldigerati.org/about-us/our-services
 Redirect 301 /digital-quiet-time https://missionaldigerati.org/about-us/our-services
 Redirect 301 /about-us/our-coding-practices https://contribute.missionaldigerati.org
+Redirect 301 /volunteer https://missionaldigerati.org/participate/join-volunteer
 
 <IfModule mod_rewrite.c>
   RewriteEngine on
