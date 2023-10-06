@@ -54,9 +54,18 @@ body {
     font-size: 14px;
     font-weight: 500;
 }
+.banner-tagline {
+    padding: 20px 0px;
+}
+.banner-tagline h1 {
+    text-align: center;
+}
 .container {
     padding-right: 0;
     padding-left: 0;
+}
+.breadcrumbs {
+    clear: left;
 }
 body,
 li,
@@ -3875,6 +3884,9 @@ form.simpleform a.learn_more:hover {
 	}
 }
 @media (max-width: 767px) {
+    .navigation.pull-right {
+        clear: both;
+    }
 	.navbar .container,
 	.container {
 	    padding-right: 20px;

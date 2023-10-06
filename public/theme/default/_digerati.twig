@@ -22,9 +22,9 @@
 
       {% endif %}
     </span>
-    {% set social_links = sort_obj_array(digerati.related('social_links'), 'social_media') %}
 
     {% if social_links is defined and social_links is not empty %}
+      {% set social_links = sort_obj_array(digerati.related('social_links'), 'social_media') %}
       <ul class="social">
 
         {% for social_link in social_links %}
