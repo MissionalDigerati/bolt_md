@@ -21,8 +21,9 @@ about_us:
 projects:
   path: /projects
   defaults:
-    _controller: controller.frontend:listing
-    contenttypeslug: projects
+    _controller: controller.frontend:record
+    contenttypeslug: page
+    slug: projects
 
 training_pages:
   path: /training/{slug}

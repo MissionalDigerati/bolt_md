@@ -36,22 +36,22 @@ main:
     path:  /donate
     class: participate
     submenu:
-      - label: Contribute to a Project
-        title: Contribute to Our Open Source Projects
-        path:  https://contribute.missionaldigerati.org
-        class: contribute
-      - label: Donate
-        title: Join Our Financial Partners
-        path:  /participate/donate
-        class: donate
       - label: Join Our Team
         title: Become a Part of Our Team
         path:  /participate/join-volunteer
         class: join-or-volunteer
+      - label: Donate
+        title: Join Our Financial Partners
+        path:  /participate/donate
+        class: donate
       - label: Submit an Idea
         title: Got a Great Idea
         path:  /participate/submit-an-idea
         class: submit-an-idea
+      - label: Contribute to Open Source Code
+        title: Contribute to Our Open Source Projects
+        path:  https://contribute.missionaldigerati.org
+        class: contribute
   - label: Code
     title: Checkout Our Code
     link:  https://github.com/MissionalDigerati

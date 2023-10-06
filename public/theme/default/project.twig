@@ -10,6 +10,7 @@
   <div class="light-wrapper page-title">
     <div class="container inner">
       <h1 class="pull-left">{{ project.title }}</h1>
+      <p class="pull-left breadcrumbs"><a href="/projects">Projects</a> > {{ project.title }}</p>
       <div class="navigation pull-right">
         {% setcontent prev_project = 'projects' where { status: 'published', id: "<" ~ project.id } orderby '-id' limit 1 %}
         {% setcontent next_project = 'projects' where { status: 'published', id: ">" ~ project.id } orderby 'id' limit 1 %}

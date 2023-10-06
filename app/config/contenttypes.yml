@@ -134,6 +134,11 @@ projects:
         featured:
             type: checkbox
             label: 'Feature Project (Show at Top of Projects)'
+        project_type:
+            label: 'Type of Project'
+            type: select
+            values: [ 'Website', 'App', 'Other' ]
+        
     relations:
         clients:
             multiple: false
